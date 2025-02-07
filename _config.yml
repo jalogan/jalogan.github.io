@@ -20,7 +20,7 @@
 lang:                  en
 
 # The title of your blog. Used in the sidebar and the browser tab.
-title:                 Starter Kit
+title:                 Jack Logan
 
 # A short description (~150 chars) of the page used for the meta description tag.
 # Can use markdown, but no more than one paragraph (enforced by `>`)
@@ -29,7 +29,7 @@ description:           >
   with a focus on personal sites that are meant to impress.
 
 # A shorter description for the sidebar.
-tagline:               Change `tagline` in `_config.yml`
+tagline:               Physicist
 
 # A list of keywords for your blog
 keywords:              []
@@ -37,7 +37,7 @@ keywords:              []
 # A (square) logo for your site.
 # If provided, it will be shown at the top of the sidebar.
 # It also used by the `jekyll-seo-tag` plugin.
-logo:                  /assets/img/logo.png
+logo:                  /assets/img/cover_pages/welcome_robot.png
 
 # This should be the same author as first entry in `_data/authors.yml`.
 author:
@@ -49,12 +49,16 @@ author:
 
 # Add links to the sidebar.
 menu:
+  - title:             About Me
+    url:               /about/
   - title:             Example
     url:               /example/
-  - title:             Documentation
-    url:               /docs/
-  - title:             About
-    url:               /about/
+  - title:             Extra
+    url:               /docs/ #/projects/ #/docs/
+  - title:             Projects
+    url:               /projects/
+  #- title:             CV
+  #  url:               /CV/
 
 # Add links to the footer.
 # Typically you'll want to link to your cookie- or privacy policy (if appliable), etc..
@@ -92,7 +96,7 @@ theme: jekyll-theme-hydejack
 # ----------------------------------------------------------------------------------------
  
 # Sidebar image and theme color of the site.
-accent_image:          /assets/img/sidebar-bg.jpg
+accent_image:          /assets/img/cover_pages/penrose_tiling_bw.jpg #sidebar-bg.jpg
 accent_color:          rgb(79,177,186)
 
 # This is used for the `theme-color` meta tag,
@@ -404,14 +408,14 @@ jekyll_compose:
         A short ~160 character description of your post for search engines,
         social media previews, etc.
       image:
-        path: /assets/img/sidebar-bg.jpg
+        path: /assets/img/cover_pages/penrose_tiling.jpg #sidebar-bg.jpg
     posts:
       layout: post
       description: > 
         A short ~160 character description of your post for search engines,
         social media previews, etc.
       image:
-        path: /assets/img/sidebar-bg.jpg
+        path: /assets/img/cover_pages/quasicrystal.jpg #sidebar-bg.jpg
     projects:
       layout: project
       description: > 
@@ -422,3 +426,6 @@ jekyll_compose:
       links:
         - title: Project Link
           url: https://example.com
+
+
+

@@ -3,15 +3,16 @@
 layout: list
 
 # The title of the tag's page.
-title: Example
+title: Projects
 
 # The name of the tag, used in a post's front matter (e.g. tags: [<slug>]).
 slug: example
 
 # (Optional) Write a short (~150 characters) description of this featured tag.
 description: >
-  This is a featured category, which have their own page.
+  Below is a list of selected projects that I have completed and some notes on topics related to the projects. 
   Check out `_featured_tags/example.md` to learn how to create your own.
+  Create more by adding files to example/_posts
 
 # (Optional) You can disable grouping posts by date.
 # no_groups: true

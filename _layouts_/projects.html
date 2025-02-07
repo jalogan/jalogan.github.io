@@ -1,0 +1,41 @@
+---
+layout: default
+---
+
+<h1>{{ page.title }}</h1>
+
+<div class="grid">
+  {% for project in site.projects %}
+    <div class="grid-item">
+      <a href="{{ project.url }}">
+        {% if project.image %}
+          <img src="{{ project.image.path }}" alt="{{ project.title }}">
+        {% endif %}
+        <h2>{{ project.title }}</h2>
+        <p>{{ project.caption }}</p>
+      </a>
+    </div>
+  {% endfor %}
+</div>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .grid-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  .grid-item:hover {
+    transform: scale(1.05);
+  }
+  .grid img {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
+
