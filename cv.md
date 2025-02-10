@@ -4,7 +4,9 @@ title: "My CV"
 permalink: /cv/
 ---
 
+{%comment%}
 # My CV
+{%endcomment%}
 
 <object data="/assets/docs/my_cv.pdf" type="application/pdf" width="100%" height="600px">
   <p>It looks like your browser doesn't support PDFs. You can <a href="/assets/docs/my_cv.pdf">download the file here</a>.</p>

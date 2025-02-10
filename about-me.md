@@ -4,7 +4,9 @@ title: "About Me"
 permalink: /about-me/
 ---
 
+{%comment%}
 # About Me
+{%endcomment%}
 
 <img src="/assets/img/about_me/photo1.jpg" alt="Me" width="200">
 <img src="/assets/img/about_me/photo2.jpg" alt="Me 2" width="200">
