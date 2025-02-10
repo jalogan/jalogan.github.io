@@ -49,16 +49,18 @@ author:
 
 # Add links to the sidebar.
 menu:
+  #- title:             About
+  #  url:               /about/
+  #- title:             Example
+  #  url:               /example/
   - title:             About Me
-    url:               /about/
-  - title:             Example
-    url:               /example/
-  - title:             Extra
-    url:               /docs/ #/projects/ #/docs/
+    url:               /about-me/
+  #- title:             Extra
+  #  url:               /docs/ #/projects/
   - title:             Projects
     url:               /projects/
-  #- title:             CV
-  #  url:               /CV/
+  - title:             CV
+    url:               /cv/
 
 # Add links to the footer.
 # Typically you'll want to link to your cookie- or privacy policy (if appliable), etc..
@@ -429,3 +431,5 @@ jekyll_compose:
 
 
 
+include:
+  - assets/videos/

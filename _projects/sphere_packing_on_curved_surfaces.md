@@ -3,13 +3,13 @@ layout:      project
 title:       "Sphere packing on curved 2D manifolds"
 date:        2 Jan 2014
 #image:
-#  path:      /assets/img/constrained_polymers/4096_polymer_full.png
+#  path:      /assets/img/spheres_on_curved_surfaces/spheres_on_sphere_cover_image.png
 #  srcset:
-#    1920w:   /assets/img/constrained_polymers/4096_polymer_full.png
-#    960w:    /assets/img/constrained_polymers/4096_polymer_half.png
-#    480w:    /assets/img/constrained_polymers/4096_polymer_quarter.png
+#    1920w:   /assets/img/spheres_on_curved_surfaces/spheres_on_sphere_cover_image.png
+#    960w:    /assets/img/spheres_on_curved_surfaces/spheres_on_sphere_cover_image.png
+#    480w:    /assets/img/spheres_on_curved_surfaces/spheres_on_sphere_cover_image.png
 video:
-  path: /assets/img/spheres_on_curved_surfaces/spheres_moving_on_sphere.mp4
+  path: /assets/videos/spheres_on_curved_surfaces/spheres_moving_on_sphere.mp4
   poster: /assets/img/spheres_on_curved_surfaces/spheres_on_sphere_cover_image.png
 caption:     Packing spheres on curved surfaces
 description: >

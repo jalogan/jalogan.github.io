@@ -24,6 +24,8 @@ featured:    false
 
 # Polymers and Coarse-Grained Proteins
 
+
+* this unordered seed list will be replaced by the toc
 {:toc}
 
 A polymer is a chain of monomer units that can be as simple (a single sphere) or as complex (complex molecule, e.g., amino acid) as necessary. 
