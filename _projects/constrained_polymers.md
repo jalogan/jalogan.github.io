@@ -1,7 +1,8 @@
 ---
 layout:      project
 title:       "Constrained Polymers"
-date:        2 Jan 2014
+#date:        2 Jan 2014
+order: 2
 image:
   path:      /assets/img/constrained_polymers/4096_polymer_full.png
   srcset:
@@ -9,15 +10,15 @@ image:
     960w:    /assets/img/constrained_polymers/4096_polymer_half.png
     480w:    /assets/img/constrained_polymers/4096_polymer_quarter.png
 caption:     Modeling proteins as constrained polymers
-description: >
-  Hyde is a brazen two-column [Jekyll](http://jekyllrb.com) theme.
-  It's based on [Poole](http://getpoole.com), the Jekyll butler.
-links:
-  - title:   Publication
-    url:     https://doi.org/10.48550/arXiv.2501.02424
-  #- title:   GitHub Repository
-  - icon:    fa-github
-    url:     https://github.com/jalogan/Constrained-Polymer-Collapse.git
+#description: >
+#  Hyde is a brazen two-column [Jekyll](http://jekyllrb.com) theme.
+#  It's based on [Poole](http://getpoole.com), the Jekyll butler.
+#links:
+#  - title:   Publication
+#    url:     https://doi.org/10.48550/arXiv.2501.02424
+#  #- title:   GitHub Repository
+#  - icon:    "fab fa-github"
+#    url:     https://github.com/jalogan/Constrained-Polymer-Collapse.git
 featured:    false
 #related_posts: 
 ---
@@ -61,3 +62,22 @@ Discuss the key observables we want to match, such as, core packing fraction, fr
 
 
 ### Key results
+
+
+### Links
+
+<a href="https://doi.org/10.48550/arXiv.2501.02424" class="info-button" target="_blank">
+  <span class="icon-book" style="font-size: 32px;"></span> The effect of stereochemical constraints on the radius of gyration of folded proteins
+</a>
+
+<a href="https://github.com/jalogan/Constrained-Polymer-Collapse.git" class="info-button" target="_blank">
+  <span class="icon-github" style="font-size: 32px;"></span>
+</a>
+
+
+<style>
+  /* Remove any arrows on external links */
+  .info-button::after {
+    content: none !important;
+  }
+</style>

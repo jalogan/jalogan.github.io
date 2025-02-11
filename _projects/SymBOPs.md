@@ -1,7 +1,8 @@
 ---
 layout: default
 title: "Symmetrized Bond Order Parameters"
-date:        2 Jan 2014
+#date:        2 Jan 2014
+order: 3
 image: 
   path:    /assets/img/SymBOPs_general/SymBOPs_main_full_w_bg.png
   srcset:
@@ -9,11 +10,11 @@ image:
   960w:    /assets/img/SymBOPs_general/SymBOPs_main_half.png
   480w:    /assets/img/SymBOPs_general/SymBOPs_main_quarter.png
 caption: "Exploring SymBOPs with different particle types."
-description: >
-  SymBOPs projects
-links:
-  - title: Publication
-    url:     https://doi.org/10.1063/5.0076915
+#description: >
+#  SymBOPs projects
+#links:
+#  - title: Publication
+#    url:     https://doi.org/10.1063/5.0076915
 featured:    false
 redirect_from:
   - "/SymBOPs"
@@ -39,6 +40,44 @@ redirect_from:
     {% endif %}
   {% endfor %}
 </div>
+
+
+
+### Links
+
+<a href="https://doi.org/10.1063/5.0076915" class="info-button" target="_blank">
+  <span class="icon-book" style="font-size: 32px;"></span> Symmetry-specific orientational order parameters for complex structures
+</a>
+
+<a href="https://doi.org/10.1063/5.0076914" class="info-button" target="_blank">
+  <span class="icon-book" style="font-size: 32px;"></span> Controlling morphology in hybrid isotropic/patchy particle assemblies
+</a>
+
+<a href="https://doi.org/10.1063/5.0168604" class="info-button" target="_blank">
+  <span class="icon-book" style="font-size: 32px;"></span> Symmetry-specific characterization of bond orientation order in DNA-assembled nanoparticle lattices
+</a>
+
+
+
+
+
+
+<style>
+  /* Remove any arrows on external links */
+  .info-button::after {
+    content: none !important;
+  }
+</style>
+
+
+
+
+
+
+
+
+
+
 
 <style>
   .grid {

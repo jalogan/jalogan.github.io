@@ -1,7 +1,8 @@
 ---
 layout:      project
 title:       "Physics PhD Thesis"
-date:        2 Jan 2014
+#date:        2 Jan 2014
+order: 1
 image:
   path:      /assets/img/PhD_thesis/Frontispiece_w_words_full.png
   srcset:
