@@ -55,6 +55,12 @@ I am a physicist with expertise in computational modeling, data analysis, and hi
   transform: scale(1.1);
   opacity: 0.8;
 }
+
+/* Remove any arrows on external links */
+.info-button::after {
+  content: none !important;
+}
+
 </style>
 
 

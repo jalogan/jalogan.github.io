@@ -433,3 +433,5 @@ jekyll_compose:
 
 include:
   - assets/videos/
+keep_files: []
+incremental: false

@@ -11,8 +11,21 @@ image:
 caption:     PhD Thesis
 description: >
   Thesis written as part of my physics PhD at Stony Brook University.
-links:
-  - title:   Thesis
-    url:     https://www.proquest.com/openview/cfe4c4a9c07c976b765b4474a40b6436/1?pq-origsite=gscholar&cbl=18750&diss=y
+#links:
+#  - title:   Thesis
+#    url:     https://www.proquest.com/openview/cfe4c4a9c07c976b765b4474a40b6436/1?pq-origsite=gscholar&cbl=18750&diss=y
 featured:    true
 ---
+
+*PhD Thesis:* ["Geometric and Topological Aspects of Self-Assembly: from spheres and rods to designer particles"](https://www.proquest.com/openview/cfe4c4a9c07c976b765b4474a40b6436/1?pq-origsite=gscholar&cbl=18750&diss=y){: .no-arrow}
+
+
+My PhD [thesis](https://www.proquest.com/openview/cfe4c4a9c07c976b765b4474a40b6436/1?pq-origsite=gscholar&cbl=18750&diss=y){: .no-arrow} in physics was written under the advisory of Dr. Alexei V. Tkachenko at the Center for Functional Nanomaterials (CFN), located at Brookhaven National Laboratory (BNL).
+
+
+<style>
+.no-arrow::after {
+  content: none !important;
+}
+</style>
+

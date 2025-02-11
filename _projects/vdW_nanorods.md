@@ -3,9 +3,9 @@ layout:      project
 title:       "Compact interaction potential for vdW nanorods"
 date:        2 Jan 2014
 image:
-  path:      /assets/img/vdW_nanorods/vdW_nanorods_main2_full.png
+  path:      /assets/img/vdW_nanorods/vdW_nanorods_main2_full_w_bg.png
   srcset:
-    1920w:   /assets/img/vdW_nanorods/vdW_nanorods_main2_full.png
+    1920w:   /assets/img/vdW_nanorods/vdW_nanorods_main2_full_w_bg.png
     960w:    /assets/img/vdW_nanorods/vdW_nanorods_main2_half.png
     480w:    /assets/img/vdW_nanorods/vdW_nanorods_main2_quarter.png
 caption:     Modeling proteins as constrained polymers

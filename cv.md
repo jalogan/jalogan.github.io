@@ -4,18 +4,99 @@ title: "CV"
 permalink: /cv/
 ---
 
-{%comment%}
-# My CV
-{%endcomment%}
 
+
+
+<button onclick="window.location.href='/assets/docs/CV_short.pdf'" class="cv-button">
+  <i class="fa fa-download"></i> View Full CV
+</button>
+
+
+## Summary
+- Extensive experience in computational and mathematical modeling, data analysis, analytical methods, and high-performance computing.  
+- Proven leadership in managing multidisciplinary teams, delivering impactful research and publications.  
+- Seeking to leverage technical expertise and project management skills in a challenging role within R&D to address complex problems.
+
+
+## Education
+**PhD in Physics**  
+Stony Brook University  
+*Advisor:* Alexei Tkachenko (Brookhaven National Laboratory)  
+*Dissertation:* ["Geometric and Topological Aspects of Self-Assembly: from spheres and rods to designer particles"](/projects/PhD_thesis/)
+
+## Technical Skills
+**Programming:** Python, C++, CUDA, MATLAB, Bash  
+**Simulation Tools:** Molecular Dynamics, Monte Carlo methods  
+**Data Analysis:** Machine Learning, Statistical Analysis, Optimization   
+**High-Performance Computing:** Parallel Computing, HPC Clusters   
+**Collaboration Tools:** Git, GitHub  
+
+## Professional Experience
+**Yale University**  
+Postdoctoral Fellow  
+**Brookhaven National Laboratory**  
+Research Assistant, *Center for Functional Nanomaterials*  
+
+## Selected Publications
+- ["The effect of constraints on the radius of gyration for collapsed polymers"](https://doi.org/10.48550/arXiv.2501.02424), **Jack A. Logan**, Alex T. Grigas, Jacob Sumner, Mark D. Shattuck, and Corey S. O’Hern  
+- ["Geometric and Topological Entropies of Sphere Packing"](https://doi.org/10.1103/PhysRevE.105.014117), **Jack A. Logan** and Alexei V. Tkachenko  
+- ["Symmetry-specific orientational order parameters for complex structures"](https://doi.org/10.1063/5.0076915), **Jack A. Logan**, Srinivas Mushnoori, Meenakshi Dutt, Alexei V. Tkachenko  
+- ["Controlling morphology in hybrid isotropic/patchy particle assemblies"](https://doi.org/10.1063/5.0076914), Srinivas Mushnoori, **Jack A. Logan**, Alexei V. Tkachenko, Meenakshi Dutt  
+- ["Symmetry-specific characterization of bond orientation order in DNA-assembled nanoparticle lattices"](https://doi.org/10.1063/5.0168604), **Jack A. Logan**, Aaron Michelson, Ajith Pattammattel, Hanfei Yan, Oleg Gang, Alexei V. Tkachenko  
+- ["Compact interaction potential for van der Waals nanorods"](https://doi.org/10.1103/PhysRevE.98.032609), **Jack A. Logan** and Alexei V. Tkachenko  
+
+## Other Resources
+
+<div class="info-buttons">
+  <a href="https://github.com/jalogan" class="info-button">
+    <img src="/assets/img/buttons/github_logo_lego_button.png" alt="GitHub" height="50">
+  </a>
+
+  <a href="https://www.linkedin.com/in/jacklogan-physicist/" class="info-button">
+    <img src="/assets/img/buttons/linkedin_logo_lego_button.png" alt="LinkedIn" height="50">
+  </a>
+</div>
+
+<style>
+.info-buttons {
+  display: flex;
+  justify-content: left; /* Centers the buttons */
+  gap: 15px; /* Adds spacing between buttons */
+}
+
+.info-button img {
+  height: 100px;
+  width: auto;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.info-button img:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+/* Remove any arrows on external links */
+.info-button::after {
+  content: none !important;
+}
+</style>
+
+
+
+
+{%comment%}
 <object data="/assets/docs/CV_short.pdf" type="application/pdf" width="100%" height="600px">
   <p>It looks like your browser doesn't support PDFs. You can <a href="/assets/docs/CV_short.pdf">download the file here</a>.</p>
 </object>
 
-<div class="pdf-container">
-  <object data="/assets/docs/my_cv.pdf" type="application/pdf"></object>
-</div>
 
+<div class="pdf-container">
+  <object data="/assets/docs/CV_short.pdf" type="application/pdf"></object>
+</div>
+{%endcomment%}
+
+
+{%comment%}
 <style>
 .pdf-container {
   width: 100%;
@@ -29,14 +110,11 @@ permalink: /cv/
   height: 100%;
 }
 </style>
+{%endcomment%}
 
 
 
 
-
-<button onclick="window.location.href='/assets/docs/my_cv.pdf'" class="cv-button">
-  <i class="fa fa-download"></i> Download CV
-</button>
 
 <style>
 .cv-button {
