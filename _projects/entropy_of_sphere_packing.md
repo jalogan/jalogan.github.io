@@ -27,42 +27,69 @@ Entropy is often associated with disorder, but in physics and mathematics, it is
 {:.lead}
 
 
+### **The System**
+
+We consider a system of $$N$$ hard spherical particles in $$d$$-dimensional space with average particle diameter $$\bar{a}$$. The spheres have similar diameters, and packing is weakly polydisperse. A pair of particles is said to be in contact if the gap between them is less than some small value $$\Delta \ll \bar{a}$$. For any configuration, the topology can be specified by an adjacency matrix $$\mathbf{\hat{C}}$$ with $$C_{ij}=1$$ for all particles $$i\neq j$$ in contact and $$C_{ij}=0$$ otherwise.
+
+One way in which this work is unique is that the average coordination number $$Z = \frac{1}{N} \sum_{i<j} C_{ij}$$ is treated as a thermodynamic variable of the system. The weak polydispersity is introduced to avoid overconstrained topolgoies--those with more than the required bonds to keep the configuration stable. Examples of such configurations include close-packed crystals, e.g., face-centered cubic in 3D or hexagonal in 2D. If we disqualify such topolgies, the only rigid packings remaining are isostatic. These are configurations where the number of contacts is equal to the total number of degrees of freedom of $$N$$ spheres $$Nd$$ minus the number of rigid body degrees of freedom $$d(d+1)/2$$ (global rotations and translations). For a finite system of $$N$$ spheres the mean coordination number for a system to be isostatic is $$Z^* = 2d - d(d+1)/N$$. In the thermodynamic limit ($$N \rightarrow \infty$$) this becomes $$Z^* = 2d$$.
+
+The mathematical framework developed below is applicable to all topolgies of spheres, not just the isostatic case, but we'll see that when the system is isostatic there is a key simplification that allows the equations to be easily solved. Another important point is that the energy of the system comes from the bonding, but if the number of bonds does not change, then the energy of the system does not change. This makes energy essentially useless in this problem. The main  variable is the entropy of the system. For this reason, we reformulate standard statistical mechanics in terms of entropy instead of energy. As shown below, the entropy of the whole packing $$S_{\text{pack}}$$ is broken into two exclusive pieces: geometric entropy $$S_{\text{geo}}$$ and topological entropy $$S_{\text{topo}}$$. 
+
+In order to compute the entropies we use a statistical mechanical thought experiment and a novel Monte Carlo algorithm, developed for this work. The simulations are done for packings in a periodic box and for packings in free space. Examples of these two types of packings are seen in the figure at the top of the page.
+
 
 ### **Connecting to Traditional Statistical Mechanics**
 In equilibrium statistical mechanics, the **partition function** $$\mathcal{Z}$$ is the fundamental quantity that encodes all thermodynamic properties of a system:
 
 $$
-\mathcal{Z} = \sum_i e^{-\beta E_i}
+\mathcal{Z} = \sum_i e^{-\beta E_i} = \sum_E \Omega(E) e^{-\beta E}
 $$
 
 where:
-- The sum runs over all possible **microstates** \( i \).
+- The first sum runs over all possible **microstates** $$ i $$.
 - $$E_i$$ is the energy of the microstate.
 - $$\beta = 1/k_B T$$ is the inverse temperature.
+- Equivalently, the second sum is over all **macrostates** with energy $$E$$
+- $$\Omega(E)$$ is the number of microstates with energy $$E$$
+
+**While these are *equivalent* ways to write the partition function, the latter is more directly comparable to this work.**
 
 The free energy $$F$$ is related to the partition function by:
 
 $$
-F = -k_B T \ln Z.
+F = -k_B T \ln \mathcal{Z}.
 $$
 
-In contrast, Logan and Tkachenko define an **entropy-based partition function**:
+In contrast, for our work on the entropy of sphere packings we define an **entropy-based partition function**:
 
 $$
-e^{N S_{\text{pack}}(Z)} = \sum_{\hat{C}} \delta(Z(\hat{C}) - Z) \frac{1}{N!} e^{N S_{\text{geo}}(\hat{C})}.
+e^{N S_{\text{pack}}(Z)} = \sum_{\mathbf{\hat{C}}} \frac{\delta(Z(\mathbf{\hat{C}}) - Z)}{N!} e^{N S_{\text{geo}}(\mathbf{\hat{C}})}.
 $$
 
 This equation sums over **packing configurations** instead of energy states. Here:
-- $$\hat{C}$$ is the **adjacency matrix** defining a packing topology.
-- $$S_{\text{geo}}(\hat{C})$$ is the **geometric entropy** of that topology.
-- $$\delta(Z(\hat{C}) - Z)$$ enforces a constraint on the **average coordination number**.
-- The factorial $$1/N!$$ accounts for indistinguishable particles, similar to the Gibbs correction in traditional statistical mechanics.
+- $$Z$$ is the mean coordination number--the average number of bonds for each sphere.
+- $$\mathbf{\hat{C}}$$ is the **adjacency matrix** defining a packing topology--a bonding network.
+- $$S_{\text{geo}}(\mathbf{\hat{C}})$$ is the **geometric entropy** of that topology.
+- $$\delta(Z(\mathbf{\hat{C}}) - Z)$$ enforces a constraint on the **average coordination number**.
+- $$Z$$ is used as a thermodynamic variable in this custom ensemble.
+
+If $$e^{N S_{\text{pack}}(Z)}$$ is the equivalent of a partition function, then $$S_{\text{geo}}$$ determines the statistical weight for a specific realization of the packing topology $$\mathbf{\hat{C}}$$.
+
+$$
+e^{NS_{\text{geo}}(\mathbf{\hat{C}})} = \int \frac{d^d\vec{r}_2...d^d\vec{r}_N}{\Omega_d \bar{a}^{(N-1)d}} \prod\limits_{i>j,C_{ij}=1} \bar{a} \delta(x_{ij}) \prod\limits_{i>j,C_{ij}=0} \Theta(x_{ij}) 
+$$
+
+Here:
+- The first sphere $$\vec{r}_1$$ is assumed fixed at the origin to remove global translations.
+- Division by $$\Omega_d$$ eliminates contributions from rigid body rotations (specicially, $$\Omega_{2} = 2\pi$$ and $$\Omega_{3} = 2\pi \times 4\pi = 8\pi^2$$).
+
+
 
 ### **Geometric vs. Topological Entropy: A Free Energy-Like Decomposition**
 Instead of decomposing free energy as $$ F = E - TS $$, the authors define:
 
 $$
-N S_{\text{pack}} = N S_{\text{geo}} - N S_{\text{topo}}.
+- N T S_{\text{pack}} = - N T S_{\text{geo}} - N T S_{\text{topo}}.
 $$
 
 where:
@@ -74,12 +101,12 @@ This formulation mirrors the **free energy decomposition** in traditional stat m
 
 | **Traditional Statistical Mechanics** | **Logan & Tkachenko Sphere Packing** |
 |----------------------------|----------------------------------|
-| $$ Z = \sum_i e^{-\beta E_i} $$ | $$ e^{N S_{\text{pack}}} = \sum_{\hat{C}} e^{N S_{\text{geo}}} $$ |
-| $$ F = E - TS $$ | $$ N S_{\text{pack}} = N S_{\text{geo}} - N S_{\text{topo}} $$ |
-| Energy $$ E $$ | Geometric entropy $$ N S_{\text{geo}} $$ |
+| $$ \mathcal{Z} = \sum_i e^{-\beta E_i} $$ | $$ e^{N S_{\text{pack}}} = \sum_{\hat{C}} e^{N S_{\text{geo}}} $$ |
+| $$ F = E - TS $$ | $$ N T S_{\text{pack}} = N T S_{\text{geo}} + N T S_{\text{topo}} $$ |
+| Energy $$ E $$ | Geometric entropy $$ -N T S_{\text{geo}} $$ |
 | Temperature $$ T $$ | Implicit, ensemble-based |
 | Entropy $$ S $$ | Topological entropy $$ N S_{\text{topo}} $$ |
-| Free energy $$ F $$ | Packing entropy $$ N S_{\text{pack}} $$ |
+| Free energy $$ F $$ | Packing entropy $$ N T S_{\text{pack}} $$ |
 
 ### **Novel Isostaticity-Preserving Monte Carlo Methods**
 A key challenge in computing entropy in sphere packings is ensuring that the packing remains **mechanically stable**. Traditional Monte Carlo (MC) methods allow random displacements, but these can disrupt the isostatic nature of the packing. Instead, the authors introduce an **isostaticity-preserving Monte Carlo method**, where moves are constrained to preserve local force balance.
