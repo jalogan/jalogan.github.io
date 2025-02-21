@@ -86,12 +86,22 @@ Here:
 - The delta function $$\delta(x_{ij})$$ ensures that all contacts recorded in the adjacency matrix are just touching with surface-to-surface distance 0.
 - The Heaviside function $$\Theta(x_{ij})$$ ensures that all spheres that are not in contact are not touching.
 
+In the special case of an isostatic packing, the number of constraints is exactly equal to the number of degrees of freedom (minimum number of constraints to make the packing mechanically stable) we may conveniently change variables from the positions $$(\vec{r}_2,...,\vec{r}_N)$$ to the gaps between pairs of particles $$(x_1,...,x_{NZ/2})$$ including the $$d(d-1)/2$$ independent rigid body rotations $$\hat{\theta} = (\theta_1,...,\theta_{d(d-1)/2})$$. The Jacobian determinant of this transformation then provides a very simple way to compute the geometric entropy of a configuration.
+
+$$
+NS_{\text{geo}}(\mathbf{\hat{C}}) = \ln \left[ \frac{\partial (\vec{r}_2,...,\vec{r}_N)}{\partial (\hat{\theta}, x_1,...,x_{NZ/2})}  \right].
+$$
+
+
 
 ### **Geometric vs. Topological Entropy: A Free Energy-Like Decomposition**
 We may decompose our effective free energy in a similar way to the standard $$ F = E - TS $$:
 
 $$
-- N T S_{\text{pack}} = (- N T S_{\text{geo}}) - T(N S_{\text{topo}}),
+\begin{align}
+- N T S_{\text{pack}} &= (- N T S_{\text{geo}}) - T(N S_{\text{topo}}) \\ 
+S_{\text{pack}} &= S_{\text{geo}} + S_{\text{topo}},
+\end{align}
 $$
 
 where we have defined effective energies and entropies:
@@ -111,14 +121,64 @@ This formulation mirrors the **free energy decomposition** in traditional statis
 | Entropy $$ S $$ | Topological entropy $$ N S_{\text{topo}} $$ |
 | Free energy $$ F $$ | Packing entropy $$ -N T S_{\text{pack}} $$ |
 
-### **Novel Isostaticity-Preserving Monte Carlo Methods**
-A key challenge in computing entropy in sphere packings is ensuring that the packing remains **mechanically stable**. Traditional Monte Carlo (MC) methods allow random displacements, but these can disrupt the isostatic nature of the packing. Instead, the authors introduce an **isostaticity-preserving Monte Carlo method**, where moves are constrained to preserve the number of bonds.
+### **Computing $$S_{\text{geo}}$$ Using Novel Isostaticity-Preserving Monte Carlo Methods**
 
-**Microstate Moves:** 
+{%comment%}
+<figure>
+  <img src="/assets/img/entropy_of_sphere_packing/MC_move_cover.png" alt="2D_vp_and_rem" width="400" height="auto">
+  <figcaption>
+  Demonstration of one step in a Monte Carlo move from one isostic packing to another for a cluster of 50 particles in 2D. The bond between the green particles increases and all spheres move along the zero mode introduced until a previously unbound pair of spheres (purple) makes contact. At this point the green bond is broken and a new bond is formed between the purple spheres.
+  </figcaption>
+</figure>
+{%endcomment%}
+
+{%comment%}
+<figure>
+  <video width="650" height="auto" poster="{{ "/assets/img/entropy_of_sphere_packing/MC_move_cover.png" | relative_url }}" autoplay loop muted playsinline>
+  <source src="{{ "/assets/videos/entropy_of_sphere_packing/MC_move.mp4" | relative_url }}?v={{ site.time | date: '%s' }}" type="video/mp4">
+  Your browser does not support the video tag.
+  </video>
+  <figcaption data-katex>
+    Demonstration of Monte Carlo move from one isostic packing to another for a cluster of 50 particles in 2D. The bond between the green particles increases and all spheres move along the zero mode introduced until a previously unbound pair of spheres (purple) makes contact. At this point the green bond is broken and a new bond is formed between the purple spheres.
+  </figcaption>
+</figure>
+{%endcomment%}
+
+<figure>
+  <video width="650" height="auto" poster="{{ "/assets/img/entropy_of_sphere_packing/MC_move_cover.png" | relative_url }}" autoplay loop muted playsinline>
+    <source src="{{ "/assets/videos/entropy_of_sphere_packing/MC_move.mp4" | relative_url }}" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <figcaption data-katex>
+    Demonstration of Monte Carlo move from one isostatic packing to another for a cluster of 50 particles in 2D.
+  </figcaption>
+</figure>
+
+
+
+A key challenge in computing entropy in sphere packings is ensuring that the packing remains **mechanically stable**. Traditional Monte Carlo (MC) methods allow random displacements, but these can disrupt the isostatic nature of the packing. Instead, we introduce an **isostaticity-preserving Monte Carlo method**, where moves are constrained to preserve the number of bonds.
+
+**Microstate Moves and Computing $$S_{\text{geo}}$$:**
+{%comment%}
 Each step modifies the configuration by randomly choosing a bond and increasing the bond length while remaining in equilibrium until two previously unbound spheres make contact. At this point the original bond is broken and a new bond is made at the new contact point. 
 This preserves the isostaticity of the packing and allows one to explore the space of isostatic packings for $$N$$ spheres and $$NZ/2$$ bonds. When the bond length is increased it introduces a single zero mode into the system which allows the spheres to rearrange until a new isostatic configuration is found.
+{%endcomment%}
 
-### **Virtual Exchange with a Reference Packing**
+A packing evolves in a $Nd$-dimensional space that can be represented by the positions of the $$N$$ spheres or the $$Nd$$$ bond gaps. The constraints for them to be hard spheres in contact are given by <span>$$|\vec{r}_i - \vec{r}_j|^2 = \left(\frac{a_i + a_j}{2}\right)^2$$</span>. The Jacobian of this equation is the rigidity tensor, introduced above as a convenient method of calculating $$S_{\text{geo}}$$. At each step of our simulations a bond is broken and a zero mode enters into the packing. The packing then evolves in such a way that it moves orthogonal to the constraints imposed by the rigidity tensor until contact is made between two unbonded particles, and a new isostatic packing is realized. The rigidity tensor $$R(\vec{r})$$ relates the particle displacements $$\vec{u}_i$$ to the gaps between particles $$x_{ij}$$. If we consider that the bond $$\alpha$$ breaks and opens by an amount $$x_{\alpha}$$, the displacement of any particle $$i$$ can be calculated as $$\vec{u}_{i} = R^{-1}_{i,\alpha} x_{\alpha}$$. However, to avoid the computationally expensive inverse function, we instead use a QR decomposition with column pivoting from the linear algebra library *Eigen* to solve the equation for the displacements $$\vec{u}_i$$ of all particles caused by the opening of $$\alpha$$. By using the equation for $$S_{\text{geo}}$$ defined above, the distribution of $$S_{geo}$$ is computed directly.
+
+
+
+### **Computing $$S_{\text{pack}}$$ with Virtual Particle Exchange with a Reference Packing**
+
+<figure style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
+  <img src="{{ "/assets/img/entropy_of_sphere_packing/vp_and_rem_2D_full.png" | relative_url }}" alt="Figure 1" style="width: 100%; max-width: 45%;">
+  <img src="{{ "/assets/img/entropy_of_sphere_packing/vp_and_rem_3D_full.png" | relative_url }}" alt="Figure 2" style="width: 100%; max-width: 45%;">
+  <figcaption style="text-align: center; width: 100%;">
+    Figure 2: Examples in 2D and 3D of a packing in equilibrium with a reference lattice (reservoir) with which it can exchange particles. 
+  </figcaption>
+</figure>
+
+
 To compute geometric and topological entropy, we propose a **thought experiment** in which a given packing is compared to a **reference packing** with a known entropy.
 The simplest reference lattice is a square lattice (in 2D) or cubic lattice (in 3D), because we know $$S_{\text{geo}}=0$$ for these ordered lattices.
 
@@ -126,19 +186,23 @@ This all seems difficult, but, luckily, the system can be treated using equilibr
 
 It all comes down to detailed balance. Detailed balance states that the probability of transitioning $$A \rightarrow B$$ from state $$A$$ to state $$B$$ is balanced by the probability of transitioning $$B \rightarrow A$$:
 
-
-{% comment %}
 $$
   P(A)W(A\rightarrow B) = P(B)W(B\rightarrow A),
 $$
 where $$P(A)$$ is the probability of being in state $$A$$, and $$W(A\rightarrow B)$$ is the transition rate between the two states.
 
-In this case $$A$$ can be the state of the random packing have $$N$$ spheres and $$B$$ is the state of the packing having $$N-1$$ spheres after one sphere was moved to the reference lattice.
+In this case $$A$$ can be the state of the random packing have $$N$$ spheres and $$B$$ is the state of the packing having $$N-1$$ spheres after one sphere was moved to the reference lattice. If we look at Fig.3, we can count the number of positions where a particle can be removed and the number of positions where a particle can be added, such that it remains isostatic. Let the number of ways to add or remove a particle from a configuration be $$N_+$$ and $$N_-$$, respectively. Figure 3 shows the particles that may be removed in blue and the positions where a particle may be added as a dashed circle for one particular microstate. Averaging over many microstates, $$\langle N_+ \rangle$$ is proportional to the transition rate from a packing with $$N-1$$ particles to a packing with $$N$$ particles, and similarly for $$\langle N_- \rangle$$ for the reverse transition. From detailed balance this means that the ratio of probabilities is equal to the ratio $$\frac{N_-}{N_+}$$,
 
 $$
-\frac{W_{\text{remove}}}{W_{\text{add}}} = \frac{P_{\text{pack}}(N-1)}{P_{\text{pack}}(N)} = \frac{\frac{e^{S_{\text{pack}}(N-1)}}{\mathcal{Z}_{pack}}}{\frac{e^{S_{\text{pack}}(N)}}{\mathcal{Z}_{pack}}} = e^{\left[S_{\text{pack}}(N-1) - S_{\text{pack}}(N)\right]}
+\frac{W_{\text{remove}}}{W_{\text{add}}} = \frac{P_{\text{pack}}(N-1)}{P_{\text{pack}}(N)} = \frac{N_-}{N_+} = \frac{\frac{e^{S_{\text{pack}}(N-1)}}{\mathcal{Z}_{pack}}}{\frac{e^{S_{\text{pack}}(N)}}{\mathcal{Z}_{pack}}} = e^{\left[S_{\text{pack}}(N-1) - S_{\text{pack}}(N)\right]} = e^{-\mu} = e^{S_{\text{pack}}}
 $$
 
+where we have approximated $$S_{\text{pack}}(N) - S_{\text{pack}}(N-1) \approx \frac{\partial S_{\text{pack}}}{\partial N} = \frac{\partial F}{\partial N} = \mu$$.
+
+Finally, we have a way to compute $$S_{\text{pack}}$$. Really this is an indirect way of computing $$S_{\text{topo}}$$ because we know how to find $$S_{\text{geo}}$$ and $$S_{\text{topo}} = S_{\text{geo}} + S_{\text{topo}}$$.
+
+
+{% comment %}
 We can approximate $$S_{\text{pack}}(N) - S_{\text{pack}}(N-1) \approx \frac{\partial S_{\text{pack}}}{\partial N} = \frac{\partial F}{\partial N} = \mu$$, which leads to $$\mu = \frac{\partial (-N S_{\text{pack}})}{\partial N} = -S_{\text{pack}}$$, using $$T=1$$. Finally we find 
 
 $$
@@ -154,11 +218,11 @@ N_- &= P(N) W_{\text{remove}}
 \frac{N_+}{N_-} &= e^{S_{\text{pack}}} \frac{W_{\text{add}}}{W_{\text{remove}}} \\ 
 \end{align}
 $$
-{% endcomment %}
 
 
 In equilibrium the rate of transfer of particles between the system and the reference lattice must be equal, which translates to the chemical potentials being equal $$\mu_{\text{ref}} = \mu_{\text{pack}}$$. 
 In other words, the probabilities of adding a particle to the packing or removing a particle from the packing must be the same.
+
 
 
 
@@ -171,24 +235,25 @@ In other words, the probabilities of adding a particle to the packing or removin
    - Track how frequently these exchanges occur and use that to estimate the entropy contribution.
    - Use **persistent homology** techniques to quantify the number of distinct adjacency matrices consistent with a given $$ Z $$.
 
-By combining these two computations, they obtain a complete measure of entropy.
+{% endcomment %}
 
-### **Results and Key Insights**
-- **Packing disorder contains hidden structure:** Even random packings exhibit local motifs appearing more frequently than expected.
-- **Different packings with the same average coordination number can have different entropy:** The adjacency matrix structure determines entropy beyond simple coordination counting.
-- **A new classification scheme for disordered packings:** Traditional metrics like packing fraction are insufficient; entropy-based classification provides deeper insight.
+By combining these two computations, we obtain a complete measure of entropy.
 
-### **Why This Matters for Future Research**
-This study lays the foundation for applying **statistical mechanics to non-equilibrium, jammed, and disordered materials**. It has implications for:
 
-- **Glassy Systems:** Understanding configurational entropy in amorphous solids.
-- **Granular Media:** Characterizing mechanically stable packings.
-- **Colloidal Assembly:** Predicting self-organization in soft matter physics.
 
-### **Final Thoughts**
-Logan and Tkachenko’s work is a significant step forward in understanding entropy in disordered systems. By introducing **geometric and topological entropy** as distinct but complementary measures, they provide a framework that captures both **local and global disorder** in a way that previous methods could not. Their new simulation techniques further enhance our ability to explore and classify packings, opening the door to future research in soft matter physics, statistical mechanics, and beyond.
+### **Summary and Future Research**
+- We proposed a statistical mechanical description of sphere packings based on treating the  coordination number $$Z$$ as a macroscopic thermodynamic parameter, and  identified two contributions to the packing entropy: geometric and topological. They correspond to the statistical weight of a particular topological configuration, and the number of non-equivalent arrangements, respectively.
+- An important difference of our approach is that it is built entirely within the framework of equilibrium statistical mechanics, and does not impose a requirement on the individual configurations to be jammed.
+- Our results are directly applicable to systems with tensile short-range forces, such as sticky spherical colloids.
+- We developed an MC scheme to compute the geometric and topological entropies of isostatic packings in both 2D and 3D.
 
-Next time you see a pile of stacked oranges at the store or think about how atoms arrange in a glass, remember: it’s not just about how dense the packing is, but also how its **local structure and global connectivity** contribute to the overall entropy of the system!
+The work has implications for:
+- **Glassy Systems:**
+- **Granular Media:**
+- **Colloidal Assembly:**
+
+
+
 
 
 
