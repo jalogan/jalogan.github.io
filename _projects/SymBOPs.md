@@ -43,6 +43,45 @@ redirect_from:
 
 
 
+
+
+
+### **Brief orientational order overview**
+
+
+<figure style="max-width: 100%; text-align: center; margin: auto;">
+  <img src="{{ "/assets/img/SymBOPs_general/symmetry_of_circle_vs_rod.png" | relative_url }}" alt="Figure Description"
+       style="width: 100%; height: auto; max-width: 600px;">
+  <figcaption style="font-size: 0.9em; color: #666; margin-top: 5px;">
+    Difference of rotational symmetry between a circle and a cirlce with two differently colored points.
+  </figcaption>
+</figure>
+
+
+
+
+Rotational symmetry is used to describe an object or set of objects (or points, equations, etc.) that is unaffected by rotations. A 2-sphere in three-dimensions, for instance, has the full symmetry of the rotation group SO(3). We can rotate it in any manner that we'd like and it never looks any different. To make things easier to visualize let's think of a circle (1-sphere) in two-dimensions. Any rotation of the circle leaves it unchanged. If we place two differently colored points on opposite ends of a chord that goes through the center of the circle, everything changes. Now any rotation we choose other than a multiple of $$2\pi$$ gives a different picture from what we started with. The symmetry we had has been broken and only repeats when we rotate by $$2\pi n$$, where $$n$$ is an integer.
+
+
+<figure style="max-width: 100%; text-align: center; margin: auto;">
+  <img src="{{ "/assets/img/SymBOPs_general/BOP_and_nematic_rods_full.png" | relative_url }}" alt="Figure Description"
+       style="width: 100%; height: auto; max-width: 800px;">
+  <figcaption style="font-size: 0.9em; color: #666; margin-top: 5px;">
+    Simple example using rods to demonstrate the difference between bond-orientational order, nematic order, and the combination of both.
+  </figcaption>
+</figure>
+
+
+Orientational order looks at the rotational symmetry of an object or group of obejcts. There are two types of orientational order that we must distinguish between. 
+
+
+
+
+
+
+
+
+
 ### Links
 
 <a href="https://doi.org/10.1063/5.0076915" class="info-button" target="_blank">
@@ -58,25 +97,12 @@ redirect_from:
 </a>
 
 
-
-
-
-
 <style>
   /* Remove any arrows on external links */
   .info-button::after {
     content: none !important;
   }
 </style>
-
-
-
-
-
-
-
-
-
 
 
 <style>
@@ -107,3 +133,10 @@ redirect_from:
     margin-top: auto;
   }
 </style>
+
+
+
+
+
+
+
