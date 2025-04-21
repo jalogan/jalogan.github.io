@@ -22,6 +22,28 @@ featured:    true
 
 
 My PhD [thesis](https://www.proquest.com/openview/cfe4c4a9c07c976b765b4474a40b6436/1?pq-origsite=gscholar&cbl=18750&diss=y){: .no-arrow} in physics was written under the advisory of Dr. Alexei V. Tkachenko at the Center for Functional Nanomaterials (CFN), located at Brookhaven National Laboratory (BNL).
+{:.lead}
+
+
+
+
+{%comment%}
+You can add a note.
+{:.note title="Deeper Look"}
+
+~~~python
+import numpy as np
+
+## Define vector x
+x = [1,2,3]
+
+## Compute the norm of x
+xnorm = np.linalg.norm(x)
+
+## Print the norm
+print("xnorm: ", xnorm)
+~~~
+{%endcomment%}
 
 
 <style>

@@ -33,9 +33,11 @@ Van der Waals forces are the molecular glue that holds together a surprising num
 
 
 ### **The Challenge: Beyond Spheres**  
-For decades, van der Waals interactions have been well understood for spherical particles. If you want to model how tiny spheres attract or repel each other, there's a well-established set of equations for that. But nanorods (think tiny, elongated cylinders) have added complications. Their interactions depend not just on distance but also on *orientation*—two rods can sit parallel, cross at an angle, or barely touch end-to-end. Traditional calculations for these scenarios are complex and computationally expensive.  
+For decades, van der Waals (vdW) interactions have been well understood for spherical particles. If you want to model how tiny spheres attract or repel each other, there's a well-established set of equations for that. But nanorods (think tiny, elongated cylinders) have added complications. Their interactions depend not just on distance but also on *orientation*—-two rods can sit parallel, cross at an angle, or barely touch end-to-end. Traditional calculations for these scenarios are complex, computationally expensive, and have no simple closed-form expression.
 
-We sought to simplify this mess with a compact formula that captures the essential physics without the need for heavy computation.  
+Despite the difficulty of working with vdW rods, they are incredibly useful and necessary with applications to simulations of self-assembly, carbon nanotubes, liquid crystals, microtubules, and DNA. Their use spans fields such as soft-condensed matter physics, biology, materials science, among others. 
+
+We sought to simplify this mess with a compact formula that captures the essential physics without the need for heavy computation. This compact formula can help computational scientists to avoid time wasting numerical integrations when performing molecular dynamics or Monte Carlo simulations involving rod-like particles interacting through a vdW force.
 
 ---
 
