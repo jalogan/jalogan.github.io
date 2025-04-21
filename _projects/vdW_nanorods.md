@@ -39,10 +39,63 @@ Despite the difficulty of working with vdW rods, they are incredibly useful and 
 
 We sought to simplify this mess with a compact formula that captures the essential physics without the need for heavy computation. This compact formula can help computational scientists to avoid time wasting numerical integrations when performing molecular dynamics or Monte Carlo simulations involving rod-like particles interacting through a vdW force.
 
+<p align="center"><strong>We consider two uniform rods of the same length $$L$$ and diameter $$a$$ and present a high-accuracy approximate formula for the vdW potential as a function of their relative positions and orientation.</strong></p>
+
 ---
 
+## **vdW Potential Energy**
+
+vdW interactions were first developed by London (London dispersion forces are a type of vdW interaction for non-polar molecules) and are interpreted as an effect of correlated quantum fluctuations of dipole moments. It is generally only effective over several hundred angstroms and then begins to fall off faster for larger distances (known as the retarded regime). Retardation and multi-body effects are often neglected and written as a simple $$1/r^6$$ potential.
+
+$$
+U = -\frac{A}{\pi^2} \int \int \frac{d^3\mathbf{r_1}d^3\mathbf{r_2}}{|\mathbf{r_1} - \mathbf{r_2}|^6},
+$$
+
+where $$A = \pi^2 C \rho_1 \rho_2$$ is the material-dependent Hamaker constant with $$\rho$$ the number density of interacting particles, and integration is carried out over the the volumes of each object. The potential is negative becuase it is purely attractive.
+
+## **The Model**
+
+<figure style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
+  <img src="{{ "assets/img/vdW_nanorods/vdW_nanorods_main_full.png" | relative_url }}" alt="Figure 1" style="width: 100%; max-width: 45%;">
+  <figcaption style="text-align: center; width: 100%;">
+    Figure 1: The model of two idential rods interacting through a vdW potential. 
+  </figcaption>
+</figure>
+
+Our model, shown in Fig. !, is two identical rods of length $$L$$ and diameter $$a$$. We utilize non-orthogonal coordinates $$\mathbf{\hat{n}_x}$$, $$\mathbf{\hat{n}_y}$$, $$\mathbf{\hat{n}_z}$$, where $$\mathbf{\hat{n}_x}$$ and $$\mathbf{\hat{n}_y}$$ are the 
+"director" vectors directed along the two rods, and $$\mathbf{\hat{n}_z}$$ is perpendicular to both rods. The centers of the rods are denoted $$\mathbf{X}_c$$ and $$\mathbf{Y}_c$$ for the two rods and are defined as 
+
+$$
+\begin{aligned}
+\mathbf{X}_c &= \mathbf{X}_1 + X_0 \mathbf{\hat{n}_x} \\ 
+\mathbf{Y}_c &= \mathbf{Y}_1 + Y_0 \mathbf{\hat{n}_y},
+\end{aligned}
+$$
+
+where $$X_1$$ and $$Y_1$$ are the two closest points in each rod and $$X_0$$ and $$X_0$$ are their longitudinal displacements from the rod centers.
+
+
+
 ### **The Approach: Bridging the Gaps**  
-The key to the work was recognizing that there are a few limiting cases where the problem becomes much easier. For example:  
+The key to the work was recognizing that there are a few limiting cases where the problem becomes much easier. 
+
+**Limiting Cases:**
+
+
+* *Infinitely long* rods with *infinitesimal thickness* and *non-parallel*
+* *Infinitely long* rods with *finite thickness* and *non-parallel*
+
+* *Infinitely long* rods with *infinitesimal thickness* and *parallel*
+* *Infinitely long* rods with *finite thickness* and *parallel*
+
+* *Finite length* in the far-field
+
+
+
+We begin with the case of infinitely long, infinitesimally thin rods that are not parallel. 
+
+
+For example:  
 - When two rods are far apart, their interaction behaves like that of two point masses.  
 - When they're nearly touching, the force looks more like the interaction between two plates.  
 - If they are perfectly aligned, they behave like a set of stacked spheres.  
