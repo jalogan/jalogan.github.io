@@ -124,9 +124,9 @@ This formulation mirrors the **free energy decomposition** in traditional statis
 ### **Computing $$S_{\text{geo}}$$ Using Novel Isostaticity-Preserving Monte Carlo Methods**
 
 {%comment%}
-<figure>
+<figure id="MC_move">
   <img src="/assets/img/entropy_of_sphere_packing/MC_move_cover.png" alt="2D_vp_and_rem" width="400" height="auto">
-  <figcaption>
+  <figcaption style="text-align: center; width: 100%;">
   Demonstration of one step in a Monte Carlo move from one isostic packing to another for a cluster of 50 particles in 2D. The bond between the green particles increases and all spheres move along the zero mode introduced until a previously unbound pair of spheres (purple) makes contact. At this point the green bond is broken and a new bond is formed between the purple spheres.
   </figcaption>
 </figure>
