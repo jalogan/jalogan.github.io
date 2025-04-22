@@ -43,8 +43,53 @@
 </script>
 
 
+<link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
 
 
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("a[data-fig-ref]").forEach(function (link) {
+      const figId = link.getAttribute("href").substring(1);
+      const fig = document.getElementById(figId);
+      const caption = fig?.querySelector("figcaption");
+      if (caption) {
+        const figText = caption.textContent;
+        const match = figText.match(/Figure\s+(\d+)/);
+        if (match) {
+          link.textContent = "Figure " + match[1];
+        }
+      }
+    });
+  });
+</script>
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get all figures and create a lookup map of their order
+    const figures = Array.from(document.querySelectorAll("figure"));
+    const figureMap = new Map();
+
+    figures.forEach((fig, index) => {
+      const id = fig.id;
+      if (id) {
+        figureMap.set(id, index + 1); // 1-based numbering
+      }
+    });
+
+    // Replace the link text with the actual figure number
+    document.querySelectorAll("a[data-fig-ref]").forEach(function (link) {
+      const figId = link.getAttribute("href").substring(1);
+      if (figureMap.has(figId)) {
+        const number = figureMap.get(figId);
+        link.textContent = "Figure " + number;
+      } else {
+        link.textContent = "Figure ??";
+      }
+    });
+  });
+</script>
 
 
 

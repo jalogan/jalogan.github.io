@@ -18,8 +18,15 @@ caption:     Modeling proteins as constrained polymers
 #  - title:   Publication
 #    url:     https://doi.org/10.1103/PhysRevE.98.032609
 featured:    false
+#header-includes:
+#  - \renewcommand{\vec}[1]{\mathbf{#1}}
+#  - \let\oldhat\hat
+#  - \renewcommand{\hat}[1]{\oldhat{\mathbf{#1}}}
 #related_posts: 
 ---
+
+
+
 
 
 Van der Waals forces are the molecular glue that holds together a surprising number of materials. From geckos sticking to walls to how soot clumps in the air, these weak but omnipresent forces shape the microscopic world. But what happens when the objects involved aren’t simple spheres, but long, thin nanorods? We set out to answer a deceptively simple question: how do these tiny rods attract each other, and can we describe their interactions with a simple formula?  
@@ -55,14 +62,16 @@ where $$A = \pi^2 C \rho_1 \rho_2$$ is the material-dependent Hamaker constant w
 
 ## **The Model**
 
-<figure style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
-  <img src="{{ "assets/img/vdW_nanorods/vdW_nanorods_main_full.png" | relative_url }}" alt="Figure 1" style="width: 100%; max-width: 45%;">
+<figure id="fig_model">
+  <img src="{{ 'assets/img/vdW_nanorods/vdW_nanorods_main_full.png' | relative_url }}" alt="Figure 1a" style="width: 37.5%; max-width: 100%;">
+  <img src="{{ 'assets/img/vdW_nanorods/Fig2_Secondary_Modelv2.png' | relative_url }}" alt="Figure 1b" style="width: 54.2%; max-width: 100%;">
   <figcaption style="text-align: center; width: 100%;">
-    Figure 1: The model of two idential rods interacting through a vdW potential. 
+    Several views of the model of two identical rods interacting through a vdW potential.
   </figcaption>
 </figure>
 
-Our model, shown in Fig. !, is two identical rods of length $$L$$ and diameter $$a$$. We utilize non-orthogonal coordinates $$\mathbf{\hat{n}_x}$$, $$\mathbf{\hat{n}_y}$$, $$\mathbf{\hat{n}_z}$$, where $$\mathbf{\hat{n}_x}$$ and $$\mathbf{\hat{n}_y}$$ are the 
+
+Our model, shown in <a href="#fig_model" data-fig-ref>??</a>, is two identical rods of length $$L$$ and diameter $$a$$. We utilize non-orthogonal coordinates $$XYZ$$, where $$\mathbf{\hat{n}_x}$$ and $$\mathbf{\hat{n}_y}$$ are the 
 "director" vectors directed along the two rods, and $$\mathbf{\hat{n}_z}$$ is perpendicular to both rods. The centers of the rods are denoted $$\mathbf{X}_c$$ and $$\mathbf{Y}_c$$ for the two rods and are defined as 
 
 $$
@@ -74,33 +83,94 @@ $$
 
 where $$X_1$$ and $$Y_1$$ are the two closest points in each rod and $$X_0$$ and $$X_0$$ are their longitudinal displacements from the rod centers.
 
+$$
+\begin{aligned}
+X_0 &= \frac{\left[ \left( \mathbf{X}_c - \mathbf{Y}_c \right) \cdot \mathbf{\hat{n}}_y \right]\left( \mathbf{\hat{n}}_x \cdot \mathbf{\hat{n}}_y \right) - \left( \mathbf{X}_c - \mathbf{Y}_c \right) \cdot \mathbf{\hat{n}}_x}{\left( \mathbf{\hat{n}}_x \cdot \mathbf{\hat{n}}_y \right)^2 -1} \\
+Y_0 &= \frac{\left[ \left( \mathbf{X}_c - \mathbf{Y}_c \right) \cdot \mathbf{\hat{n}}_x \right]\left( \mathbf{\hat{n}}_x \cdot \mathbf{\hat{n}}_y \right) - \left( \mathbf{X}_c - \mathbf{Y}_c \right) \cdot \mathbf{\hat{n}}_y}{1 - \left( \mathbf{\hat{n}}_x \cdot \mathbf{\hat{n}}_y \right)^2}.
+\end{aligned}
+$$
+
+The axis-to-axis distance between the rods is 
+
+$$
+r=\left|\left(\mathbf{X}_c - \mathbf{Y}_c\right)\cdot \mathbf{\hat{n}}_z\right|,
+$$
+
+where
+
+$$
+\mathbf{\hat{n}}_z = \mathrm{sgn} \left( \left(\mathbf{X}_c-\mathbf{Y}_c \right)\cdot \left( \mathbf{\hat{n}}_x \times \mathbf{\hat{n}}_y \right) \right) \frac{\mathbf{\hat{n}}_x \times \mathbf{\hat{n}}_y}{\left| \mathbf{\hat{n}}_x \times \mathbf{\hat{n}}_y \right|}.
+$$
+
+With this definition of $$\mathbf{\hat{n}}_z$$, the origin of the $$XYZ$$ system is at point  $$\mathbf{Y}_1$$, and vector $$\mathbf{\hat{n}}_z$$  points towards the "$$X$$" rod.  The angle between two rods is defined as
+
+$$
+\sin \theta = \left| \mathbf{\hat{n}}_x \times \mathbf{\hat{n}}_y \right|.
+$$
+
+
+
+
+
+
+
+
+
 
 
 ### **The Approach: Bridging the Gaps**  
-The key to the work was recognizing that there are a few limiting cases where the problem becomes much easier. 
+The key to the work is recognizing that there are a few limiting cases where the problem becomes much easier. 
 
 **Limiting Cases:**
 
+In broad strokes, the limiting csaes can be broken into a few parameters: 
 
-* *Infinitely long* rods with *infinitesimal thickness* and *non-parallel*
-* *Infinitely long* rods with *finite thickness* and *non-parallel*
+  1. Rod Thickness:
+    * infinitesemially thin rods (far-field regime)
+    * finite thickness rods (near-field regime)
 
-* *Infinitely long* rods with *infinitesimal thickness* and *parallel*
-* *Infinitely long* rods with *finite thickness* and *parallel*
+  2. Angle Between Rods:
+    * non-parallel rods
+    * parallel rods (surprisingly different from non-parallel)
 
-* *Finite length* in the far-field
+  3. Rod Length:
+    * infinitely long rods
+    * finite rods of length $$L$$ (requires care)
+
+
+The general method for finding solutions is as follows. For the simplest cases, we may integrate over the rods to get a closed-form solution, such as with infinitely long rods in the far-field. Given a solutions for, essentially, interacting lines of material, we may integrate this result to build up to a finite thickness, but infinitely long, rod (near-field). For instance, for infinitely long non-parallel rods, the potential in the two extreme limits is 
+
+$$
+U_{\mathrm{\times}} \approx \begin{cases}{} 
+\frac{-A \pi a^4}{32 \,  \,\left|\sin\theta\right| \, r^4} & \frac{r}{a} \gg 1 \\ \\ 
+\frac{-A a}{12\,  \,\left|\sin\theta\right| \, (r-a)} & \frac{r-a}{a} \ll 1
+\end{cases} 
+$$
+
+Given the results in the near- and far-fields, we may interpolate in between by choosing a rational function that equals these results in the correct limits. This is a common interpolation strategy known as a Pade approximant.
+
+We want something that decays like $$1/r^4$$ in the far-field and like $$1 / (r-a)$$ in the near-field. We choose a rational function such as 
+
+$$
+U = \frac{C}{(r-a)(r+B)^3}.
+$$
+
+
+<div class="aside-box">
+  <div class="aside-header">Aside: Taking the limits</div>
+  <div class="aside-content">
+    Let's take the limits of the function and compute the values of B and C.
+  </div>
+</div>
 
 
 
-We begin with the case of infinitely long, infinitesimally thin rods that are not parallel. 
 
 
-For example:  
-- When two rods are far apart, their interaction behaves like that of two point masses.  
-- When they're nearly touching, the force looks more like the interaction between two plates.  
-- If they are perfectly aligned, they behave like a set of stacked spheres.  
 
-In this work we interpolate between these known cases to create a general equation that works across a wide range of distances and orientations. 
+
+
+
 
 ---
 
