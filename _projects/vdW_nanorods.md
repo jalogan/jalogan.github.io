@@ -164,20 +164,26 @@ $$
   <div class="aside-header">Aside: Taking the limits</div>
   <div class="aside-content">
     Let's take the limits of the function and compute the values of B and C.
-
+  
+    <div class="math-box">
     $$\mathbf{r\to\infty}$$ \textbf{Limit:}
+    </div>
+
       This limit is not difficult to calculate and we find 
+      <div class="math-box">
       $$
       \lim_{r\to\infty} \frac{C}{(r-a)(r+B)^3} = \frac{C}{r^4}
       $$
-
+      </div>
       We know that in this limit $$U = \frac{-A \pi a^4}{32 \,  \,\left|\sin\theta\right| \, r^4}$$, so we set them equal and find
 
+      <div class="math-box">
       $$
       C = \frac{-A \pi a^4}{32 \,  \,\left|\sin\theta\right|}.
       $$
 
     $$\mathbf{r\to\a^+}$$ \textbf{Limit:}
+    </div>
       This limit requires a little more work.
 
       We can define $$h = r-a$$ and instead compute 
@@ -211,13 +217,17 @@ $$
       B &= \left( \frac{12 |sin\theta| C}{-Aa} \right)^{1/3} - a = \left[ \frac{(3\pi)^{1/3}}{2} - 1 \right]a \approx 0.06a
       \end{aligned}
       $$
-
   </div>
 </div>
 
 
+After using the asymptotes to find $$B$$ and $$C$$ we find 
 
+$$
+U = \frac{-V_0}{|\sin\theta| (r-a) (r + \epsilon a)^3},
+$$
 
+where $$\epsilon$$ has replaced the $$0.06$$  prefactor of $$a$$ and is instead used as a fine tuning parameter to achieve a near-perfect fit for the value $$\epsilon = 0.12$$. Finally we have a compact expression for non-parallel infinite rods
 
 
 

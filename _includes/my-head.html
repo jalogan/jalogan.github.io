@@ -87,3 +87,21 @@
     if (document.visibilityState === 'visible') startAutoplayVideos();
   });
 </script>
+
+
+
+
+<script defer>
+  document.addEventListener('DOMContentLoaded', () => {
+    // find every element you’ve marked for math
+    document.querySelectorAll('[data-katex]').forEach(el => {
+      renderMathInElement(el, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '\\(', right: '\\)', display: false }
+        ],
+        throwOnError: false
+      });
+    });
+  });
+</script>
