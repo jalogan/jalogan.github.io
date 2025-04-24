@@ -124,7 +124,7 @@ This formulation mirrors the **free energy decomposition** in traditional statis
 ### **Computing $$S_{\text{geo}}$$ Using Novel Isostaticity-Preserving Monte Carlo Methods**
 
 {%comment%}
-<figure id="MC_move">
+<figure id="vid_MC_move">
   <img src="/assets/img/entropy_of_sphere_packing/MC_move_cover.png" alt="2D_vp_and_rem" width="400" height="auto">
   <figcaption style="text-align: center; width: 100%;">
   Demonstration of one step in a Monte Carlo move from one isostic packing to another for a cluster of 50 particles in 2D. The bond between the green particles increases and all spheres move along the zero mode introduced until a previously unbound pair of spheres (purple) makes contact. At this point the green bond is broken and a new bond is formed between the purple spheres.
@@ -133,7 +133,7 @@ This formulation mirrors the **free energy decomposition** in traditional statis
 {%endcomment%}
 
 {%comment%}
-<figure>
+<figure id="vid_MC_move">
   <video width="650" height="auto" poster="{{ "/assets/img/entropy_of_sphere_packing/MC_move_cover.png" | relative_url }}" autoplay loop muted playsinline>
   <source src="{{ "/assets/videos/entropy_of_sphere_packing/MC_move.mp4" | relative_url }}?v={{ site.time | date: '%s' }}" type="video/mp4">
   Your browser does not support the video tag.
@@ -144,8 +144,9 @@ This formulation mirrors the **free energy decomposition** in traditional statis
 </figure>
 {%endcomment%}
 
-<figure>
-  <video width="650" height="auto" poster="{{ "/assets/img/entropy_of_sphere_packing/MC_move_cover.png" | relative_url }}" autoplay loop muted playsinline>
+{%comment%}
+<figure id="vid_MC_move">
+  <video width="650" poster="{{ "/assets/img/entropy_of_sphere_packing/MC_move_cover.png" | relative_url }}" autoplay loop muted playsinline>
     <source src="{{ "/assets/videos/entropy_of_sphere_packing/MC_move.mp4" | relative_url }}" type="video/mp4">
     Your browser does not support the video tag.
   </video>
@@ -153,7 +154,20 @@ This formulation mirrors the **free energy decomposition** in traditional statis
     Demonstration of Monte Carlo move from one isostatic packing to another for a cluster of 50 particles in 2D.
   </figcaption>
 </figure>
+{%endcomment%}
 
+<video
+  width="650"
+  muted autoplay loop playsinline
+  preload="auto"
+  poster="{{ '/assets/img/entropy_of_sphere_packing/MC_move_cover.png' | relative_url }}"
+  onloadedmetadata="this.play().catch(()=>{});"
+>
+  <source
+    src="{{ '/assets/videos/entropy_of_sphere_packing/MC_move.mp4' | relative_url }}"
+    type="video/mp4"
+  >
+</video>
 
 
 A key challenge in computing entropy in sphere packings is ensuring that the packing remains **mechanically stable**. Traditional Monte Carlo (MC) methods allow random displacements, but these can disrupt the isostatic nature of the packing. Instead, we introduce an **isostaticity-preserving Monte Carlo method**, where moves are constrained to preserve the number of bonds.
@@ -164,17 +178,18 @@ Each step modifies the configuration by randomly choosing a bond and increasing 
 This preserves the isostaticity of the packing and allows one to explore the space of isostatic packings for $$N$$ spheres and $$NZ/2$$ bonds. When the bond length is increased it introduces a single zero mode into the system which allows the spheres to rearrange until a new isostatic configuration is found.
 {%endcomment%}
 
-A packing evolves in a $Nd$-dimensional space that can be represented by the positions of the $$N$$ spheres or the $$Nd$$$ bond gaps. The constraints for them to be hard spheres in contact are given by <span>$$|\vec{r}_i - \vec{r}_j|^2 = \left(\frac{a_i + a_j}{2}\right)^2$$</span>. The Jacobian of this equation is the rigidity tensor, introduced above as a convenient method of calculating $$S_{\text{geo}}$$. At each step of our simulations a bond is broken and a zero mode enters into the packing. The packing then evolves in such a way that it moves orthogonal to the constraints imposed by the rigidity tensor until contact is made between two unbonded particles, and a new isostatic packing is realized. The rigidity tensor $$R(\vec{r})$$ relates the particle displacements $$\vec{u}_i$$ to the gaps between particles $$x_{ij}$$. If we consider that the bond $$\alpha$$ breaks and opens by an amount $$x_{\alpha}$$, the displacement of any particle $$i$$ can be calculated as $$\vec{u}_{i} = R^{-1}_{i,\alpha} x_{\alpha}$$. However, to avoid the computationally expensive inverse function, we instead use a QR decomposition with column pivoting from the linear algebra library *Eigen* to solve the equation for the displacements $$\vec{u}_i$$ of all particles caused by the opening of $$\alpha$$. By using the equation for $$S_{\text{geo}}$$ defined above, the distribution of $$S_{geo}$$ is computed directly.
+A packing evolves in a $$Nd$$-dimensional space that can be represented by the positions of the $$N$$ spheres or the $$Nd$$ bond gaps. The constraints for them to be hard spheres in contact are given by <span>$$|\vec{r}_i - \vec{r}_j|^2 = \left(\frac{a_i + a_j}{2}\right)^2$$</span>. The Jacobian of this equation is the rigidity tensor, introduced above as a convenient method of calculating $$S_{\text{geo}}$$. At each step of our simulations a bond is broken and a zero mode enters into the packing. The packing then evolves in such a way that it moves orthogonal to the constraints imposed by the rigidity tensor until contact is made between two unbonded particles, and a new isostatic packing is realized. The rigidity tensor $$R(\vec{r})$$ relates the particle displacements $$\vec{u}_i$$ to the gaps between particles $$x_{ij}$$. If we consider that the bond $$\alpha$$ breaks and opens by an amount $$x_{\alpha}$$, the displacement of any particle $$i$$ can be calculated as $$\vec{u}_{i} = R^{-1}_{i,\alpha} x_{\alpha}$$. However, to avoid the computationally expensive inverse function, we instead use a QR decomposition with column pivoting from the linear algebra library *Eigen* to solve the equation for the displacements $$\vec{u}_i$$ of all particles caused by the opening of $$\alpha$$. By using the equation for $$S_{\text{geo}}$$ defined above, the distribution of $$S_{geo}$$ is computed directly.
 
 
 
 ### **Computing $$S_{\text{pack}}$$ with Virtual Particle Exchange with a Reference Packing**
 
-<figure style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
+
+<figure id="fig_packing_and_ref_lattice" style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
   <img src="{{ "/assets/img/entropy_of_sphere_packing/vp_and_rem_2D_full.png" | relative_url }}" alt="Figure 1" style="width: 100%; max-width: 45%;">
   <img src="{{ "/assets/img/entropy_of_sphere_packing/vp_and_rem_3D_full.png" | relative_url }}" alt="Figure 2" style="width: 100%; max-width: 45%;">
   <figcaption style="text-align: center; width: 100%;">
-    Figure 2: Examples in 2D and 3D of a packing in equilibrium with a reference lattice (reservoir) with which it can exchange particles. 
+    Examples in 2D and 3D of a packing in equilibrium with a reference lattice (reservoir) with which it can exchange particles. 
   </figcaption>
 </figure>
 
@@ -191,7 +206,7 @@ $$
 $$
 where $$P(A)$$ is the probability of being in state $$A$$, and $$W(A\rightarrow B)$$ is the transition rate between the two states.
 
-In this case $$A$$ can be the state of the random packing have $$N$$ spheres and $$B$$ is the state of the packing having $$N-1$$ spheres after one sphere was moved to the reference lattice. If we look at Fig.3, we can count the number of positions where a particle can be removed and the number of positions where a particle can be added, such that it remains isostatic. Let the number of ways to add or remove a particle from a configuration be $$N_+$$ and $$N_-$$, respectively. Figure 3 shows the particles that may be removed in blue and the positions where a particle may be added as a dashed circle for one particular microstate. Averaging over many microstates, $$\langle N_+ \rangle$$ is proportional to the transition rate from a packing with $$N-1$$ particles to a packing with $$N$$ particles, and similarly for $$\langle N_- \rangle$$ for the reverse transition. From detailed balance this means that the ratio of probabilities is equal to the ratio $$\frac{N_-}{N_+}$$,
+In this case $$A$$ can be the state of the random packing have $$N$$ spheres and $$B$$ is the state of the packing having $$N-1$$ spheres after one sphere was moved to the reference lattice. If we look at <a href="#fig_packing_and_ref_lattice" data-fig-ref>??</a>, we can count the number of positions where a particle can be removed and the number of positions where a particle can be added, such that it remains isostatic. Let the number of ways to add or remove a particle from a configuration be $$N_+$$ and $$N_-$$, respectively. <a href="#fig_packing_and_ref_lattice" data-fig-ref>??</a> shows the particles that may be removed in blue and the positions where a particle may be added as a dashed circle for one particular microstate. Averaging over many microstates, $$\langle N_+ \rangle$$ is proportional to the transition rate from a packing with $$N-1$$ particles to a packing with $$N$$ particles, and similarly for $$\langle N_- \rangle$$ for the reverse transition. From detailed balance this means that the ratio of probabilities is equal to the ratio $$\frac{N_-}{N_+}$$,
 
 $$
 \frac{W_{\text{remove}}}{W_{\text{add}}} = \frac{P_{\text{pack}}(N-1)}{P_{\text{pack}}(N)} = \frac{N_-}{N_+} = \frac{\frac{e^{S_{\text{pack}}(N-1)}}{\mathcal{Z}_{pack}}}{\frac{e^{S_{\text{pack}}(N)}}{\mathcal{Z}_{pack}}} = e^{\left[S_{\text{pack}}(N-1) - S_{\text{pack}}(N)\right]} = e^{-\mu} = e^{S_{\text{pack}}}

@@ -49,7 +49,7 @@ redirect_from:
 ### **Rotational symmetry**
 
 
-<figure style="max-width: 100%; text-align: center; margin: auto;">
+<figure id="fig_rotational_symm_example" style="max-width: 100%; text-align: center; margin: auto;">
   <img src="{{ "/assets/img/SymBOPs_general/symmetry_of_circle_vs_rod.png" | relative_url }}" alt="Figure Description"
        style="width: 100%; height: auto; max-width: 600px;">
   <figcaption style="font-size: 0.9em; color: #666; margin-top: 5px;">
@@ -69,7 +69,7 @@ Rotational symmetry is used to describe an object or set of objects (or points, 
 ### **What is Traditionally Done**
 
 
-<figure style="max-width: 100%; text-align: center; margin: auto;">
+<figure id="fig_BOO_vs_nematic" style="max-width: 100%; text-align: center; margin: auto;">
   <img src="{{ "/assets/img/SymBOPs_general/BOP_and_nematic_rods_full.png" | relative_url }}" alt="Figure Description"
        style="width: 100%; height: auto; max-width: 800px;">
   <figcaption style="font-size: 0.9em; color: #666; margin-top: 5px;">

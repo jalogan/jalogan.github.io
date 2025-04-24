@@ -1,9 +1,9 @@
+/* Reset only the figure counter — video no longer needs a separate one */
 body {
   counter-reset: figure;
 }
 
-
-
+/* Math and aside styles (unchanged) */
 .math-box {
   background-color: #f0f0f0;
   padding: 1em;
@@ -34,9 +34,7 @@ body {
   line-height: 1.6;
 }
 
-
-
-
+/* All figures (images or videos) */
 figure {
   display: block;
   margin: 2em auto;
@@ -49,8 +47,15 @@ figcaption::before {
   font-weight: bold;
 }
 
+/* Shared figcaption styling */
 figcaption {
   margin-top: 0.5em;
   font-size: 0.95em;
   color: #444;
+}
+
+/* Responsive video styling */
+video {
+  max-width: 100%;
+  height: auto;
 }

@@ -126,16 +126,20 @@ The key to the work is recognizing that there are a few limiting cases where the
 In broad strokes, the limiting csaes can be broken into a few parameters: 
 
   1. Rod Thickness:
-    * infinitesemially thin rods (far-field regime)
-    * finite thickness rods (near-field regime)
+
+      - infinitesemially thin rods (far-field regime)
+      - finite thickness rods (near-field regime)
 
   2. Angle Between Rods:
-    * non-parallel rods
-    * parallel rods (surprisingly different from non-parallel)
+
+      - non-parallel rods
+      - parallel rods (surprisingly different from non-parallel)
 
   3. Rod Length:
-    * infinitely long rods
-    * finite rods of length $$L$$ (requires care)
+
+      - infinitely long rods
+      - finite rods of length $$L$$ (requires care)
+
 
 
 The general method for finding solutions is as follows. For the simplest cases, we may integrate over the rods to get a closed-form solution, such as with infinitely long rods in the far-field. Given a solutions for, essentially, interacting lines of material, we may integrate this result to build up to a finite thickness, but infinitely long, rod (near-field). For instance, for infinitely long non-parallel rods, the potential in the two extreme limits is 
@@ -147,7 +151,7 @@ U_{\mathrm{\times}} \approx \begin{cases}{}
 \end{cases} 
 $$
 
-Given the results in the near- and far-fields, we may interpolate in between by choosing a rational function that equals these results in the correct limits. This is a common interpolation strategy known as a Pade approximant.
+Given the results in the near- and far-fields, we may interpolate in between by choosing a rational function that equals these results in the correct limits. This is a common interpolation strategy known as a Padé approximant.
 
 We want something that decays like $$1/r^4$$ in the far-field and like $$1 / (r-a)$$ in the near-field. We choose a rational function such as 
 
@@ -160,6 +164,54 @@ $$
   <div class="aside-header">Aside: Taking the limits</div>
   <div class="aside-content">
     Let's take the limits of the function and compute the values of B and C.
+
+    $$\mathbf{r\to\infty}$$ \textbf{Limit:}
+      This limit is not difficult to calculate and we find 
+      $$
+      \lim_{r\to\infty} \frac{C}{(r-a)(r+B)^3} = \frac{C}{r^4}
+      $$
+
+      We know that in this limit $$U = \frac{-A \pi a^4}{32 \,  \,\left|\sin\theta\right| \, r^4}$$, so we set them equal and find
+
+      $$
+      C = \frac{-A \pi a^4}{32 \,  \,\left|\sin\theta\right|}.
+      $$
+
+    $$\mathbf{r\to\a^+}$$ \textbf{Limit:}
+      This limit requires a little more work.
+
+      We can define $$h = r-a$$ and instead compute 
+      $$
+      \lim_{h\to\0} \frac{C}{h(h + a + B)^3}
+      $$
+
+      To do this we factor 
+
+      $$
+      \left(h + (a + B)\right)^3 = (a+B)^3 (1 + \frac{h}{a+B})^3
+      $$
+
+      and expand the second term $$(1 + \frac{h}{a+B})^3$$ to leading order around $$\frac{h}{(a+B)}=0$$ as
+
+      $$
+      (1 + \frac{h}{a+B})^3 \approx 1 + \frac{3h}{a+B} + \mathellipsis
+      $$
+
+      Plugging in $$(1 + \frac{h}{a+B})^3 \approx 1$$ we find
+
+      $$
+      \lim_{h\to\0} \frac{C}{h(h + a + B)^3} \approx \frac{C}{h(a + B)^3} = \frac{C}{(r-a)(a+B)^3}.
+      $$
+
+      Setting the limit equal to the expression in the near-field
+
+      $$
+      \begin{aligned}
+      \frac{C}{(r-a)(a+B)^3} &= \frac{-A a}{12\,  \,\left|\sin\theta\right| \, (r-a)} \\ 
+      B &= \left( \frac{12 |sin\theta| C}{-Aa} \right)^{1/3} - a = \left[ \frac{(3\pi)^{1/3}}{2} - 1 \right]a \approx 0.06a
+      \end{aligned}
+      $$
+
   </div>
 </div>
 
