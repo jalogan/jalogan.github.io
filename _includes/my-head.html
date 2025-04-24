@@ -1,107 +1,141 @@
-<link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
+<!-- ==== GUMROAD PREFETCH & EMBED LOADER ==== -->
+<link rel="dns-prefetch" href="https://assets.gumroad.com">
+<script type="module">
+  const loadJS = x => new Promise(r => window.loadJS(x).addEventListener('load', r));
+
+  let p1, p2, io1, io2, embedCreated, overlayCreated;
+  document.querySelector('hy-push-state').addEventListener('load', () => {
+    io1 ||= new IntersectionObserver(async (entries) => {
+      if (entries.some(x => x.isIntersecting)) {
+        p1 = p1 || loadJS('https://gumroad.com/js/gumroad-embed.js');
+        await p1;
+        !embedCreated && await new Promise(function check1(res) {
+          if (typeof createGumroadEmbed !== 'undefined')  {
+            embedCreated = 1;
+            res(createGumroadEmbed());
+          } else setTimeout(() => check1(res), 200);
+        });
+        await new Promise(function check2(res) {
+          if (typeof GumroadEmbed !== 'undefined') res(GumroadEmbed.reload());
+          else setTimeout(() => check2(res), 200);
+        });
+      }
+    }, { rootMargin: '1440px' });
+
+    io2 ||= new IntersectionObserver(async (entries) => {
+      if (entries.some(x => x.isIntersecting)) {
+        p2 = p2 || loadJS('https://gumroad.com/js/gumroad.js');
+        await p2;
+        !overlayCreated && await new Promise(function check(res) {
+          if (typeof createGumroadOverlay !== 'undefined') {
+            overlayCreated = 1;
+            res(createGumroadOverlay());
+          } else setTimeout(() => check(res), 200);
+        });
+      }
+    }, { rootMargin: '300px' });
+
+    document.querySelectorAll('.gumroad-product-embed').forEach(el => io1.observe(el));
+    document.querySelectorAll('.gumroad-button').forEach(el => io2.observe(el));
+  });
+</script>
+
+<!-- ==== KaTeX STYLES & SCRIPTS ==== -->
+<!-- ==== KaTeX & Auto-Render ==== -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
+/>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+></script>
 
 <script defer>
-  // 1) your numbering routine
-  function updateFigureRefs() {
-    const figs = Array.from(document.querySelectorAll('figure[id]'));
-    const figMap = new Map(figs.map((f, i) => [f.id, i + 1]));
-    document.querySelectorAll('a[data-fig-ref]').forEach(link => {
-      const tgt = link.getAttribute('href').replace(/^#/, '');
-      const n   = figMap.get(tgt);
-      link.textContent = n ? `Figure ${n}` : '??';
+  // configure how we call auto-render
+  const mathOptions = {
+    delimiters: [
+      { left: "$$", right: "$$", display: true },
+      { left: "\\(", right: "\\)", display: false }
+    ],
+    throwOnError: false
+  };
+
+  // the actual render function
+  function renderAllMath() {
+    renderMathInElement(document.body, mathOptions);
+  }
+
+  // rerun on PJAX loads
+  function hookPjaxMath() {
+    document.querySelectorAll('hy-push-state').forEach(el => {
+      el.addEventListener('load', renderAllMath);
     });
   }
 
-  // 2) watch the page (or the PJAX container) and re-run whenever anything changes:
-  function watchForReplacements() {
-    // Hydejack wraps your page in <hy-push-state> … </hy-push-state>
+  // also watch for any DOM swap (just in case)
+  function watchForMathChanges() {
     const root = document.querySelector('hy-push-state') || document.body;
-    if (!root) return;
+    const mo = new MutationObserver(renderAllMath);
+    mo.observe(root, { childList: true, subtree: true });
+  }
 
-    const mo = new MutationObserver(() => updateFigureRefs());
-    mo.observe(root, {
-      childList: true,    // anything added/removed
-      subtree:   true,    // anywhere in the tree
-      characterData: true // or text changed
+  // initial + hooks
+  document.addEventListener('DOMContentLoaded', () => {
+    renderAllMath();
+    hookPjaxMath();
+    watchForMathChanges();
+  });
+</script>
+
+
+
+
+<!-- ==== YOUR CUSTOM CSS ==== -->
+<link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
+
+<!-- ==== FIGURE AUTO-NUMBERING & LIVE UPDATE ==== -->
+<script defer>
+  function updateFigureRefs() {
+    const figs   = Array.from(document.querySelectorAll("figure[id]"));
+    const figMap = new Map(figs.map((f, i) => [f.id, i + 1]));
+    document.querySelectorAll("a[data-fig-ref]").forEach(link => {
+      const tgt = link.getAttribute("href").replace(/^#/, "");
+      const n   = figMap.get(tgt);
+      link.textContent = n ? `Figure ${n}` : "??";
     });
   }
 
-  // 3) kick everything off once the DOM is loaded
-  document.addEventListener('DOMContentLoaded', () => {
+  function watchForReplacements() {
+    const root = document.querySelector("hy-push-state") || document.body;
+    if (!root) return;
+    const mo = new MutationObserver(updateFigureRefs);
+    mo.observe(root, {
+      childList: true,
+      subtree:   true,
+      characterData: true
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
     updateFigureRefs();
     watchForReplacements();
   });
 </script>
 
-
-<!--
+<!-- ==== VIDEO AUTOPLAY ON NAVIGATION ==== -->
 <script defer>
-  // Make sure videos always play!
-  // Find and (re)start every <video autoplay> whenever the page loads or PJAX swaps content.
   function startAutoplayVideos() {
-    document.querySelectorAll('video[autoplay]').forEach(video => {
-      // Muted autoplay is allowed; if the play() Promise rejects, we'll just ignore it.
-      video.play().catch(_ => {});
-    });
+    document.querySelectorAll("video[autoplay]").forEach(v => v.play().catch(()=>{}));
   }
 
-  // On the very first load:
-  document.addEventListener('DOMContentLoaded', startAutoplayVideos);
-
-  // On browser “Back”/“Forward” or tab-focus restores:
-  window.addEventListener('pageshow', startAutoplayVideos);
-
-  // On every PJAX/hy-push-state navigation:
-  document.querySelectorAll('hy-push-state').forEach(el =>
-    el.addEventListener('load', startAutoplayVideos)
+  document.addEventListener("DOMContentLoaded", startAutoplayVideos);
+  window.addEventListener("pageshow",          startAutoplayVideos);
+  document.querySelectorAll("hy-push-state").forEach(el =>
+    el.addEventListener("load", startAutoplayVideos)
   );
-
-  // (Optional) If you want to resume on tab-visibility changes too:
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') startAutoplayVideos();
-  });
-</script>
--->
-
-
-<script defer>
-  console.log('[video-js] script loaded');
-
-  function startAutoplayVideos() {
-    console.log('[video-js] startAutoplayVideos()');
-    const vids = Array.from(document.querySelectorAll('video[autoplay]'));
-    console.log('[video-js] found videos:', vids.length);
-    vids.forEach(video => {
-      video.play()
-        .then(() => console.log('[video-js] playing ▶️', video))
-        .catch(err => console.error('[video-js] play() failed:', err));
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', startAutoplayVideos);
-  window.addEventListener('pageshow', startAutoplayVideos);
-  document.querySelectorAll('hy-push-state').forEach(el =>
-    el.addEventListener('load', startAutoplayVideos)
-  );
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') startAutoplayVideos();
-  });
-</script>
-
-
-
-
-<script defer>
-  document.addEventListener('DOMContentLoaded', () => {
-    // find every element you’ve marked for math
-    document.querySelectorAll('[data-katex]').forEach(el => {
-      renderMathInElement(el, {
-        delimiters: [
-          { left: '$$', right: '$$', display: true },
-          { left: '\\(', right: '\\)', display: false }
-        ],
-        throwOnError: false
-      });
-    });
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") startAutoplayVideos();
   });
 </script>

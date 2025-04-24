@@ -10,6 +10,17 @@ body {
   border-radius: 5px;
   margin: 1em 0;
 }
+.math-box.wide-math {
+  max-width: 90% !important;
+  margin: 2em auto !important;  /* centers it */
+}
+
+
+.wide-math.katex-display {
+  max-width: 90%;      /* or 800px, or whatever you like */
+  margin: 1.5em auto;  /* center it with some vertical breathing room */
+}
+
 
 .aside-box {
   border-radius: 12px;

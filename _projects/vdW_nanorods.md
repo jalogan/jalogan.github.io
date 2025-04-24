@@ -160,93 +160,146 @@ U = \frac{C}{(r-a)(r+B)^3}.
 $$
 
 
+
 <div class="aside-box">
   <div class="aside-header">Aside: Taking the limits</div>
-  <div class="aside-content">
-    Let's take the limits of the function and compute the values of B and C.
+
+  <!-- only this inner div is in Markdown mode -->
+  <div class="aside-content" markdown="1">
+
+Let's take the limits of the function and compute the values of B and C.
   
-    <div class="math-box">
-    $$\mathbf{r\to\infty}$$ \textbf{Limit:}
-    </div>
+#### **The Far-Field Limit:**
 
-      This limit is not difficult to calculate and we find 
-      <div class="math-box">
-      $$
-      \lim_{r\to\infty} \frac{C}{(r-a)(r+B)^3} = \frac{C}{r^4}
-      $$
-      </div>
-      We know that in this limit $$U = \frac{-A \pi a^4}{32 \,  \,\left|\sin\theta\right| \, r^4}$$, so we set them equal and find
+This limit is not difficult to calculate and we find 
 
-      <div class="math-box">
-      $$
-      C = \frac{-A \pi a^4}{32 \,  \,\left|\sin\theta\right|}.
-      $$
+$$
+\lim_{r\to\infty} \frac{C}{(r-a)(r+B)^3} = \frac{C}{r^4}
+$$
 
-    $$\mathbf{r\to\a^+}$$ \textbf{Limit:}
-    </div>
-      This limit requires a little more work.
+We know that in this limit $$U = \frac{-A \pi a^4}{32 \,  \,\lvert\sin\theta\rvert \, r^4}$$, so we set them equal and find
 
-      We can define $$h = r-a$$ and instead compute 
-      $$
-      \lim_{h\to\0} \frac{C}{h(h + a + B)^3}
-      $$
+$$
+C = \frac{-A \pi a^4}{32 \,  \,\lvert\sin\theta\rvert}.
+$$
 
-      To do this we factor 
 
-      $$
-      \left(h + (a + B)\right)^3 = (a+B)^3 (1 + \frac{h}{a+B})^3
-      $$
+#### **The Near-Field Limit:**
 
-      and expand the second term $$(1 + \frac{h}{a+B})^3$$ to leading order around $$\frac{h}{(a+B)}=0$$ as
+This limit requires a little more work.
 
-      $$
-      (1 + \frac{h}{a+B})^3 \approx 1 + \frac{3h}{a+B} + \mathellipsis
-      $$
+We can define $$h = r-a$$ and instead compute 
+$$
+\lim_{h\to 0} \frac{C}{h(h + a + B)^3}
+$$
 
-      Plugging in $$(1 + \frac{h}{a+B})^3 \approx 1$$ we find
+To do this we factor 
 
-      $$
-      \lim_{h\to\0} \frac{C}{h(h + a + B)^3} \approx \frac{C}{h(a + B)^3} = \frac{C}{(r-a)(a+B)^3}.
-      $$
+$$
+\left(h + (a + B)\right)^3 = (a+B)^3 (1 + \frac{h}{a+B})^3
+$$
 
-      Setting the limit equal to the expression in the near-field
+and expand the second term $$(1 + \frac{h}{a+B})^3$$ to leading order around $$\frac{h}{(a+B)}=0$$ to find
 
-      $$
-      \begin{aligned}
-      \frac{C}{(r-a)(a+B)^3} &= \frac{-A a}{12\,  \,\left|\sin\theta\right| \, (r-a)} \\ 
-      B &= \left( \frac{12 |sin\theta| C}{-Aa} \right)^{1/3} - a = \left[ \frac{(3\pi)^{1/3}}{2} - 1 \right]a \approx 0.06a
-      \end{aligned}
-      $$
+$$
+\lim_{h\to 0} \frac{C}{h(h + a + B)^3} \approx \frac{C}{h(a + B)^3} = \frac{C}{(r-a)(a+B)^3}.
+$$
+
+Setting the limit equal to the expression in the near-field
+
+$$
+\frac{C}{(r-a)(a+B)^3} = \frac{-A a}{12\,  \,\lvert\sin\theta\rvert \, (r-a)}
+$$
+
+$$
+B = \left( \frac{12 \lvert\sin\theta\rvert C}{-Aa} \right)^{1/3} - a = \left[ \frac{(3\pi)^{1/3}}{2} - 1 \right]a \approx 0.06a
+$$
+
   </div>
 </div>
+
+
+
+
 
 
 After using the asymptotes to find $$B$$ and $$C$$ we find 
 
 $$
-U = \frac{-V_0}{|\sin\theta| (r-a) (r + \epsilon a)^3},
+U = \frac{-V_0}{\lvert\sin\theta\rvert (r-a) (r + \epsilon a)^3},
 $$
 
-where $$\epsilon$$ has replaced the $$0.06$$  prefactor of $$a$$ and is instead used as a fine tuning parameter to achieve a near-perfect fit for the value $$\epsilon = 0.12$$. Finally we have a compact expression for non-parallel infinite rods
+where $$V_0 = A\pi a^4 / 32$$ and $$\epsilon$$ has replaced the $$0.06$$ prefactor of $$a$$ and is instead used as a fine tuning parameter to achieve a near-perfect fit for the value $$\epsilon = 0.12$$. 
+
+With this result we have a compact expression for *non-parallel infinite rods*. From Here we use the same logic for parallel rods in the near- and far-fields. We interpolate between these limits, in the same manner as above, starting with our previous expression, which we know works well for non-parallel rods, but we replace the $$\lvert \sin\theta \rvert$$ with a correction term to match the parallel results in the extreme limits. After repeating the steps above for parallel rods, we arrive at an equation for the vdW potential of interacting infinite rods at arbitrary angle and diameter
+
+$$
+U_{\mathrm{rods}} \approx \frac{-V_0}{(\lvert\sin\theta\rvert + 2.35\frac{\sqrt{r(r-a)}}{L}) (r-a) (r + \epsilon a)^3}.
+$$
+
+
+Moving to finite length rods is done using a finite-size correction term $$\gamma$$ which is modified to work for non-parallel and parallel configurations, and, in fact, $$U_{\mathrm{rods}} \gamma$$ works well in the far-field regime. The terminals of the rods are more complicated because they add a "shadow effect" that makes the rods appear longer than they are, which comes from the divergence of the $$1/(r-a)$$ term. To fix this shadow effect we include a term $$\gamma_a$$ in $$1 / (r - \gamma_a a)$$ that allows the user to define the shape of the rods (perhaps you'd like to simulate ellipsoidal rods) and how they shrink to zero at their ends. Alternatively, $$\gamma_a$$ can be set to unity and made to decay as $$\gamma$$ goes to zero to, ensuring that the rod diameter is uniform but will go to zero when they rods should not collide.
+
+The **final vdW interaction potential:** 
+
+<div class="math-box wide-math">
+{% raw %}
+$$
+\begin{gathered}
+\boxed{U_{\mathrm{vdW}}(X_0, Y_0, r, L,\theta) = \frac{-A \pi a^4 \, \gamma\left(X_\pm, Y_\pm \right)}{32 \, (\left| \sin \theta \right|+2.35 \frac{\sqrt{r(r-\gamma_a a)}}{L}) \, (r- \gamma_{a} a) \, (r+0.12 \, a)^3}}
+\\[7mm]
+\begin{aligned}
+\gamma(x\pm, y\pm)&=\mathrm{min}\left\{\left[g\left(x_+ \right)-g\left(x_-\right) \right], \left[g\left(y_+ \right)-g\left(y_-\right) \right]\right\}&g(x)&=\frac{1}{2} \, \mathrm{sgn}\left(x\right) \, \mathrm{min}\left\{ 1, \frac{3}{2}\left|x\right| \right\}&\gamma_a&=\gamma\left(X_\pm^a, Y_\pm^a \right)
+\end{aligned}
+\\[7mm]
+{\scriptstyle
+\begin{aligned}
+X_\pm&=\left(X_0 \pm \frac{L}{2}\right)\left(\frac{\left|\sin \theta \right|}{r+a}+\frac{4 \left| \cos \theta \right|}{3L}\right) - \frac{4Y_0 \cos \theta}{3L}&Y_\pm&=\left(Y_0 \pm \frac{L}{2}\right)\left(\frac{\left|\sin \theta \right|}{r+a}+\frac{4 \left| \cos \theta \right|}{3L}\right) - \frac{4X_0 \cos \theta}{3L}
+\end{aligned}
+}
+\\[7mm]
+\begin{aligned}
+X_\pm^a &= \frac{(X_0\pm \frac{L}{2})}{a} \pm \frac{2(r+a)(L\mp 2Y_0\cos \theta)}{4a(r+a) \left|\cos \theta\right| + 3La \left|\sin \theta\right|} \mp 1.4&Y_\pm^a &= \frac{(Y_0\pm \frac{L}{2})}{a} \pm \frac{2(r+a)(L\mp 2X_0\cos \theta)}{4a(r+a) \left|\cos \theta\right| + 3La \left|\sin \theta\right|} \mp 1.4
+\end{aligned}
+\end{gathered}
+$$
+{% endraw %}
+</div>
+
+<!--
+{: .math-box .wide-math}
+-->
+
+
+
+
+The paper includes derivations of force and torque, and even includes a version of the interaction potential to beused in 2D.
+
+
+
+<figure id="fig_results_heat_maps">
+  <img src="{{ '/assets/img/vdW_nanorods/Fig9a_gamma_0_and_90_deg_with_L50_a2_r2_2.png' | relative_url }}" alt="Figure a" style="width: 37.5%; max-width: 100%;">
+  <img src="{{ '/assets/img/vdW_nanorods/Fig9b_gamma_0_and_90_deg_with_L50_a2_r2_2.png' | relative_url }}" alt="Figure b" style="width: 37.5%; max-width: 100%;">
+  <img src="{{ '/assets/img/vdW_nanorods/Fig10_Uvdw_Xr_heatmap_L50_a2_m90_y0_rpos.png' | relative_url }}" alt="Figure c" style="width: 37.5%; max-width: 100%;">
+  <figcaption style="text-align: center; width: 100%;">
+    Heat map of $$\gamma(X_\pm, Y_\pm)$$ with $$\frac{L}{a}=25$$, for (a) $$\theta=\frac{\pi}{2}$$ and (b) $$\theta=0$$$. As the angle between the rods changes from perpendicular to parallel, the non-zero region in the 2D plot transforms from a closed square to an infinitely long linear region, illustrating that $\gamma(X_\pm, Y_\pm)$ becomes proportional to the overlap $\Delta$ as the angle goes to zero.
+    Two-dimensional plot of $$\frac{\left|U_{\mathrm{vdW}}\right|}{A}$$ with $$\frac{Y_0}{a}=0$$, $$\theta=\frac{\pi}{2}$$, and $$\frac{L}{a}=25$$. The red region diverges as the rods make contact and it essentially outlines the rod. The area inside of the rod, where the other rod cannot physically penetrate is colored in white.
+  </figcaption>
+</figure>
 
 
 
 
 
 
----
-
-### **What They Found**  
-The result? A **compact formula** that accurately describes van der Waals interactions between nanorods in various configurations. This formula provides a quick and efficient way to model these interactions, making it much easier to simulate systems of nanorods in fields like nanomaterials, soft matter physics, and colloidal science.  
+### **Why This Work Matters**  
+The result is a **compact formula** that accurately describes van der Waals interactions between nanorods in arbitrary configurations. This formula provides a quick and efficient way to model these interactions, making it much easier to simulate systems of nanorods in fields like nanomaterials, soft matter physics, and colloidal science.  
 
 The approach is not just theoretical—it’s practical. Instead of running costly simulations for every possible scenario, scientists can now plug values into this formula and get good approximations in a fraction of the time.  
 
----
-
-### **Why It Matters**  
 Understanding how nanorods stick together is critical for many cutting-edge technologies. Think of **nanotube-based electronics**, **self-assembling materials**, or even **biomedical applications** where rod-like particles are used for drug delivery. By providing a simple, computationally light method to calculate these interactions, we have made it easier for other researchers to explore and design new materials.  
 
----
+
 
 
 
