@@ -46,7 +46,7 @@ Despite the difficulty of working with vdW rods, they are incredibly useful and 
 
 We sought to simplify this mess with a compact formula that captures the essential physics without the need for heavy computation. This compact formula can help computational scientists to avoid time wasting numerical integrations when performing molecular dynamics or Monte Carlo simulations involving rod-like particles interacting through a vdW force.
 
-<p align="center"><strong>We consider two uniform rods of the same length $$L$$ and diameter $$a$$ and present a high-accuracy approximate formula for the vdW potential as a function of their relative positions and orientation.</strong></p>
+<p align="center"><strong>We consider two uniform rods of the same length \(L\) and diameter \(a\) and present a high-accuracy approximate formula for the vdW potential as a function of their relative positions and orientation.</strong></p>
 
 ---
 
@@ -242,12 +242,16 @@ Moving to finite length rods is done using a finite-size correction term $$\gamm
 
 The **final vdW interaction potential:** 
 
+
 <div class="math-box wide-math">
 {% raw %}
 $$
 \begin{gathered}
 \boxed{U_{\mathrm{vdW}}(X_0, Y_0, r, L,\theta) = \frac{-A \pi a^4 \, \gamma\left(X_\pm, Y_\pm \right)}{32 \, (\left| \sin \theta \right|+2.35 \frac{\sqrt{r(r-\gamma_a a)}}{L}) \, (r- \gamma_{a} a) \, (r+0.12 \, a)^3}}
-\\[7mm]
+\\[5mm]
+\hline
+\hline
+\\[5mm]
 \begin{aligned}
 \gamma(x\pm, y\pm)&=\mathrm{min}\left\{\left[g\left(x_+ \right)-g\left(x_-\right) \right], \left[g\left(y_+ \right)-g\left(y_-\right) \right]\right\}&g(x)&=\frac{1}{2} \, \mathrm{sgn}\left(x\right) \, \mathrm{min}\left\{ 1, \frac{3}{2}\left|x\right| \right\}&\gamma_a&=\gamma\left(X_\pm^a, Y_\pm^a \right)
 \end{aligned}
@@ -266,28 +270,26 @@ $$
 {% endraw %}
 </div>
 
-<!--
-{: .math-box .wide-math}
--->
+
+
+
+<p align="center"><strong>The paper includes derivations of force and torque, and even includes a version of the interaction potential to be used in 2D.</strong></p>
 
 
 
 
-The paper includes derivations of force and torque, and even includes a version of the interaction potential to beused in 2D.
-
-
-
-<figure id="fig_results_heat_maps">
-  <img src="{{ '/assets/img/vdW_nanorods/Fig9a_gamma_0_and_90_deg_with_L50_a2_r2_2.png' | relative_url }}" alt="Figure a" style="width: 37.5%; max-width: 100%;">
-  <img src="{{ '/assets/img/vdW_nanorods/Fig9b_gamma_0_and_90_deg_with_L50_a2_r2_2.png' | relative_url }}" alt="Figure b" style="width: 37.5%; max-width: 100%;">
-  <img src="{{ '/assets/img/vdW_nanorods/Fig10_Uvdw_Xr_heatmap_L50_a2_m90_y0_rpos.png' | relative_url }}" alt="Figure c" style="width: 37.5%; max-width: 100%;">
+<figure id="fig_results_heat_maps" class="stack-vertical">
+  <img src="{{ '/assets/img/vdW_nanorods/Fig9a_gamma_0_and_90_deg_with_L50_a2_r2_2.png' | relative_url }}" alt="Figure a" style="width: 75%;">
+  <img src="{{ '/assets/img/vdW_nanorods/Fig9b_gamma_0_and_90_deg_with_L50_a2_r2_2.png' | relative_url }}" alt="Figure b" style="width: 75%;">
+  <img src="{{ '/assets/img/vdW_nanorods/Fig10_Uvdw_Xr_heatmap_L50_a2_m90_y0_rpos.png' | relative_url }}" alt="Figure c" style="width: 75%;">
   <figcaption style="text-align: center; width: 100%;">
-    Heat map of $$\gamma(X_\pm, Y_\pm)$$ with $$\frac{L}{a}=25$$, for (a) $$\theta=\frac{\pi}{2}$$ and (b) $$\theta=0$$$. As the angle between the rods changes from perpendicular to parallel, the non-zero region in the 2D plot transforms from a closed square to an infinitely long linear region, illustrating that $\gamma(X_\pm, Y_\pm)$ becomes proportional to the overlap $\Delta$ as the angle goes to zero.
-    Two-dimensional plot of $$\frac{\left|U_{\mathrm{vdW}}\right|}{A}$$ with $$\frac{Y_0}{a}=0$$, $$\theta=\frac{\pi}{2}$$, and $$\frac{L}{a}=25$$. The red region diverges as the rods make contact and it essentially outlines the rod. The area inside of the rod, where the other rod cannot physically penetrate is colored in white.
+    Heat map of \(\gamma(X_\pm, Y_\pm)\) with \(\frac{L}{a}=25\), for (top) \(\theta=\frac{\pi}{2}\) and (middle) \(\theta=0\). As the angle between the rods changes from perpendicular to parallel, the non-zero region in the 2D plot transforms from a closed square to an infinitely long linear region, illustrating that \(\gamma(X_\pm, Y_\pm)\) becomes proportional to the overlap \(\Delta\) as the angle goes to zero.
+    (bottom) Two-dimensional plot of \(\frac{\left|U_{\mathrm{vdW}}\right|}{A}\) with \(\frac{Y_0}{a}=0\), \(\theta=\frac{\pi}{2}\), and \(\frac{L}{a}=25\). The red region diverges as the rods make contact and it essentially outlines the rod. The area inside of the rod, where the other rod cannot physically penetrate is colored in white.
   </figcaption>
 </figure>
 
 
+In <a href="#fig_results_heat_maps" data-fig-ref>Figure ??</a> we see 2D heat maps of $$\gamma$$ for different displacements from the centers of each rod $$X_0$$ and $$Y_0$$ for orthogonal (top) and parallel (middle) rods of uniform radius $$a$$ and idential lengths $$L$$. At $$X_0 = Y_0 = 0$$ The closest points between the two rods are their centers, and the heat maps show that the interaction is strongest. As We increase $$X_0$$, for instance, the "$$X$$" rod moves along the its longitudinal axis without chanign the angle between the rods and the interaction strength begins to decay. When the rods are orthgonal, the decay begins once the end of the $$X$$ rod nears the center of the $$Y$$ rod. When the rods are parallel, the interaction begins to decay almost immediately and reaches zero once the ends have passed each other. We can interpolate between orthogonal and parallel rods by looking at the top and middle plots. For orthogonal rods the non-zero interaction region is square for equal length rods, and for parallel rods it is an infinitely long linear region as the rods move together parallel to each other. For intermediate angles, the square distorts and transforms slowly as the angle decreases to zero, moving toward the infinite lienar region seen in the middle plot. The bottom plot shows how the interactions decays as orthogonal rods keep the same angle but move away from each other in the Z-direction. 
 
 
 

@@ -8,18 +8,23 @@ body {
   background-color: #f0f0f0;
   padding: 1em;
   border-radius: 5px;
-  margin: 1em 0;
-}
-.math-box.wide-math {
-  max-width: 90% !important;
-  margin: 2em auto !important;  /* centers it */
+  margin: 2em 0;
 }
 
+.math-box.wide-math {
+  max-width: 95%;      /* or a fixed px width */
+  margin: 2em auto;    /* centers it and adds vertical breathing room */
+}
 
 .wide-math.katex-display {
-  max-width: 90%;      /* or 800px, or whatever you like */
+  max-width: 95%;      /* or 800px, or whatever you like */
   margin: 1.5em auto;  /* center it with some vertical breathing room */
 }
+
+
+
+
+
 
 
 .aside-box {
@@ -69,4 +74,23 @@ figcaption {
 video {
   max-width: 100%;
   height: auto;
+}
+
+
+
+
+
+/* stack everything vertically, center it, and add gaps */
+.stack-vertical {
+  display: flex;
+  flex-direction: column;   /* one item per “row” */
+  align-items: center;      /* center each image */
+  gap: 1em;                 /* spacing between them */
+}
+
+/* control the size of images inside it */
+.stack-vertical img {
+  /*width: 37.5%;*/      /* your desired width */
+  max-width: 100%;   /* but never overflow the container */
+  height: auto;      /* keep aspect ratio */
 }

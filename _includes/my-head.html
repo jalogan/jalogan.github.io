@@ -40,54 +40,59 @@
   });
 </script>
 
+
+
 <!-- ==== KaTeX STYLES & SCRIPTS ==== -->
-<!-- ==== KaTeX & Auto-Render ==== -->
+<!-- ==== KaTeX CSS & JS ==== -->
 <link
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
 />
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
-<script
-  defer
-  src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
-></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"></script>
 
-<script defer>
-  // configure how we call auto-render
+<script>
+(function(){
   const mathOptions = {
     delimiters: [
-      { left: "$$", right: "$$", display: true },
+      { left: "$$",  right: "$$",  display: true  },
       { left: "\\(", right: "\\)", display: false }
     ],
     throwOnError: false
   };
 
-  // the actual render function
   function renderAllMath() {
-    renderMathInElement(document.body, mathOptions);
+    if (typeof renderMathInElement === "function") {
+      renderMathInElement(document.body, mathOptions);
+    }
   }
 
-  // rerun on PJAX loads
-  function hookPjaxMath() {
-    document.querySelectorAll('hy-push-state').forEach(el => {
-      el.addEventListener('load', renderAllMath);
-    });
-  }
+  // **IMMEDIATE**: typeset right now, so captions & inline math show on first paint
+  renderAllMath();
 
-  // also watch for any DOM swap (just in case)
-  function watchForMathChanges() {
-    const root = document.querySelector('hy-push-state') || document.body;
-    const mo = new MutationObserver(renderAllMath);
-    mo.observe(root, { childList: true, subtree: true });
-  }
+  // Also typeset on every page‐load, back/forward, PJAX, and DOM mutation:
+  document.addEventListener("DOMContentLoaded", renderAllMath);
+  window.addEventListener("load",     renderAllMath);
+  window.addEventListener("pageshow", renderAllMath);
+  window.addEventListener("popstate", renderAllMath);
 
-  // initial + hooks
-  document.addEventListener('DOMContentLoaded', () => {
-    renderAllMath();
-    hookPjaxMath();
-    watchForMathChanges();
+  document.querySelectorAll("hy-push-state").forEach(el =>
+    el.addEventListener("load", renderAllMath)
+  );
+
+  
+  new MutationObserver(renderAllMath).observe(document.body, {
+    childList: true,
+    subtree:   true
   });
+})();
 </script>
+
+
+
+
+
+
 
 
 

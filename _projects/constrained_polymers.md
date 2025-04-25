@@ -40,7 +40,7 @@ The structural properties of folded proteins are key to understanding their biol
 
 <figure id="fig_protein_schematic">
   <img src="/assets/img/constrained_polymers/protein_skeleton_cartoon.png" alt="schematic_of_protein" width="1000" height="auto">
-  <figcaption>Schematic of a chain of amino acids. Each subunit looks identical with an alpha-Carbon ($$C_{\alpha}$$) atom in the center. What gives each amino acid its flavor is the "R" group in yellow. These are called the side chain of the amino acid and they are different for each of the 20 naturally occurring amino acids. </figcaption>
+  <figcaption>Schematic of a chain of amino acids. Each subunit looks identical with an alpha-Carbon (\(C_{\alpha}\)) atom in the center. What gives each amino acid its flavor is the "R" group in yellow. These are called the side chain of the amino acid and they are different for each of the 20 naturally occurring amino acids. </figcaption>
 </figure>
 
 A polymer is a chain of monomer units that can be as simple (a single sphere) or as complex (complex molecule, e.g., amino acid) as necessary. Some of the most important and ubiquitous types of polymers are proteins, seen in <a href="#fig_protein_schematic" data-fig-ref>??</a>. In proteins the monomer units are amino acids and the interactions between the amino acids and their surroundings and other parts of the protein, along with the conditions in which they exist, e.g., in a cell, cause the polymer to collapse in a very specific way. This collapse is called protein folding and when a protein folds incorrectly, it can lead to disease and other problems for the organism that relies on it. X-ray Crystallography is often used to probe the folded structures of proteins, so the folded configuration is sometimes called the protein crystal structure.  
@@ -79,7 +79,7 @@ $$
   Your browser does not support the video tag.
   </video>
   <figcaption data-katex>
-    Demonstration of all of the \($$n=5$$\) subpolymers in this small polymer. To compute \(R_g(n=5)\), we first compute the \(R_g\) of each of these subpolymers with five monomers (highlighted in red) and then average over all of their values.
+    Demonstration of all of the \(n=5\) subpolymers in this small polymer. To compute \(R_g(n=5)\), we first compute the \(R_g\) of each of these subpolymers with five monomers (highlighted in red) and then average over all of their values.
   </figcaption>
 </figure>
 
@@ -89,7 +89,7 @@ This equation essentially treats the polymer in pieces and computes the $$R_g$$ 
 
 <figure id="fig_Rg_n_collapsed_polymers">
   <img src="/assets/img/constrained_polymers/Fig1b_Rg_vs_n_curves_with_insets.png" alt="Rg_for_collapse_polymers" width="450" height="auto">
-  <figcaption>Rg(n) for collapsed polymers  </figcaption>
+  <figcaption> \(R_g(n)\) for collapsed polymers  </figcaption>
 </figure>
 
 
@@ -100,7 +100,7 @@ When it comes to a highly constrained polymer, such as a protein, $$R_g(n)$$ can
 
 <figure id="fig_Rg_n_folded_proteins">
   <img src="/assets/img/constrained_polymers/Fig1a_Rg_vs_n_curves_with_insets.png" alt="Rg_for_folded_proteins" width="450" height="auto">
-  <figcaption>$$R_g(n)$$ for over 2500 folded single-chain proteins. </figcaption>
+  <figcaption>\(R_g(n)\) for over 2500 folded single-chain proteins. </figcaption>
 </figure>
 
 
