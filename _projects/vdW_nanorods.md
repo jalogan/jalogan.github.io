@@ -26,7 +26,8 @@ featured:    false
 ---
 
 
-
+* this unordered seed list will be replaced by the toc
+{:toc}
 
 
 Van der Waals forces are the molecular glue that holds together a surprising number of materials. From geckos sticking to walls to how soot clumps in the air, these weak but omnipresent forces shape the microscopic world. But what happens when the objects involved aren’t simple spheres, but long, thin nanorods? We set out to answer a deceptively simple question: how do these tiny rods attract each other, and can we describe their interactions with a simple formula?  
@@ -35,11 +36,19 @@ Van der Waals forces are the molecular glue that holds together a surprising num
 
 ---
 
-* this unordered seed list will be replaced by the toc
-{:toc}
 
 
-### **The Challenge: Beyond Spheres**  
+## **Why This Work Matters**
+Our result is a **compact formula** that accurately describes van der Waals interactions between nanorods in arbitrary configurations. This formula provides a quick and efficient way to model these interactions, making it much easier to simulate systems of nanorods in fields like nanomaterials, soft matter physics, and colloidal science.  
+
+The approach is not just theoretical—it’s practical. Instead of running costly simulations for every possible scenario, scientists can now plug values into this formula and get good approximations in a fraction of the time.  
+
+Understanding how nanorods stick together is critical for many cutting-edge technologies. Think of **nanotube-based electronics**, **self-assembling materials**, or even **biomedical applications** where rod-like particles are used for drug delivery. By providing a simple, computationally light method to calculate these interactions, we have made it easier for other researchers to explore and design new materials.  
+
+
+
+
+## **The Challenge: Beyond Spheres**
 For decades, van der Waals (vdW) interactions have been well understood for spherical particles. If you want to model how tiny spheres attract or repel each other, there's a well-established set of equations for that. But nanorods (think tiny, elongated cylinders) have added complications. Their interactions depend not just on distance but also on *orientation*—-two rods can sit parallel, cross at an angle, or barely touch end-to-end. Traditional calculations for these scenarios are complex, computationally expensive, and have no simple closed-form expression.
 
 Despite the difficulty of working with vdW rods, they are incredibly useful and necessary with applications to simulations of self-assembly, carbon nanotubes, liquid crystals, microtubules, and DNA. Their use spans fields such as soft-condensed matter physics, biology, materials science, among others. 
@@ -49,6 +58,8 @@ We sought to simplify this mess with a compact formula that captures the essenti
 <p align="center"><strong>We consider two uniform rods of the same length \(L\) and diameter \(a\) and present a high-accuracy approximate formula for the vdW potential as a function of their relative positions and orientation.</strong></p>
 
 ---
+
+
 
 ## **vdW Potential Energy**
 
@@ -238,6 +249,11 @@ U_{\mathrm{rods}} \approx \frac{-V_0}{(\lvert\sin\theta\rvert + 2.35\frac{\sqrt{
 $$
 
 
+
+
+
+### **Finite Length Rods**
+
 Moving to finite length rods is done using a finite-size correction term $$\gamma$$ which is modified to work for non-parallel and parallel configurations, and, in fact, $$U_{\mathrm{rods}} \gamma$$ works well in the far-field regime. The terminals of the rods are more complicated because they add a "shadow effect" that makes the rods appear longer than they are, which comes from the divergence of the $$1/(r-a)$$ term. To fix this shadow effect we include a term $$\gamma_a$$ in $$1 / (r - \gamma_a a)$$ that allows the user to define the shape of the rods (perhaps you'd like to simulate ellipsoidal rods) and how they shrink to zero at their ends. Alternatively, $$\gamma_a$$ can be set to unity and made to decay as $$\gamma$$ goes to zero to, ensuring that the rod diameter is uniform but will go to zero when they rods should not collide.
 
 The **final vdW interaction potential:** 
@@ -293,13 +309,6 @@ In <a href="#fig_results_heat_maps" data-fig-ref>Figure ??</a> we see 2D heat ma
 
 
 
-
-### **Why This Work Matters**  
-The result is a **compact formula** that accurately describes van der Waals interactions between nanorods in arbitrary configurations. This formula provides a quick and efficient way to model these interactions, making it much easier to simulate systems of nanorods in fields like nanomaterials, soft matter physics, and colloidal science.  
-
-The approach is not just theoretical—it’s practical. Instead of running costly simulations for every possible scenario, scientists can now plug values into this formula and get good approximations in a fraction of the time.  
-
-Understanding how nanorods stick together is critical for many cutting-edge technologies. Think of **nanotube-based electronics**, **self-assembling materials**, or even **biomedical applications** where rod-like particles are used for drug delivery. By providing a simple, computationally light method to calculate these interactions, we have made it easier for other researchers to explore and design new materials.  
 
 
 

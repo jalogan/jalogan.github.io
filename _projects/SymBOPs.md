@@ -43,10 +43,20 @@ redirect_from:
 
 
 
+* this unordered seed list will be replaced by the toc
+{:toc}
 
 
 
-### **Rotational symmetry**
+## **Why This Work Matters**
+
+This work is a significant advancement in the characterization of complex self-assembled structures. By introducing symmetry-specific bond orientational order parameters (SymBOPs), we extend the classical framework of bond orientational order to explicitly account for the symmetry of particles and structures, overcoming key limitations of traditional, rotationally invariant bond order parameters (BOPs). This innovation allows researchers to detect both crystalline and amorphous coherent domains with much greater sensitivity, even at the level of individual bonds. The methodology enables the identification of complex forms of order-—such as compact amorphous clusters that lack long-range periodicity, which were previously inaccessible using conventional tools. As a result, this work has the potential to profoundly impact future studies of self-assembly, nanomaterials design, and condensed matter physics by offering more precise tools for analyzing symmetry, order, and defect structures in emerging complex materials.
+
+
+
+
+
+## **Rotational symmetry**
 
 
 <figure id="fig_rotational_symm_example" style="max-width: 100%; text-align: center; margin: auto;">
@@ -66,7 +76,7 @@ Rotational symmetry is used to describe an object or set of objects (or points, 
 
 
 
-### **What is Traditionally Done**
+## **What is Traditionally Done**
 
 
 <figure id="fig_BOO_vs_nematic" style="max-width: 100%; text-align: center; margin: auto;">
@@ -86,7 +96,7 @@ $$
 \psi_{\ell} = \frac{1}{N_b}\sum\limits_{i=1}^{N_{b}} e^{i\ell \theta_i},
 $$
 
-where $$\ell$$ is chosen to look at $$\ell$$-fold orientational order. In the figure I have drawn concentric hexagons to aid the eye in looking for $$\ell=6$$-fold order, called hexatic order. We can easily see that each neighbor lies almost exactly on a vertex of the hexagons, showing that these neighbors have near perfect hexatic order. Notice that translationally, they're a mess; together the points do no form a regular hexagon. Our concern is strictly the orientational order about the central point, and not the translational order. Another thing to note is that this show that we can have orientational order while maintaining translational symmetry. Translational symmetry implies that there is no preferred distance between points, such as in a crystal--which breaks translational and orientational order. At this point we have a 2D vector $$\psi_\ell$$ which is a property of the neighborhood of the green point. This vector holds information about how the neighboring points are distributed orientationally around the green point--how well they approximate $$\ell$$-fold symmetry and also the orientation of this polygon in the chosen coordinate system. If we were to look at the neighborhood of a different point that differs from the previous neighborhood only be a rotation, the $$\psi_\ell$$ vectors will be different.
+where $$\ell$$ is chosen to look at $$\ell$$-fold orientational order. In the figure I have drawn concentric hexagons to aid the eye in looking for $$\ell=6$$-fold order, called hexatic order. We can easily see that each neighbor lies almost exactly on a vertex of the hexagons, showing that these neighbors have near perfect hexatic order. Notice that translationally, they're a mess; together the points do no form a regular hexagon. Our concern is strictly the orientational order about the central point, and not the translational order. Another thing to note is that this show that we can have orientational order while maintaining translational symmetry. Translational symmetry implies that there is no preferred distance between points, such as in a crystal-which breaks translational and orientational order. At this point we have a 2D vector $$\psi_\ell$$ which is a property of the neighborhood of the green point. This vector holds information about how the neighboring points are distributed orientationally around the green point-how well they approximate $$\ell$$-fold symmetry and also the orientation of this polygon in the chosen coordinate system. If we were to look at the neighborhood of a different point that differs from the previous neighborhood only be a rotation, the $$\psi_\ell$$ vectors will be different.
 
 The seminal paper by Steinhardt et al. in 1983 defined a way to quantify bond-orientational order in three-dimensions and proposed the use of rotational invariants to describe local structure of a set of particles in liquids and glasses. In 3D you may use spherical harmonics in place of a complex field. For each bond vector $$b_{ij}$$ from central particle $$i$$ to neighboring particle $$j$$ we may identify a point on the unit sphere with polar and azimuthal angles $$\left( \theta(\vec{r}_{ij}), \phi(\vec{r}_{ij}) \right)$$. From here traditionally one averages over the spherical harmonics for all neighbors and computes the second-order scalar (rotational invariant)
 
@@ -104,7 +114,7 @@ These parameters have been used very successfully over decades as structure desc
 
 
 
-### **How SymBOPs improves this**
+## **How SymBOPs improves this**
 
 
 

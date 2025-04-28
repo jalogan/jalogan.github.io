@@ -20,6 +20,25 @@ featured: false
 
 This page explores **SymBOPs Anisotropic Particles** in detail.
 
+* this unordered seed list will be replaced by the toc
+{:toc}
+
+
+
+Introduction about the topic
+{:.lead}
+
+
+
+## **Why This Work Matters**  
+
+This work acts as a demonstration of SymBOPs when working with anisotropic particles. By combining isotropic particles with anisotropic, patchy designer particles, and carefully controlling their size ratio and annealing protocols, we uncover a sharp morphological transition between amorphous and highly ordered structures, such as NaCl lattices and square lattices. This work not only demonstrates the remarkable tunability achievable through hybrid assemblies but also highlights the power of SymBOPs for identifying and analyzing local and global order within complex structures. The insights and methods developed here can profoundly impact future experimental and computational efforts in designing programmable materials made with complex particles that enable precise control over the formation of intricate nanoscale architectures.
+
+
+
+
+
+
 
 ### Links
 

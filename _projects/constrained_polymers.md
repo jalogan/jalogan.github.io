@@ -23,20 +23,28 @@ featured:    false
 #related_posts: 
 ---
 
-# Polymers and Coarse-Grained Proteins
-
 
 * this unordered seed list will be replaced by the toc
 {:toc}
+
+
+<!--
+# Polymers and Coarse-Grained Proteins
+-->
+
 
 The structural properties of folded proteins are key to understanding their biological function and evolutionary constraints. One of the fundamental descriptors of protein structure is the radius of gyration ($$R_g$$), which quantifies the spatial distribution of atomic mass around the protein’s center of mass. The $$R_g$$ of a protein is influenced by its sequence, secondary structure content, and global packing constraints. A long-standing question in protein physics is how various factors, such as stereochemical constraints and sequence properties, shape the $$R_g$$ of folded proteins.
 {:.lead}
 
 
+## **Why This Work Matters**  
+There now exist modern methods using machine learning and AI to obtain the best prediction for the structure of a folded protein. These methods are incredible feats, but they only provide a final folded structure and do not fill in the whole picture of protein folding. Simulations of all-atom models are computationally expensive and require cutting-edge technology to accurately simulate the length of time required for an average sized protein to fold. In addition, proteins typically exist in crowded enviroments inside of cells. To further our understanding of the pathways of protein folding we need to shrink the space of configurations and focus on the most important features. This work focuses on coarse-grained models and searches for the simplest possible model that can recapitulate the average behavior of real folded proteins. In addition to common metrics, such as packing fraction, the fraction of the protein in the core, the end-to-end radius of gyration scaling, and the structure factor, we are the first to study the internal (subpolymer) scaling of the radius of gyration and compare simulated models with real protein X-ray crystal structures. 
+
+This work advances our understanding of what physical ingredients are essential for protein folding, helps distinguish realistic protein structures from computational decoys, and provides a foundation for improving coarse-grained models used in protein design and folding studies​. This will enable future studies to build more efficient, physically realistic coarse-grained models that can simulate folding pathways, misfolding, design, and structural transitions at large scales that are inaccessible to atomistic simulations. It also opens the door to better distinguishing physical principles underlying folding from purely data-driven or machine learning-based structure predictions, helping to unify physics-based modeling with modern predictive tools.
 
 
 
-### What is a protein
+## **What is a protein**
 
 <figure id="fig_protein_schematic">
   <img src="/assets/img/constrained_polymers/protein_skeleton_cartoon.png" alt="schematic_of_protein" width="1000" height="auto">
@@ -107,22 +115,22 @@ When it comes to a highly constrained polymer, such as a protein, $$R_g(n)$$ can
 
 
 
-## How complex must a polymer model be to begin to capture critical features of folded proteins 
+## **How complex must a polymer model be to begin to capture critical features of folded proteins**
 This is the big question that we aim to answer in this work. We design and employ a C++ molecular dynamics code that will build a polymer model with constraints and collapse it under a central force.
 
-### What are the critical features of folded proteins?
+### **What are the critical features of folded proteins?**
 We begin with the simplest physical polymer, a freely-jointed chain whose only constraint is for the atoms not to overlap. But where do we go from there? The space of polymer models is vast and if we think of approaching the point in this space that represents a real protein (assuming we even know where that is), there are innumerable directions of approach. To begin to clarify a possible path, we enumerate the key features of proteins. For example, the average distance from residue-to-residue is approximately 3.8$$\r{A}$$, which suggests the possibility to simplify all of the backbone atoms into a single spherical bead of diameter $$\sigma_{\mathrm{bb}} = 3.8\r{A}$$. Proteins have constrained bond angles and dihedral angles along the backbone, but if the backbone of each residue is a single sphere, we can instead define coarse-grained bond and dihedral angles that are defined from $$C_{\alpha}$$-to-$$C_{\alpha}$$ atom in a protein. Another key feature of proteins in the variable side chain that defines the amino acid type. The simplest way to include this is with another single sphere bonded to the backbone sphere. As we add more detail to the models, we can include more atoms in the backbone or side chains. A final key ingredient, which is what defines one protein compared to another, is the amino acid sequence. Somehow the sequence of the protein should be taken into account.
 
-### Models
+### **Models**
 Given some of the key features that define the structure of folded proteins, we can begin with a simple polymer model and add constraints until we find a model that captures that qualitative scaling observed in Fig. 4.
 
 <figure id="fig_CG_models">
   <img src="/assets/img/constrained_polymers/Fig2_models.png" alt="Rg_for_folded_proteins" width="550" height="auto">
-  <figcaption>The coarse-grained models used in this work. For each over 2500 simulations will be done--one for each single-chain protein in the dataset.  </figcaption>
+  <figcaption>The coarse-grained models used in this work. For each over 2500 simulations will be done-one for each single-chain protein in the dataset.  </figcaption>
 </figure>
 
 
-<a href="#fig_CG_models" data-fig-ref>??</a> introduces the six polymer models that are studied in this work. We begin with a freely-jointed chain in <a href="#fig_CG_models" data-fig-ref>??</a> (a), where the only constraint is non-overlapping atoms---this is essentially a self-avoiding random walk. As the starting point in model space, we don't expect this model to recapitulate the properties of a folded protein. Next, <a href="#fig_CG_models" data-fig-ref>??</a> (b) introduces bond angle and dihedral angle constraints between three and four consecutive residues, respectively. We find that including these constraints is an enormous step, and we even begin to see a kink in the scaling for this model. The next natural step is to include a simplified side chain as a single atom. Each amino acid type will have a full distriution of side chain size because of the different conformations possible for each amino acid. We account for this by creating distributions of the approximate sizes of the side chains for each amino acid over the whole protein dataset. We also make a single global distribution which accounts for all sizes of every amino acid type. The model seen in <a href="#fig_CG_models" data-fig-ref>??</a> (c) uses this global distribution to randomly select a side chain diameter for each monodisperse backbone atom. The effect of this is to create a protein with a random sequence. The model seen in <a href="#fig_CG_models" data-fig-ref>??</a> (d), on the other hand, makes a random selection from the individual distribution of the amino acid, allowing us to essentially create a model that has the correct sequence. By creating both of these models we are able to compare random sequences to known protein sequences. The final two models are represented by <a href="#fig_CG_models" data-fig-ref>??</a> (e)-(f) are are multi-particle side chain models. <a href="#fig_CG_models" data-fig-ref>??</a> (e) has all the constraints of the previous models, including the correct protein sequence, but includes more geometric detail in the side chains of selected amino acids. The geometry of the side chains is taken from the well-known Martini model. Intra-side chain constraints are included to maintain the correct geometry throughout the simulations, but no additional force fields are included. <a href="#fig_CG_models" data-fig-ref>??</a> (f) shows that the final model is very similar to the previous. It is a modified version of the multi-particle side chain model just described, but with the side chains of amino acids Leucine and Valine updated.
+<a href="#fig_CG_models" data-fig-ref>??</a> introduces the six polymer models that are studied in this work. We begin with a freely-jointed chain in <a href="#fig_CG_models" data-fig-ref>??</a> (a), where the only constraint is non-overlapping atoms-this is essentially a self-avoiding random walk. As the starting point in model space, we don't expect this model to recapitulate the properties of a folded protein. Next, <a href="#fig_CG_models" data-fig-ref>??</a> (b) introduces bond angle and dihedral angle constraints between three and four consecutive residues, respectively. We find that including these constraints is an enormous step, and we even begin to see a kink in the scaling for this model. The next natural step is to include a simplified side chain as a single atom. Each amino acid type will have a full distriution of side chain size because of the different conformations possible for each amino acid. We account for this by creating distributions of the approximate sizes of the side chains for each amino acid over the whole protein dataset. We also make a single global distribution which accounts for all sizes of every amino acid type. The model seen in <a href="#fig_CG_models" data-fig-ref>??</a> (c) uses this global distribution to randomly select a side chain diameter for each monodisperse backbone atom. The effect of this is to create a protein with a random sequence. The model seen in <a href="#fig_CG_models" data-fig-ref>??</a> (d), on the other hand, makes a random selection from the individual distribution of the amino acid, allowing us to essentially create a model that has the correct sequence. By creating both of these models we are able to compare random sequences to known protein sequences. The final two models are represented by <a href="#fig_CG_models" data-fig-ref>??</a> (e)-(f) are are multi-particle side chain models. <a href="#fig_CG_models" data-fig-ref>??</a> (e) has all the constraints of the previous models, including the correct protein sequence, but includes more geometric detail in the side chains of selected amino acids. The geometry of the side chains is taken from the well-known Martini model. Intra-side chain constraints are included to maintain the correct geometry throughout the simulations, but no additional force fields are included. <a href="#fig_CG_models" data-fig-ref>??</a> (f) shows that the final model is very similar to the previous. It is a modified version of the multi-particle side chain model just described, but with the side chains of amino acids Leucine and Valine updated.
 
 One of our hypotheses is that When a polymer model begins to capture the correct $$R_g(n)$$ scaling of a protein, other structural properties begin to converge as well. To demonstrate this, in addition to $$R_g(n)$$, we also measure the fraction of the protein found in the core $$f_{core}$$, the average packing fraction of the protein cores $$\langle \phi \rangle$$, and the structure factor of the $$C_{\alpha}$$ atoms of the folded polymer $$S(q)$$.
 

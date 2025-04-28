@@ -21,6 +21,26 @@ featured: false
 This page covers **SymBOPs Isotropic Particles** and their behavior.
 
 
+* this unordered seed list will be replaced by the toc
+{:toc}
+
+
+
+
+Introduction about the topic
+{:.lead}
+
+
+
+## **Why This Work Matters**  
+
+In this work we extend the applicability of SymBOPs to systems where particle orientations are unknown-a common situation in experimental studies. By developing a self-consistent, bond-level framework that relies only on interparticle positions, we broaden the practical utility of SymBOPs beyond simulations of anisotropic particles. This enables precise identification of coherent crystalline domains, defects, and even complex structures like interpenetrating lattices in experimentally realized DNA-assembled nanoparticle systems. 
+
+We demonstrate this by successfully applying SymBOPs analysis to experimental 3D tomographic data, uncovering features such as grain boundaries and dislocations that traditional order parameters would miss. This work significantly enhances the toolkit available for characterizing order and defects in real-world nanomaterials, setting the stage for more sophisticated experimental studies and accelerating the discovery and design of complex self-assembled materials.
+
+
+
+
 ### Links
 
 <a href="https://doi.org/10.1063/5.0168604" class="info-button" target="_blank">

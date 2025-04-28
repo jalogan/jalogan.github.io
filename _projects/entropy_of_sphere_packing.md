@@ -21,21 +21,32 @@ featured:    false
 #related_posts: 
 ---
 
+* this unordered seed list will be replaced by the toc
+{:toc}
 
-
-Entropy is often associated with disorder, but in physics and mathematics, it is a powerful tool for understanding complexity and structure. In their paper, "Geometric and Topological Entropies of Sphere Packing," Logan and Tkachenko introduce novel ways to quantify the organization and randomness in sphere packings using a statistical mechanics-inspired framework. Instead of working in traditional energy-based ensembles, they construct a **custom entropy-based ensemble**, where entropy itself is the primary variable. Their work extends beyond traditional methods by developing two complementary entropy measures: **geometric entropy** and **topological entropy**. These measures provide deeper insights into the organization of sphere packings, particularly in jammed states, with implications for materials science, soft matter physics, and statistical mechanics.
+Entropy is often associated with disorder, but in physics and mathematics, it is a powerful tool for understanding complexity and structure. In our paper, "Geometric and Topological Entropies of Sphere Packing," we introduce novel ways to quantify the organization and randomness in sphere packings using a statistical mechanics-inspired framework. Instead of working in traditional energy-based ensembles, we construct a **custom entropy-based ensemble**, where entropy itself is the primary variable. The work extends beyond traditional methods by developing two complementary entropy measures: **geometric entropy** and **topological entropy**. These measures provide deeper insights into the organization of sphere packings, particularly in jammed states, with implications for materials science, soft matter physics, and statistical mechanics.
 {:.lead}
 
 
-### **The System**
+
+## **Why This Work Matters**
+
+This work introduces a fundamentally new way of characterizing sphere packings by explicitly separating packing entropy into two distinct contributions: **geometric entropy**, which captures the statistical weight of specific configurations, and **topological entropy**, which counts the number of distinct topologies. Unlike previous approaches that focused mainly on jammed states, this framework treats the mean coordination number as a thermodynamic variable, allowing it to describe non-jammed packings within **equilibrium statistical mechanics**. This opens new paths for studying disordered systems like sticky colloids, where conventional ideas of jamming and glassy dynamics do not fully apply. Moreover, we develop a novel isostaticity-preserving Monte Carlo method to efficiently sample configurations and extrapolate entropy contributions. These methods and concepts are crucial because they offer a more complete physical understanding of how structural disorder and mechanical constraints shape the thermodynamics of particulate systems, and they lay the groundwork for future studies on aggregation, phase transitions, and mechanical stability in a wide variety of soft and granular materials.
+
+
+
+
+## **The System**
 
 We consider a system of $$N$$ hard spherical particles in $$d$$-dimensional space with average particle diameter $$\bar{a}$$. The spheres have similar diameters, and packing is weakly polydisperse. A pair of particles is said to be in contact if the gap between them is less than some small value $$\Delta \ll \bar{a}$$. For any configuration, the topology can be specified by an adjacency matrix $$\mathbf{\hat{C}}$$ with $$C_{ij}=1$$ for all particles $$i\neq j$$ in contact and $$C_{ij}=0$$ otherwise.
 
-One way in which this work is unique is that the average coordination number $$Z = \frac{1}{N} \sum_{i<j} C_{ij}$$ is treated as a thermodynamic variable of the system. The weak polydispersity is introduced to avoid overconstrained topolgoies--those with more than the required bonds to keep the configuration stable. Examples of such configurations include close-packed crystals, e.g., face-centered cubic in 3D or hexagonal in 2D. If we disqualify such topolgies, the only rigid packings remaining are isostatic. These are configurations where the number of contacts is equal to the total number of degrees of freedom of $$N$$ spheres $$Nd$$ minus the number of rigid body degrees of freedom $$d(d+1)/2$$ (global rotations and translations). For a finite system of $$N$$ spheres the mean coordination number for a system to be isostatic is $$Z^* = 2d - d(d+1)/N$$. In the thermodynamic limit ($$N \rightarrow \infty$$) this becomes $$Z^* = 2d$$.
+One way in which this work is unique is that the average coordination number $$Z = \frac{1}{N} \sum_{i<j} C_{ij}$$ is treated as a thermodynamic variable of the system. The weak polydispersity is introduced to avoid overconstrained topolgoies-those with more than the required bonds to keep the configuration stable. Examples of such configurations include close-packed crystals, e.g., face-centered cubic in 3D or hexagonal in 2D. If we disqualify such topolgies, the only rigid packings remaining are isostatic. These are configurations where the number of contacts is equal to the total number of degrees of freedom of $$N$$ spheres $$Nd$$ minus the number of rigid body degrees of freedom $$d(d+1)/2$$ (global rotations and translations). For a finite system of $$N$$ spheres the mean coordination number for a system to be isostatic is $$Z^* = 2d - d(d+1)/N$$. In the thermodynamic limit ($$N \rightarrow \infty$$) this becomes $$Z^* = 2d$$.
 
 The mathematical framework developed below is applicable to all topolgies of spheres, not just the isostatic case, but we'll see that when the system is isostatic there is a key simplification that allows the equations to be easily solved. Another important point is that the energy of the system comes from the bonding, but if the number of bonds does not change, then the energy of the system does not change. This makes energy essentially useless in this problem. The main  variable is the entropy of the system. For this reason, we reformulate standard statistical mechanics in terms of entropy instead of energy. As shown below, the entropy of the whole packing $$S_{\text{pack}}$$ is broken into two exclusive pieces: geometric entropy $$S_{\text{geo}}$$ and topological entropy $$S_{\text{topo}}$$. 
 
 In order to compute the entropies we use a statistical mechanical thought experiment and a novel Monte Carlo algorithm, developed for this work. The simulations are done for packings in a semi-periodic box (periodic in $$x$$ and $$y$$, closed at $$z=0$$ and open for positive $$z$$) and for packings in free space. Examples of these two types of packings are seen in the figure at the top of the page.
+
+
 
 
 ### **Connecting to Traditional Statistical Mechanics**
@@ -248,7 +259,7 @@ In other words, the probabilities of adding a particle to the packing or removin
 2. **Topological Entropy Calculation**
    - Consider a virtual exchange process where individual spheres are swapped between different adjacency matrices.
    - Track how frequently these exchanges occur and use that to estimate the entropy contribution.
-   - Use **persistent homology** techniques to quantify the number of distinct adjacency matrices consistent with a given $$ Z $$.
+   - Use **persistent homology** techniques to quantify the number of distinct adjacency matrices consistent with a given $$Z$$.
 
 {% endcomment %}
 
