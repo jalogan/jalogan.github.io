@@ -21,7 +21,10 @@ layout: base
 
 <article class="page" role="article">
   <header>
+    {%- comment -%}
     <h1 class="page-title">{{ page.title | default:strings.home | default:"Home" }}</h1>
+    {%- endcomment -%}
+    <h1 class="page-title">{{ page.header_title | default: page.title | default: strings.home | default: "Home" }}</h1>
     {% include components/message.html text=page.description hide=page.hide_description %}
   </header>
 
@@ -29,6 +32,7 @@ layout: base
 
   <hr class="dingbat related"/>
 
+  {%- comment -%}
   {% if site.posts.size > 0 %}
     <h2 class="hr-bottom">{{ strings.posts | default:"Posts" }}</h2>
     <ul class="related-posts">
@@ -37,7 +41,9 @@ layout: base
       {% endfor %}
     </ul>
   {% endif %}
+  {%- endcomment -%}
 
+  {%- comment -%}
   {% assign pages = site.html_pages | where:"layout","page" | where_exp:"page","page.sitemap != false" %}
   {% if pages.size > 0 %}
     <h2 class="hr-bottom">{{ strings.pages | default:"Pages" }}</h2>
@@ -53,4 +59,5 @@ layout: base
       {% endfor %}
     </ul>
   {% endif %}
+  {%- endcomment -%}
 </article>

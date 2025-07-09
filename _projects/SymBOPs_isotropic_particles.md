@@ -2,6 +2,7 @@
 layout: project
 title: "SymBOPs for Isotropic Particles"
 category: SymBOPs
+hidden: true
 image: 
   path: /assets/img/SymBOPs_isotropic/SymBOPs_isotropic_main_full_w_bg.png
   srcset:

@@ -1,3 +1,7 @@
+---
+---
+
+
 /* Reset only the figure counter — video no longer needs a separate one */
 body {
   counter-reset: figure;
@@ -93,4 +97,70 @@ video {
   /*width: 37.5%;*/      /* your desired width */
   max-width: 100%;   /* but never overflow the container */
   height: auto;      /* keep aspect ratio */
+}
+
+
+
+
+
+/* Projects Page Layout */
+/* Uniform project grid layout */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Each project card */
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  min-height: 350px;
+  box-sizing: border-box;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+/* Optional hover effect */
+
+.grid-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Image inside each card */
+
+.grid-item img {
+  max-width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+/* Title and caption spacing */
+
+.grid-item h2 {
+  font-size: 1.1em;
+  margin: 0.5em 0;
+}
+
+.grid-item p {
+  font-size: 0.9em;
+  color: #060606;
+}
+
+/* Project Title Font Color on Projects Page */
+.grid-item h2 {
+  color: #000;
+  font-weight: 600;
+  font-size: 1.2em;
 }

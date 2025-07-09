@@ -32,10 +32,16 @@ layout: base
   {% case addon %}
   {% when 'about' %}
      {% include_cached components/about.html author=page.author %}
+
+  {%- comment -%}
   {% when 'related' %}
     {% include if-non-null try="components/related-posts.html" %}
+  {%- endcomment -%}
+
   {% when 'comments' %}
     {% include body/comments.html %}
   {% else %}
   {% endcase %}
 {% endfor %}
+
+<p style="color:red">TEST: This is my post layout</p>
