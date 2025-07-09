@@ -164,3 +164,15 @@ video {
   font-weight: 600;
   font-size: 1.2em;
 }
+
+
+/* Shape and Crop of picture when site first opens */
+
+.my-avatar {
+  border-radius: 10 !important;         /* 0 for square, or try 10% for rounded */
+  object-fit: cover !important;        /* Ensures the image fills the space */
+  width: 140px !important;                        /* Optional: adjust if needed */
+  height: 140px !important;
+}
+
+
