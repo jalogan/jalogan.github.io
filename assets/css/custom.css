@@ -176,3 +176,82 @@ video {
 }
 
 
+
+/* Make sure it works on different monitor sizes */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 500px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.grid-item img,
+.grid-item video {
+  width: 100%;
+  height: auto;
+  max-height: 300px;        /* Optional: keeps cards from becoming too tall */
+  object-fit: contain;      /* Prevents distortion or cropping */
+  border-radius: 6px;
+  display: block;
+  margin: 0 auto;
+}
+
+
+body {
+  overflow-x: hidden;
+}
+
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+
+/* To make sure figure environment images don't overflow their container on smaller devices */
+figure img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* figcaption environment font features */
+/*
+figcaption {
+  color: #444;
+  font-size: 0.95em;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+*/
+
+/* Default (light mode): black captions */
+body.light-mode figcaption {
+  color: black;
+}
+
+/* Night mode: white captions */
+body.dark-mode figcaption {
+  color: white;
+}
+
+
+
+

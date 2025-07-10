@@ -51,6 +51,10 @@ This work advances our understanding of what physical ingredients are essential 
   <figcaption>Schematic of a chain of amino acids. Each subunit looks identical with an alpha-Carbon (\(C_{\alpha}\)) atom in the center. What gives each amino acid its flavor is the "R" group in yellow. These are called the side chain of the amino acid and they are different for each of the 20 naturally occurring amino acids. </figcaption>
 </figure>
 
+
+
+
+
 A polymer is a chain of monomer units that can be as simple (a single sphere) or as complex (complex molecule, e.g., amino acid) as necessary. Some of the most important and ubiquitous types of polymers are proteins, seen in <a href="#fig_protein_schematic" data-fig-ref>??</a>. In proteins the monomer units are amino acids and the interactions between the amino acids and their surroundings and other parts of the protein, along with the conditions in which they exist, e.g., in a cell, cause the polymer to collapse in a very specific way. This collapse is called protein folding and when a protein folds incorrectly, it can lead to disease and other problems for the organism that relies on it. X-ray Crystallography is often used to probe the folded structures of proteins, so the folded configuration is sometimes called the protein crystal structure.  
 
 <figure id="fig_ribbon_diagram">

@@ -7,7 +7,9 @@ layout: default
 {% endcomment %}
 
 <div class="grid">
-  {% for project in site.projects %}
+  {% assign sorted_projects = site.projects | sort: "order" %}
+    {% for project in sorted_projects %}
+
     {% unless project.hidden %}
     <div class="grid-item">
       <a href="{{ project.url }}">
@@ -44,24 +46,28 @@ layout: default
   {% endfor %}
 </div>
 
-<style>
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-  }
-  .grid-item {
-    border: 1px solid #ddd;
-    padding: 15px;
-    text-align: center;
-    transition: transform 0.3s ease;
-  }
-  .grid-item:hover {
-    transform: scale(1.05);
-  }
-  .grid img {
-    max-width: 100%;
-    height: auto;
-  }
-</style>
 
+<div class="main-content">
+  <div class="grid">
+    <style>
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+      .grid-item {
+        border: 0.1rem solid #ddd; /*1px solid #ddd;*/
+        padding: 1rem; /*15px;*/
+        text-align: center;
+        transition: transform 0.3s ease;
+      }
+      .grid-item:hover {
+        transform: scale(1.05);
+      }
+      .grid img {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </div>
+</div>
