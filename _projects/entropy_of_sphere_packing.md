@@ -24,7 +24,7 @@ featured:    false
 * this unordered seed list will be replaced by the toc
 {:toc}
 
-Entropy is often associated with disorder, but in physics and mathematics, it is a powerful tool for understanding complexity and structure. In our paper, "Geometric and Topological Entropies of Sphere Packing," we introduce novel ways to quantify the organization and randomness in sphere packings using a statistical mechanics-inspired framework. Instead of working in traditional energy-based ensembles, we construct a **custom entropy-based ensemble**, where entropy itself is the primary variable. The work extends beyond traditional methods by developing two complementary entropy measures: **geometric entropy** and **topological entropy**. These measures provide deeper insights into the organization of sphere packings, particularly in jammed states, with implications for materials science, soft matter physics, and statistical mechanics.
+Entropy is often associated with disorder, but in physics and mathematics, it is a powerful tool for understanding complexity and structure. In our paper, "Geometric and Topological Entropies of Sphere Packing," we introduce novel ways to quantify the organization and randomness in sphere packings using a statistical mechanics-inspired framework. Instead of working in traditional energy-based ensembles, we construct a **custom entropy-based ensemble**, where entropy itself is the primary driving variable of the thermodynamics, and the coordination number is the macro-variable. The work extends beyond traditional methods by developing two complementary entropy measures: **geometric entropy** and **topological entropy**. These measures provide deeper insights into the organization of sphere packings, particularly in jammed states, with implications for materials science, soft matter physics, and statistical mechanics.
 {:.lead}
 
 
@@ -40,9 +40,9 @@ This work introduces a fundamentally new way of characterizing sphere packings b
 
 We consider a system of $$N$$ hard spherical particles in $$d$$-dimensional space with average particle diameter $$\bar{a}$$. The spheres have similar diameters, and packing is weakly polydisperse. A pair of particles is said to be in contact if the gap between them is less than some small value $$\Delta \ll \bar{a}$$. For any configuration, the topology can be specified by an adjacency matrix $$\mathbf{\hat{C}}$$ with $$C_{ij}=1$$ for all particles $$i\neq j$$ in contact and $$C_{ij}=0$$ otherwise.
 
-One way in which this work is unique is that the average coordination number $$Z = \frac{1}{N} \sum_{i<j} C_{ij}$$ is treated as a thermodynamic variable of the system. The weak polydispersity is introduced to avoid overconstrained topolgoies-those with more than the required bonds to keep the configuration stable. Examples of such configurations include close-packed crystals, e.g., face-centered cubic in 3D or hexagonal in 2D. If we disqualify such topolgies, the only rigid packings remaining are isostatic. These are configurations where the number of contacts is equal to the total number of degrees of freedom of $$N$$ spheres $$Nd$$ minus the number of rigid body degrees of freedom $$d(d+1)/2$$ (global rotations and translations). For a finite system of $$N$$ spheres the mean coordination number for a system to be isostatic is $$Z^* = 2d - d(d+1)/N$$. In the thermodynamic limit ($$N \rightarrow \infty$$) this becomes $$Z^* = 2d$$.
+One way in which this work is unique is that the average coordination number $$Z = \frac{1}{N} \sum_{i<j} C_{ij}$$ is treated as a thermodynamic variable of the system. The weak polydispersity is introduced to avoid overconstrained topologies-those with more than the required bonds to keep the configuration stable. Examples of such configurations include close-packed crystals, e.g., face-centered cubic in 3D or hexagonal in 2D. If we disqualify such topologies, the only rigid packings remaining are isostatic. These are configurations where the number of contacts is equal to the total number of degrees of freedom of $$N$$ spheres $$Nd$$ minus the number of rigid body degrees of freedom $$d(d+1)/2$$ (global rotations and translations). For a finite system of $$N$$ spheres the mean coordination number for a system to be isostatic is $$Z^* = 2d - d(d+1)/N$$. In the thermodynamic limit ($$N \rightarrow \infty$$) this becomes $$Z^* = 2d$$. The correction term is only non-zero for finite size systems. The $$d$$ global translations and $$d(d-1)/2$$ global rotations do not cause internal mechanical motion (changes to the relative geometry or topology), and so do not need to be explicitly constrained. 
 
-The mathematical framework developed below is applicable to all topolgies of spheres, not just the isostatic case, but we'll see that when the system is isostatic there is a key simplification that allows the equations to be easily solved. Another important point is that the energy of the system comes from the bonding, but if the number of bonds does not change, then the energy of the system does not change. This makes energy essentially useless in this problem. The main  variable is the entropy of the system. For this reason, we reformulate standard statistical mechanics in terms of entropy instead of energy. As shown below, the entropy of the whole packing $$S_{\text{pack}}$$ is broken into two exclusive pieces: geometric entropy $$S_{\text{geo}}$$ and topological entropy $$S_{\text{topo}}$$. 
+The mathematical framework developed below is applicable to all topologies of spheres, not just the isostatic case, but we'll see that when the system is isostatic there is a key simplification that allows the equations to be easily solved. Another important point is that the energy of the system comes from the bonding, but if the number of bonds does not change, then the energy of the system does not change. This means that energy is not a useful variable for discriminating between different configurations, and entropy becomes the central quantity governing the behavior. The main  variable is the entropy of the system. For this reason, we reformulate standard statistical mechanics in terms of entropy instead of energy. As shown below, the entropy of the whole packing $$S_{\text{pack}}$$ is broken into two exclusive pieces: geometric entropy $$S_{\text{geo}}$$ and topological entropy $$S_{\text{topo}}$$. 
 
 In order to compute the entropies we use a statistical mechanical thought experiment and a novel Monte Carlo algorithm, developed for this work. The simulations are done for packings in a semi-periodic box (periodic in $$x$$ and $$y$$, closed at $$z=0$$ and open for positive $$z$$) and for packings in free space. Examples of these two types of packings are seen in the figure at the top of the page.
 
@@ -77,7 +77,9 @@ $$
 e^{N S_{\text{pack}}(Z)} = \sum_{\mathbf{\hat{C}}} \frac{\delta(Z(\mathbf{\hat{C}}) - Z)}{N!} e^{N S_{\text{geo}}(\mathbf{\hat{C}})}.
 $$
 
-This equation sums over **packing configurations** instead of energy states. Here:
+Note that this is not a traditional energy-based partition function; instead, it is a configurational analog where entropy takes the place of energy. This equation sums over **packing configurations** instead of energy states. 
+
+In this generalized partition function:
 - $$Z$$ is the mean coordination number---the average number of bonds for each sphere.
 - $$\mathbf{\hat{C}}$$ is the **adjacency matrix** defining a packing topology---a bonding network.
 - $$S_{\text{geo}}(\mathbf{\hat{C}})$$ is the **geometric entropy** of that topology.
@@ -97,7 +99,7 @@ Here:
 - The delta function $$\delta(x_{ij})$$ ensures that all contacts recorded in the adjacency matrix are just touching with surface-to-surface distance 0.
 - The Heaviside function $$\Theta(x_{ij})$$ ensures that all spheres that are not in contact are not touching.
 
-In the special case of an isostatic packing, the number of constraints is exactly equal to the number of degrees of freedom (minimum number of constraints to make the packing mechanically stable) we may conveniently change variables from the positions $$(\vec{r}_2,...,\vec{r}_N)$$ to the gaps between pairs of particles $$(x_1,...,x_{NZ/2})$$ including the $$d(d-1)/2$$ independent rigid body rotations $$\hat{\theta} = (\theta_1,...,\theta_{d(d-1)/2})$$. The Jacobian determinant of this transformation then provides a very simple way to compute the geometric entropy of a configuration.
+In the special case of an isostatic packing, the number of constraints is exactly equal to the number of degrees of freedom (minimum number of constraints to make the packing mechanically stable) we may conveniently change variables from the positions $$(\vec{r}_2,...,\vec{r}_N)$$ to the gaps between pairs of particles $$(x_1,...,x_{NZ/2})$$ including the $$d(d-1)/2$$ independent rigid body rotations $$\hat{\theta} = (\theta_1,...,\theta_{d(d-1)/2})$$. The Jacobian determinant of this transformation is the determinant of the rigidity matrix and encodes how displacements of the spheres map to changes in the bond lengths of the contact network. The Jacobian provides a very simple way to compute the geometric entropy of a configuration.
 
 $$
 NS_{\text{geo}}(\mathbf{\hat{C}}) = \ln \left[ \frac{\partial (\vec{r}_2,...,\vec{r}_N)}{\partial (\hat{\theta}, x_1,...,x_{NZ/2})}  \right].
@@ -186,10 +188,10 @@ A key challenge in computing entropy in sphere packings is ensuring that the pac
 **Microstate Moves and Computing $$S_{\text{geo}}$$:**
 {%comment%}
 Each step modifies the configuration by randomly choosing a bond and increasing the bond length while remaining in equilibrium until two previously unbound spheres make contact. At this point the original bond is broken and a new bond is made at the new contact point. 
-This preserves the isostaticity of the packing and allows one to explore the space of isostatic packings for $$N$$ spheres and $$NZ/2$$ bonds. When the bond length is increased it introduces a single zero mode into the system which allows the spheres to rearrange until a new isostatic configuration is found.
+This preserves the isostaticity of the packing and allows one to explore the space of isostatic packings for $$N$$ spheres and $$NZ/2$$ bonds. When the bond length is increased it introduces a single zero mode into the system which allows the spheres to rearrange until a new isostatic configuration is found. This approach ensures that every sampled configuration lies on the isostatic manifold, preserving mechanical stability.
 {%endcomment%}
 
-A packing evolves in a $$Nd$$-dimensional space that can be represented by the positions of the $$N$$ spheres or the $$Nd$$ bond gaps. The constraints for them to be hard spheres in contact are given by <span>$$|\vec{r}_i - \vec{r}_j|^2 = \left(\frac{a_i + a_j}{2}\right)^2$$</span>. The Jacobian of this equation is the rigidity tensor, introduced above as a convenient method of calculating $$S_{\text{geo}}$$. At each step of our simulations a bond is broken and a zero mode enters into the packing. The packing then evolves in such a way that it moves orthogonal to the constraints imposed by the rigidity tensor until contact is made between two unbonded particles, and a new isostatic packing is realized. The rigidity tensor $$R(\vec{r})$$ relates the particle displacements $$\vec{u}_i$$ to the gaps between particles $$x_{ij}$$. If we consider that the bond $$\alpha$$ breaks and opens by an amount $$x_{\alpha}$$, the displacement of any particle $$i$$ can be calculated as $$\vec{u}_{i} = R^{-1}_{i,\alpha} x_{\alpha}$$. However, to avoid the computationally expensive inverse function, we instead use a QR decomposition with column pivoting from the linear algebra library *Eigen* to solve the equation for the displacements $$\vec{u}_i$$ of all particles caused by the opening of $$\alpha$$. By using the equation for $$S_{\text{geo}}$$ defined above, the distribution of $$S_{geo}$$ is computed directly.
+A packing evolves in a $$Nd$$-dimensional space that can be represented by the positions of the $$N$$ spheres or the $$Nd$$ bond gaps. The constraints for them to be hard spheres in contact are given by <span>$$|\vec{r}_i - \vec{r}_j|^2 = \left(\frac{a_i + a_j}{2}\right)^2$$</span>. The Jacobian of this equation is the rigidity tensor, introduced above as a convenient method of calculating $$S_{\text{geo}}$$. At each step of our simulations a bond is broken and a zero mode enters into the packing. The packing then evolves in such a way that it moves orthogonal to the constraints imposed by the rigidity tensor until contact is made between two unbonded particles, and a new isostatic packing is realized. The rigidity tensor $$R(\vec{r})$$ relates the particle displacements $$\vec{u}_i$$ to the gaps between particles $$x_{ij}$$. If we consider that the bond $$\alpha$$ breaks and opens by an amount $$x_{\alpha}$$, the displacement of any particle $$i$$ can be calculated as $$\vec{u}_{i} = R^{-1}_{i,\alpha} x_{\alpha}$$. However, to avoid the computationally expensive inverse function, we instead use a QR decomposition with column pivoting from the linear algebra library *Eigen* to solve the equation for the displacements $$\vec{u}_i$$ of all particles caused by the opening of $$\alpha$$. This MC approach ensures that every sampled configuration lies on the isostatic manifold, preserving mechanical stability. By using the equation for $$S_{\text{geo}}$$ defined above, the distribution of $$S_{geo}$$ is computed directly. 
 
 
 
@@ -217,15 +219,49 @@ $$
 $$
 where $$P(A)$$ is the probability of being in state $$A$$, and $$W(A\rightarrow B)$$ is the transition rate between the two states.
 
-In this case $$A$$ can be the state of the random packing have $$N$$ spheres and $$B$$ is the state of the packing having $$N-1$$ spheres after one sphere was moved to the reference lattice. If we look at <a href="#fig_packing_and_ref_lattice" data-fig-ref>??</a>, we can count the number of positions where a particle can be removed and the number of positions where a particle can be added, such that it remains isostatic. Let the number of ways to add or remove a particle from a configuration be $$N_+$$ and $$N_-$$, respectively. <a href="#fig_packing_and_ref_lattice" data-fig-ref>??</a> shows the particles that may be removed in blue and the positions where a particle may be added as a dashed circle for one particular microstate. Averaging over many microstates, $$\langle N_+ \rangle$$ is proportional to the transition rate from a packing with $$N-1$$ particles to a packing with $$N$$ particles, and similarly for $$\langle N_- \rangle$$ for the reverse transition. From detailed balance this means that the ratio of probabilities is equal to the ratio $$\frac{N_-}{N_+}$$,
+In this case $$A$$ can be the state of the random packing having $$N$$ spheres and $$B$$ is the state of the packing having $$N-1$$ spheres after one sphere was moved to the reference lattice. If we look at <a href="#fig_packing_and_ref_lattice" data-fig-ref>??</a>, we can count the number of positions where a particle can be removed and the number of positions where a particle can be added, such that it remains isostatic. Let the number of ways to add or remove a particle from a configuration be $$N_+$$ and $$N_-$$, respectively. <a href="#fig_packing_and_ref_lattice" data-fig-ref>??</a> shows the particles that may be removed in blue and the positions where a particle may be added as a dashed circle for one particular microstate. Averaging over many microstates, $$\langle N_+ \rangle$$ is proportional to the transition rate from a packing with $$N-1$$ particles to a packing with $$N$$ particles, and similarly for $$\langle N_- \rangle$$ for the reverse transition. From detailed balance this means that the ratio of probabilities is proportional to the ratio of $$N_-$$ and $$N_+$$,
+
+{% comment %}
+$$
+\frac{W_{\text{remove}}}{W_{\text{add}}} = \frac{N_-}{e^{\mu} N_+} = \frac{P_{\text{pack}}(N-1)}{P_{\text{pack}}(N)} = \frac{\frac{e^{S_{\text{pack}}(N-1)}}{\mathcal{Z}_{pack}}}{\frac{e^{S_{\text{pack}}(N)}}{\mathcal{Z}_{pack}}} = e^{\left[S_{\text{pack}}(N-1) - S_{\text{pack}}(N)\right]} = e^{-\mu} = e^{S_{\text{pack}}}
+$$
+{% endcomment %}
 
 $$
-\frac{W_{\text{remove}}}{W_{\text{add}}} = \frac{P_{\text{pack}}(N-1)}{P_{\text{pack}}(N)} = \frac{N_-}{N_+} = \frac{\frac{e^{S_{\text{pack}}(N-1)}}{\mathcal{Z}_{pack}}}{\frac{e^{S_{\text{pack}}(N)}}{\mathcal{Z}_{pack}}} = e^{\left[S_{\text{pack}}(N-1) - S_{\text{pack}}(N)\right]} = e^{-\mu} = e^{S_{\text{pack}}}
+\frac{W_{\text{add}}}{W_{\text{remove}}} = \frac{e^{\mu} N_+}{N_-} = \frac{P_{\text{pack}}(N)}{P_{\text{pack}}(N-1)} = \frac{\frac{e^{S_{\text{pack}}(N)}}{\mathcal{Z}_{pack}}}{\frac{e^{S_{\text{pack}}(N-1)}}{\mathcal{Z}_{pack}}} = e^{\left[S_{\text{pack}}(N) - S_{\text{pack}}(N-1)\right]}
 $$
 
+where adding a particle includes the statistical weight $$e^{\mu}$$ that depends on the chemical potential $$\mu$$.
+
+From here we take the thermodynamic limit ($$N\rightarrow \infty$$) and define the packing entropy per particle $$s_{\text{pack}}$$.
+
+$$
+S_{\text{pack}} = N s_{\text{pack}} \\ 
+S_{\text{pack}}(N) - S_{\text{pack}}(N-1) \approx \frac{\partial S_{\text{pack}}}{\partial N} = s_{\text{pack}}
+$$
+
+Putting it all together
+
+$$
+e^{\left[S_{\text{pack}}(N) - S_{\text{pack}}(N-1)\right]} = \frac{e^{\mu} N_+}{N_-} \\ 
+s_{\text{pack}} = \log(\frac{N_+}{N_-}) + \mu
+$$
+
+
+Because the packing is in equilibrium with the reference lattice, their chemical potentials are equal. Choosing the reference to be a lattice with zero chemical potential implies $$\mu_{\text{pack}} = \mu_{\text{ref}} = \mu = 0$$.
+
+$$
+s_{\text{pack}} = \log(\frac{N_+}{N_-})
+$$
+
+{% comment %}
 where we have approximated $$S_{\text{pack}}(N) - S_{\text{pack}}(N-1) \approx \frac{\partial S_{\text{pack}}}{\partial N} = \frac{\partial F}{\partial N} = \mu$$.
+{% endcomment %}
 
-Finally, we have a way to compute $$S_{\text{pack}}$$. Really this is an indirect way of computing $$S_{\text{topo}}$$ because we know how to find $$S_{\text{geo}}$$ and $$S_{\text{topo}} = S_{\text{geo}} + S_{\text{topo}}$$.
+
+
+Finally, we have a way to compute $$S_{\text{pack}}$$. This provides an indirect way to compute $$S_{\text{topo}}$$ since we already know how to compute $$S_{\text{geo}}$$ and the packing entropy satisfies $$S_{\text{pack}} = S_{\text{geo}} + S_{\text{topo}}$$.
+
 
 
 {% comment %}
