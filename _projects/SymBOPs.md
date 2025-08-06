@@ -58,7 +58,12 @@ This work is a significant advancement in the characterization of complex self-a
 
 ## **Rotational symmetry**
 
+<figure id="fig_rotational_symm_example">
+  <img src="/assets/img/SymBOPs_general/symmetry_of_circle_vs_rod.png" alt="rotational_symm_ex" width="1000" height="auto">
+  <figcaption>Difference of rotational symmetry between a circle and a cirlce with two differently colored points. </figcaption>
+</figure>
 
+{%comment%}
 <figure id="fig_rotational_symm_example" style="max-width: 100%; text-align: center; margin: auto;">
   <img src="{{ "/assets/img/SymBOPs_general/symmetry_of_circle_vs_rod.png" | relative_url }}" alt="Figure Description"
        style="width: 100%; height: auto; max-width: 600px;">
@@ -66,6 +71,7 @@ This work is a significant advancement in the characterization of complex self-a
     Difference of rotational symmetry between a circle and a cirlce with two differently colored points.
   </figcaption>
 </figure>
+{%endcomment%}
 
 
 
@@ -78,7 +84,13 @@ Rotational symmetry is used to describe an object or set of objects (or points, 
 
 ## **What is Traditionally Done**
 
+<figure id="fig_BOO_vs_nematic">
+  <img src="/assets/img/SymBOPs_general/BOP_and_nematic_rods_full.png" alt="BOO_vs_nematic" width="1000" height="auto">
+  <figcaption>Simple example using rods to demonstrate the difference between bond-orientational order, nematic order, and the combination of both. </figcaption>
+</figure>
 
+
+{%comment%}
 <figure id="fig_BOO_vs_nematic" style="max-width: 100%; text-align: center; margin: auto;">
   <img src="{{ "/assets/img/SymBOPs_general/BOP_and_nematic_rods_full.png" | relative_url }}" alt="Figure Description"
        style="width: 100%; height: auto; max-width: 800px;">
@@ -86,11 +98,11 @@ Rotational symmetry is used to describe an object or set of objects (or points, 
     Simple example using rods to demonstrate the difference between bond-orientational order, nematic order, and the combination of both.
   </figcaption>
 </figure>
-
+{%endcomment%}
 
 Orientational order looks at the rotational symmetry of an object or group of objects around a common point. There are two types of orientational order that we must distinguish between: *bond-orientational order* describes the orientational order of points in the neighborhood of a an origin, and *polyhedral nematic order* describes how aligned anisotropic objects, e.g., polygons and polyhedra, are with each other. 
 
-Bond-orientational order quantifies how ordered a set of points are based on their angles in a common set of axes. To learn by example, see the left image of Fig.2. Focus only on the left green point and the black points neighboring it. Using the usual polar coordinates we can compute the angle $$\theta_i$$ for each black neighboring partile $$i$$. We sum the phases of all $$N_b$$ neighbors of the green point
+Bond-orientational order quantifies how ordered a set of points are based on their angles in a common set of axes. To learn by example, see the left image of <a href="#fig_BOO_vs_nematic" data-fig-ref>??</a>. Focus only on the left green point and the black points neighboring it. Using the usual polar coordinates we can compute the angle $$\theta_i$$ for each black neighboring partile $$i$$. We sum the phases of all $$N_b$$ neighbors of the green point
 
 $$
 \psi_{\ell} = \frac{1}{N_b}\sum\limits_{i=1}^{N_{b}} e^{i\ell \theta_i},
@@ -114,7 +126,74 @@ These parameters have been used very successfully over decades as structure desc
 
 
 
-## **How SymBOPs improves this**
+
+
+
+
+
+## **Types of Order**
+
+<figure id="fig_pentagon_lattice">
+  <img src="/assets/img/SymBOPs_general/ideal_pentagon_lattice_cropped.png" alt="ideal_pentagon_lattice" width="300" height="auto">
+  <figcaption>Ideal lattice of pentagons. </figcaption>
+</figure>
+
+{%comment%}
+If we are to understand how to interpret the order in different configurations, we first need to know the types of order that are possible and how they work together to create the complex mixes observed in reality. A relatively simple example that puts this interplay of types of order on display, and sets the stage for SymBOPs, is a dense ideal crystal of pentagons, seen in <a href="#fig_pentagon_lattice" data-fig-ref>??</a>.
+
+Three types of order are present in this 2D lattice of anisotropic particles: translational order, orientational order of the bonds between particles, and orientational order of the particles. The first two types are agnostic of the actual particle geometry, and we may consider the particles to be isotropic (circles), if we want. The layers are have alternating colors to make the order more apparent. If we consider only green (or red), the centers of the particles form a 2D orthorhombic crystal--their centers all lie on the vertices of rectangles. The translational order can be described as a density wave in space with periodicity dependent on the lattice direction
+{%endcomment%}
+
+
+
+If we are to interpret the structure of complex materials, we must first understand the **distinct types of order** that may coexist in a configuration and how they interact. A clean example that illustrates this interplay—and sets the stage for the introduction of SymBOPs—is the **dense 2D lattice of ideal pentagons**, shown in <a href="#fig_pentagon_lattice" data-fig-ref>??</a>.
+
+### **Translational Order**
+Translational order refers to the periodic arrangement of particle centers in space. In the pentagon lattice, the centers of mass of the particles lie on the vertices of a 2D orthorhombic lattice. This means their spatial distribution is characterized by regular repetition along two perpendicular directions, which can be described mathematically as a **density wave** with wavevectors $$\vec{k}_x$$ and $$\vec{k}_y$$ corresponding to the lattice spacings along those directions: $$\vec{k} = 2\pi/a$$. This kind of order is present even if the particles were simple circles, making it agnostic to particle anisotropy.
+
+### **Bond-Orientational Order**
+Bond-orientational order (BOP) captures the angular structure of how particle centers are arranged relative to each other. It measures the symmetry of the bond directions connecting each particle to its neighbors. In the pentagon crystal, these bonds align strongly along the $$\hat{x}$$ and $$\hat{y}$$ directions, forming a **biaxial symmetry** pattern. This directional information reveals the symmetry axes of the lattice and serves as a natural frame of reference for understanding both the translational and orientational patterns. Even if the particles themselves were replaced with isotropic disks, this underlying bond structure would still persist.
+
+### **Orientational Order of Particles**
+The third kind of order arises from the intrinsic orientation of anisotropic particles themselves—in this case, the pentagons. Each pentagon has a defined orientation, and in the dense crystal, this orientation **alternates between layers**. This creates a **pattern of anti-nematic order**: neighboring layers contain particles oriented in nearly opposite directions (rotated by $$\pi$$). While the underlying lattice preserves translational and bond-orientational order, the particle orientations break the **10-fold rotational symmetry** that would otherwise exist if all pentagons had the same orientation. This symmetry breaking is subtle and can only be captured using **higher-rank tensors** or specialized tools like SymBOPs.
+
+
+
+
+
+
+
+## **Introducing SymBOPs**
+
+The example of the ideal pentagon crystal in the previous section shows that orthorhombic crystals and the symmetry group constrained the available space. In general we begin with the full space of symmetric, traceless tensors of rank $$\ell$$ with dimension $$2\ell + 1$$ and the identity is the only "symmetry". As we add symmetries, e.g., rotation by $$180^\circ$$ around the $$X$$-axis, reflection across the $$XY$$-plane, a constraint is added that either zeros elements or equates elements of the symmetric, traceless tensor. One of the main objects utilized by the SymBOPs method is what we call a *reference tensor* $$\widehat{R}^{(\ell)}$$. It is a traceless $$\ell$$-rank tensor that is invariant to all operations of a chosen point symmetry group and normalized to 1 $$\sqrt{\widehat{R}^{(\ell)} \cdot \widehat{R}^{(\ell)}} = 1$$. 
+
+
+
+
+
+## **How SymBOPs Improves Traditional BOPs**
+
+Traditional bond-orientational order parameters (BOPs) are rotationally invariant descriptors. While powerful, they lose essential information by averaging out the orientation of the local environment — discarding phase information and symmetry specificity. As a result, they struggle to distinguish between different symmetries (e.g., tetrahedral vs. octahedral) and cannot capture subtle orientational correlations or anisotropies present in disordered or multi-component systems.
+
+SymBOPs (Symmetrized Bond-Orientational Order Parameters) overcome these limitations by explicitly projecting local environments onto the irreducible representations of the symmetry group of interest. Instead of asking “How ordered is this neighborhood?”, SymBOPs ask “How much does this neighborhood look like a perfect copy of symmetry X?” — allowing for targeted detection of structure, whether crystalline, amorphous, or hierarchical.
+
+This approach retains symmetry-sensitive phase information, enabling:
+
+  - Distinction between multiple competing local orders
+
+  - Detection of complex or partial symmetry motifs
+
+  - Quantification of structural similarity between neighborhoods and known reference structures
+
+  - Compatibility with both isotropic and anisotropic particles
+
+Moreover, SymBOPs are defined in a group-theoretic framework, allowing them to naturally handle systems with multiple particle types, broken symmetries, or directional interactions — which are increasingly common in modern self-assembly and nanomaterials research.
+
+
+
+
+
+
 
 
 
