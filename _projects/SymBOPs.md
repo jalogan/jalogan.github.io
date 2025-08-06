@@ -165,9 +165,21 @@ The third kind of order arises from the intrinsic orientation of anisotropic par
 
 ## **Introducing SymBOPs**
 
-The example of the ideal pentagon crystal in the previous section shows that orthorhombic crystals and the symmetry group constrained the available space. In general we begin with the full space of symmetric, traceless tensors of rank $$\ell$$ with dimension $$2\ell + 1$$ and the identity is the only "symmetry". As we add symmetries, e.g., rotation by $$180^\circ$$ around the $$X$$-axis, reflection across the $$XY$$-plane, a constraint is added that either zeros elements or equates elements of the symmetric, traceless tensor. One of the main objects utilized by the SymBOPs method is what we call a *reference tensor* $$\widehat{R}^{(\ell)}$$. It is a traceless $$\ell$$-rank tensor that is invariant to all operations of a chosen point symmetry group and normalized to 1 $$\sqrt{\widehat{R}^{(\ell)} \cdot \widehat{R}^{(\ell)}} = 1$$. 
+The example of the ideal pentagon crystal in the previous section shows that orthorhombic crystals and the symmetry group constrained the available space. In general we begin with the full space of symmetric, traceless tensors of rank $$\ell$$ with dimension $$2\ell + 1$$ and the identity is the only "symmetry". As we add symmetries, e.g., rotation by $$180^\circ$$ around the $$X$$-axis, reflection across the $$XY$$-plane, a constraint is added that either zeros elements or equates elements of the symmetric, traceless tensor. One of the main objects utilized by the SymBOPs method is what we call a *reference tensor* $$\widehat{R}^{(\ell)}$$. It is a traceless $$\ell$$-rank tensor that is invariant to all operations of a chosen point symmetry group and normalized $$\sqrt{\widehat{R}^{(\ell)} \cdot \widehat{R}^{(\ell)}} = 1$$. 
 
+The reference tensor acts as an ideal template of the subspace that satisfies all symmetries we have chosen to search for in our configuration. We define the SymBOP as the projection of our bond tensors into this subspace,
 
+$$
+\widehat{q}^{*(\ell)} = \widehat{R}^{(\ell)} \left( \widehat{R}^{(\ell)} \cdot \widehat{b}_{ij}^{\otimes \ell} \right) = \widehat{\mathcal{P}}^{(\ell)} \widehat{b}_{ij}^{\otimes \ell}.
+$$
+
+$$\widehat{\mathcal{P}}^{(\ell)} = \widehat{R}^{(\ell)} \otimes \widehat{R}^{(\ell)}$$ is the projection operator associated with the reference tensor and with a symmetry group, when applicable. 
+
+In 3D, high-rank tensors may be replaced with vectors of spherical harmonics. We use a variation of dirac notation to signify use of the spherical harmonic representation, where the reference tensor is now written as $$\vert R)_{\ell}$$, the normalization $$(R\vert R)_{\ell} = 1$$, and the SymBOP becomes
+
+$$
+\vert q_{ij}^{*})_{\ell} = \vert R)_{\ell} \, (R \vert \widehat{\mathbf{b}}_{ij})_{\ell} = \tilde{\mathcal{P}} \vert \widehat{\mathbf{b}}_{ij})_{\ell}.
+$$
 
 
 
@@ -193,9 +205,13 @@ Moreover, SymBOPs are defined in a group-theoretic framework, allowing them to n
 
 
 
+## **Applications of SymBOPs Beyond Materials**
 
-
-
+{%comment%}
+  - How can this work be applied to work other than particles? 
+  - How can it be used for fields like AI/ML and neural net interpretability?
+  - They use high dimensional spaces, but maybe understanding the order of these spaces helps the interpretability. - 
+{%endcomment%}
 
 
 
