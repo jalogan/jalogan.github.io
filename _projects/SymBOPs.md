@@ -149,7 +149,7 @@ Three types of order are present in this 2D lattice of anisotropic particles: tr
 If we are to interpret the structure of complex materials, we must first understand the **distinct types of order** that may coexist in a configuration and how they interact. A clean example that illustrates this interplay—and sets the stage for the introduction of SymBOPs—is the **dense 2D lattice of ideal pentagons**, shown in <a href="#fig_pentagon_lattice" data-fig-ref>??</a>.
 
 ### **Translational Order**
-Translational order refers to the periodic arrangement of particle centers in space. In the pentagon lattice, the centers of mass of the particles lie on the vertices of a 2D orthorhombic lattice. This means their spatial distribution is characterized by regular repetition along two perpendicular directions, which can be described mathematically as a **density wave** with wavevectors $$\vec{k}_x$$ and $$\vec{k}_y$$ corresponding to the lattice spacings along those directions: $$\vec{k} = 2\pi/a$$. This kind of order is present even if the particles were simple circles, making it agnostic to particle anisotropy.
+Translational order refers to the periodic arrangement of particle centers in space. In the pentagon lattice, the centers of mass of the particles lie on the vertices of a 2D orthorhombic lattice. This means their spatial distribution is characterized by regular repetition along two perpendicular directions, which can be described mathematically as a **density wave** with wavevectors $$\vec{k}_x$$ and $$\vec{k}_y$$ corresponding to the lattice spacings along those directions: $$\vert \vec{k} \vert = 2\pi/a$$. This kind of order is present even if the particles were simple circles, making it agnostic to particle anisotropy.
 
 ### **Bond-Orientational Order**
 Bond-orientational order (BOP) captures the angular structure of how particle centers are arranged relative to each other. It measures the symmetry of the bond directions connecting each particle to its neighbors. In the pentagon crystal, these bonds align strongly along the $$\hat{x}$$ and $$\hat{y}$$ directions, forming a **biaxial symmetry** pattern. This directional information reveals the symmetry axes of the lattice and serves as a natural frame of reference for understanding both the translational and orientational patterns. Even if the particles themselves were replaced with isotropic disks, this underlying bond structure would still persist.
@@ -189,17 +189,80 @@ Traditional bond-orientational order parameters (BOPs) are rotationally invarian
 
 SymBOPs (Symmetrized Bond-Orientational Order Parameters) overcome these limitations by explicitly projecting local environments onto the irreducible representations of the symmetry group of interest. Instead of asking “How ordered is this neighborhood?”, SymBOPs ask “How much does this neighborhood look like a perfect copy of symmetry X?” — allowing for targeted detection of structure, whether crystalline, amorphous, or hierarchical.
 
-This approach retains symmetry-sensitive phase information, enabling:
-
-  - Distinction between multiple competing local orders
-
-  - Detection of complex or partial symmetry motifs
-
-  - Quantification of structural similarity between neighborhoods and known reference structures
-
-  - Compatibility with both isotropic and anisotropic particles
-
 Moreover, SymBOPs are defined in a group-theoretic framework, allowing them to naturally handle systems with multiple particle types, broken symmetries, or directional interactions — which are increasingly common in modern self-assembly and nanomaterials research.
+
+
+### *Key Advantages of SymBOPs*
+
+1. **Symmetry Specificity**  
+   **What it is:** SymBOPs are built around an explicit reference tensor $$\widehat R^{(l)}$$ that is invariant under exactly the point‐group or space‐group symmetry you care about.  A projection operator $$\widehat P^{(l)} \;=\; \widehat R^{(l)} \otimes \widehat R^{(l)T}$$ then extracts only that symmetry channel from the bond tensor $$b_{ij}^{\otimes l}\,. $$  
+   **Why it helps:** Traditional scalar BOPs average over all orientations and lose any memory of *which* symmetry they were testing for. By contrast, SymBOPs vanish identically unless the chosen symmetry is truly present.
+
+2. **Retention of Phase Information**  
+   **What it is:** Because SymBOPs project onto a single symmetry mode but keep the full tensor (or complex) output, they preserve both magnitude and *phase* (orientation) of the local order.  
+   **Why it helps:** You can not only detect *that* order exists, but also map out the *direction* of each domain (i.e., the local phase of the order parameter), something scalar invariants throw away.
+
+3. **Bond‐Level, Local Assignment**  
+   **What it is:** SymBOPs are defined *per bond*—each inter-particle bond $$(i,j)$$ carries its own order parameter  
+   $$
+   \widehat q_{ij}^{*(l)} \;=\; \widehat P^{(l)} : b_{ij}^{\otimes l}\,.
+   $$  
+   **Why it helps:** You immediately know which bonds are “good” for that symmetry.  By combining this with simple bond-percolation, you can identify coherent *domains* of any shape or size—even very small or anisotropic clusters that traditional BOPs could never identify.
+
+4. **Built-In Handling of Anisotropic Particles**  
+   **What it is:** You can choose the reference tensor from the particle’s own orientational tensor (the polyhedral nematic order parameter) when you know each particle’s orientation, so that SymBOPs measure how bonds align *relative* to the particle axes.
+
+   **Why it helps:** Traditional BOPs treat all particles as isotropic; any “particle orientation” is a separate nematic parameter. SymBOPs merge the two in one step, giving extra sensitivity to bond–particle correlations.
+
+5. **Applicability Even When Orientations Are Unknown**  
+   **What it is:** If your building blocks are isotropic (or if you lack orientation data--think experiment), you can instead pick $$\widehat R^{(l)}$$ from the *assumed* symmetry of the expected phase (e.g., octahedral or icosahedral).  
+   **Why it helps:** You still get a targeted, symmetry-specific order parameter—even without local director information—leading to better phase identification than blind scalar BOPs.
+
+6. **Unified, Group-Theoretic Framework**  
+   **What it is:** Under the hood, SymBOPs are nothing more than projection operators onto irreducible representations of any chosen group $$G$$.  In spherical-harmonic language, one writes  
+   $$
+   Q_{\ell}^{(\Gamma)}(i)
+   = \frac{1}{|G|} \sum_{g \in G}
+     \chi^{(\Gamma)}(g)^* \;D^{(\ell)}(g)\;q_{\ell}(i)\,,
+   $$  
+   but in Cartesian form it reduces to the compact  
+   $$
+   \widehat P^{(l)}\,b^{\otimes l}\,.
+   $$  
+   **Why it helps:** The group sum automatically enforces all required sign and multiplicity factors.  This approach imports well-established representation-theory machinery into the bond-order parameter literature in a wholly new way.
+
+7. **Superior Sensitivity in Heterogeneous & Amorphous Systems**  
+   **What it is:** Because SymBOPs act locally and retain full tensor/phase information, they pick up even compact amorphous clusters or small crystallites that might be below the detection threshold of global or scalar-averaged BOPs.
+
+   **Why it helps:** In hybrid simulations of patchy + isotropic particles, SymBOPs distinguished both NaCl-type edge-to-edge domains and non-space-filling face-to-face amorphous clusters—whereas traditional $$Q_\ell, W_\ell$$ methods failed to see any order.
+
+8. **Custom Pattern Detection**  
+   **What it is:** SymBOPs let you target *any* local bonding motif—crystalline, amorphous, or entirely custom—by supplying a reference tensor $$\widehat R^{(l)}$$ and forming the projector  
+   $$  
+   \widehat P^{(l)} = \widehat R^{(l)} \otimes \widehat R^{(l)T}  
+   $$  
+   which then picks out that exact pattern via  
+   $$  
+   \widehat q_{ij}^{*(l)} = \widehat P^{(l)} : b_{ij}^{\otimes l}\,.  
+   $$  
+   **Why it helps:** Traditional BOPs are limited to standard point‐group symmetries.  With SymBOPs you can locate any structure you can encode as a reasonable traceless-symmetric tensor of rank $$\ell$$—whether it’s an icosahedral cluster, a compact amorphous motif, or even a user‐defined “stick‐figure” network—simply by defining the appropriate reference tensor. However, it's important to remember that SymBOPs encodes the angular distribution and not necessarily the topology of the structure. It's often the case in assembled structures that a high SymBOPs signal will also find the same bonding connectivity, but it's not guranteed. This is especially important if these methods are applied outside of self-assembled systems, where the nodes and edges may not be constructed through physical principles. 
+
+
+
+### Summary of Novel Contributions
+
+- **Reference-tensor/projector approach** to bond order (importing irreducible-representation machinery into soft-matter order parameters).  
+- **Particle-referenced vs. self-consistent** reference choices, allowing analysis of both known-orientation and unknown-orientation systems.  
+- **Bond percolation** of SymBOP-tagged bonds to automatically extract coherent domains of *any* shape.  
+- **Dual Cartesian/spherical formulation**, ensuring applicability in 2D, 3D, and beyond with minimal overhead.  
+
+
+
+
+
+
+
+
 
 
 
