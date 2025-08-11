@@ -102,13 +102,13 @@ Rotational symmetry is used to describe an object or set of objects (or points, 
 
 Orientational order looks at the rotational symmetry of an object or group of objects around a common point. There are two types of orientational order that we must distinguish between: *bond-orientational order* describes the orientational order of points in the neighborhood of a an origin, and *polyhedral nematic order* describes how aligned anisotropic objects, e.g., polygons and polyhedra, are with each other. 
 
-Bond-orientational order quantifies how ordered a set of points are based on their angles in a common set of axes. To learn by example, see the left image of <a href="#fig_BOO_vs_nematic" data-fig-ref>??</a>. Focus only on the left green point and the black points neighboring it. Using the usual polar coordinates we can compute the angle $$\theta_i$$ for each black neighboring partile $$i$$. We sum the phases of all $$N_b$$ neighbors of the green point
+Bond-orientational order quantifies how ordered a set of points are based on their angles on a common set of axes. To learn by example, see the left image of <a href="#fig_BOO_vs_nematic" data-fig-ref>??</a>. Focus only on the left green point and the six black points neighboring it. Using the usual polar coordinates we can compute the angle $$\theta_i$$ for each black neighboring partile $$i$$. We sum the phases of all $$N_b$$ neighbors of the green point
 
 $$
 \psi_{\ell} = \frac{1}{N_b}\sum\limits_{i=1}^{N_{b}} e^{i\ell \theta_i},
 $$
 
-where $$\ell$$ is chosen to look at $$\ell$$-fold orientational order. In the figure I have drawn concentric hexagons to aid the eye in looking for $$\ell=6$$-fold order, called hexatic order. We can easily see that each neighbor lies almost exactly on a vertex of the hexagons, showing that these neighbors have near perfect hexatic order. Notice that translationally, they're a mess; together the points do no form a regular hexagon. Our concern is strictly the orientational order about the central point, and not the translational order. Another thing to note is that this show that we can have orientational order while maintaining translational symmetry. Translational symmetry implies that there is no preferred distance between points, such as in a crystal-which breaks translational and orientational order. At this point we have a 2D vector $$\psi_\ell$$ which is a property of the neighborhood of the green point. This vector holds information about how the neighboring points are distributed orientationally around the green point-how well they approximate $$\ell$$-fold symmetry and also the orientation of this polygon in the chosen coordinate system. If we were to look at the neighborhood of a different point that differs from the previous neighborhood only be a rotation, the $$\psi_\ell$$ vectors will be different.
+where $$\ell$$ is chosen to look at $$\ell$$-fold orientational order. In the figure I have drawn concentric hexagons to aid the eye in looking for $$\ell=6$$-fold order, called hexatic order. We can easily see that each neighbor lies almost exactly on a vertex of the hexagons, showing that these neighbors have near perfect hexatic order. Notice that translationally, they're a mess; together the points do not form a regular hexagon. Our concern is strictly the orientational order about the central point, and not the translational order. Another thing to note is that this shows that we can have orientational order while maintaining translational symmetry. Translational symmetry implies that there is no preferred distance between points, such as in a crystal-which breaks translational and orientational order. At this point we have a 2D vector $$\psi_\ell$$ which is a property of the neighborhood of the green point. This vector holds information about how the neighboring points are distributed *orientationally* around the green point-how well they approximate $$\ell$$-fold symmetry and also the orientation of this polygon in the chosen coordinate system. If we were to look at the neighborhood of a different point that differs from the previous neighborhood only by a rotation, the $$\psi_\ell$$ vectors will most likely be different.
 
 The seminal paper by Steinhardt et al. in 1983 defined a way to quantify bond-orientational order in three-dimensions and proposed the use of rotational invariants to describe local structure of a set of particles in liquids and glasses. In 3D you may use spherical harmonics in place of a complex field. For each bond vector $$b_{ij}$$ from central particle $$i$$ to neighboring particle $$j$$ we may identify a point on the unit sphere with polar and azimuthal angles $$\left( \theta(\vec{r}_{ij}), \phi(\vec{r}_{ij}) \right)$$. From here traditionally one averages over the spherical harmonics for all neighbors and computes the second-order scalar (rotational invariant)
 
@@ -131,7 +131,7 @@ These parameters have been used very successfully over decades as structure desc
 
 
 
-## **Types of Order**
+## **Coexistence of Different Types of Order**
 
 <figure id="fig_pentagon_lattice">
   <img src="/assets/img/SymBOPs_general/ideal_pentagon_lattice_cropped.png" alt="ideal_pentagon_lattice" width="300" height="auto">
@@ -149,21 +149,41 @@ Three types of order are present in this 2D lattice of anisotropic particles: tr
 If we are to interpret the structure of complex materials, we must first understand the **distinct types of order** that may coexist in a configuration and how they interact. A clean example that illustrates this interplay—and sets the stage for the introduction of SymBOPs—is the **dense 2D lattice of ideal pentagons**, shown in <a href="#fig_pentagon_lattice" data-fig-ref>??</a>.
 
 ### **Translational Order**
-Translational order refers to the periodic arrangement of particle centers in space. In the pentagon lattice, the centers of mass of the particles lie on the vertices of a 2D orthorhombic lattice. This means their spatial distribution is characterized by regular repetition along two perpendicular directions, which can be described mathematically as a **density wave** with wavevectors $$\vec{k}_x$$ and $$\vec{k}_y$$ corresponding to the lattice spacings along those directions: $$\vert \vec{k} \vert = 2\pi/a$$. This kind of order is present even if the particles were simple circles, making it agnostic to particle anisotropy.
+Translational order refers to the periodic arrangement of particle centers in space. In the pentagon lattice, the centers of mass of the particles of one color lie on the vertices of a 2D orthorhombic lattice--easily spotted by noticing the centers form small rectangles with neighbors of the same color. This means their spatial distribution is characterized by regular repetition along two perpendicular directions, which can be described mathematically as a **density wave** with wavevectors $$\vec{k}_x$$ and $$\vec{k}_y$$ corresponding to the lattice spacings $$a$$ along those directions: $$\vert \vec{k} \vert = 2\pi/a$$. This kind of order is present even if the particles are simple circles, making it agnostic to particle anisotropy.
 
 ### **Bond-Orientational Order**
-Bond-orientational order (BOP) captures the angular structure of how particle centers are arranged relative to each other. It measures the symmetry of the bond directions connecting each particle to its neighbors. In the pentagon crystal, these bonds align strongly along the $$\hat{x}$$ and $$\hat{y}$$ directions, forming a **biaxial symmetry** pattern. This directional information reveals the symmetry axes of the lattice and serves as a natural frame of reference for understanding both the translational and orientational patterns. Even if the particles themselves were replaced with isotropic disks, this underlying bond structure would still persist.
+Bond-orientational order (BOP) captures the angular structure of how particle centers are arranged relative to each other. It measures the symmetry of the bond directions connecting each particle to its neighbors. In the pentagon crystal, these bonds align strongly along the $$\hat{x}$$ and $$\hat{y}$$ directions, forming a **biaxial symmetry** pattern. This directional information reveals the symmetry axes of the lattice and serves as a natural frame of reference for understanding both the translational and orientational patterns. Even if the particles themselves were replaced with isotropic disks, this underlying bond structure would still persist, making it, again, agnostic to the particle anisotropy.
 
 ### **Orientational Order of Particles**
-The third kind of order arises from the intrinsic orientation of anisotropic particles themselves—in this case, the pentagons. Each pentagon has a defined orientation, and in the dense crystal, this orientation **alternates between layers**. This creates a **pattern of anti-nematic order**: neighboring layers contain particles oriented in nearly opposite directions (rotated by $$\pi$$). While the underlying lattice preserves translational and bond-orientational order, the particle orientations break the **10-fold rotational symmetry** that would otherwise exist if all pentagons had the same orientation. This symmetry breaking is subtle and can only be captured using **higher-rank tensors** or specialized tools like SymBOPs.
-
-
-
-
+The third kind of order arises from the intrinsic orientation of anisotropic particles themselves—in this case, the pentagons. Each pentagon has a defined orientation, and in the dense crystal, this orientation **alternates between layers**. This creates a **pattern of anti-nematic order**: neighboring layers contain particles oriented in nearly opposite directions (rotated by $$\pi$$). While the underlying lattice preserves translational and bond-orientational order, the particle orientations break the **10-fold rotational symmetry** that would otherwise exist if all pentagons had the same orientation. This symmetry breaking is subtle and can only be captured using **high-rank tensors** or specialized tools like SymBOPs.
 
 
 
 ## **Introducing SymBOPs**
+
+Let's begin by providing an intuitive understanding of what a SymBOP is, and what it can do. Given a seemingly messy configuration of particles (the particles can have any shape, but, surprisingly, spheres are a special case), we would like to be able to identify any regions with strong orientational order. Recall that it's possible to have orientational order without translational order, so these regions could be ideal crystalline lattices, or domains that may not look as ordered to the human eye, like <a href="#fig_BOO_vs_nematic" data-fig-ref>??</a>. The way SymBOPs finds these domains is by creating a *reference template* of the order we want to search for and then checking how well each bond matches this template. As an overly simplified example, you can imagine taking a cookie cutter of the order you want to find and running it over the sample; where the shape fits, the score is high. In one pass SymBOPs checks both (i) how neighbors are oriented relative to each other (bond-orientational order) and (ii) how the particles themselves are oriented (particle orientation). Bonds with high scores are then grouped into connected clusters, giving you domains that share the same order. A good default—when you don’t know what to expect—is to use the symmetry of the building block (e.g., a square, pentagon, etc.) as the template. While not always the case, often the order of the domains mimics the geometry of the building blocks that make up the domains.
+
+Below, 2D square particles assemble in a 3D periodic box. The left panel shows the final configuration; the right shows domains SymBOPs pulled out. Each color is a separate domain with its own orientation. The domains in this case mirror the symmetry of the particles and form 2D sheets.
+
+<figure id="vid_2D_squares_domains_example">
+  <video width="450" poster="{{ "/assets/img/SymBOPs/2D_squares_domains_cover.png" | relative_url }}" autoplay loop muted playsinline>
+  <source src="{{ "/assets/videos/SymBOPs/2D_squares_domains.mp4" | relative_url }}?v={{ site.time | date: '%s' }}" type="video/mp4">
+  Your browser does not support the video tag.
+  </video>
+  <figcaption data-katex>
+    Using SymBOPs to identify ordered domains of 2D square particles in 3D space. Each colored domain is independent and has it's own orientation.
+  </figcaption>
+</figure>
+
+In this case there are particles in the configuration that were not found to fall in any of the ordered domains. This, of course, makes sense, because not all of the particles in a region of space share the orientational order of its neighbors, and some never assembled correctly, which is very common in simulation and experiment. By design, we only report contiguous domains, so distant matches aren’t grouped together. (In other applications you could relax this to find non-local patterns.)
+
+
+
+
+
+
+
+## **Deeper Understanding of SymBOPs**
 
 The example of the ideal pentagon crystal in the previous section shows that orthorhombic crystals and the symmetry group constrained the available space. In general we begin with the full space of symmetric, traceless tensors of rank $$\ell$$ with dimension $$2\ell + 1$$ and the identity is the only "symmetry". As we add symmetries, e.g., rotation by $$180^\circ$$ around the $$X$$-axis, reflection across the $$XY$$-plane, a constraint is added that either zeros elements or equates elements of the symmetric, traceless tensor. One of the main objects utilized by the SymBOPs method is what we call a *reference tensor* $$\widehat{R}^{(\ell)}$$. It is a traceless $$\ell$$-rank tensor that is invariant to all operations of a chosen point symmetry group and normalized $$\sqrt{\widehat{R}^{(\ell)} \cdot \widehat{R}^{(\ell)}} = 1$$. 
 
