@@ -1,7 +1,13 @@
 ---
 layout: page
 title: "About Me"
-permalink: /about-me/
+#permalink: /about-me/
+permalink: /         # ← becomes the home page
+redirect_from:
+  - /about-me/       # keep the old URL working (requires jekyll-redirect-from)
+cover: true
+#section: true
+#order: 1
 ---
 
 {%comment%}

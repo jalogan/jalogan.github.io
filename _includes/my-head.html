@@ -159,4 +159,7 @@
   });
 </script>
 
-
+<!--Modify what the website homepage swipe goes to-->
+{%- unless page.cover -%}
+  <script src="{{ '/assets/js/custom-swipe.js' | relative_url }}"></script>
+{%- endunless -%}

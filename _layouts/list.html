@@ -23,6 +23,8 @@ layout: page
 
 {{ content }}
 
+
+{%- comment -%}
 {% assign posts = site.categories[page.slug] | default: site.tags[page.slug] | default: site.posts %}
 {% assign sorted_posts = posts | sort: "order" %}
 
@@ -49,6 +51,39 @@ layout: page
   {% include_cached components/post-list-item.html post=post format="%d %b" %}
   {% if forloop.last %}</ul>{% endif %}
 {% endfor %}
+{%- endcomment -%}
+
+
+
+<!-- Add the sidebar container to hold the dynamically loaded content -->
+<div id="sidebar">
+  <h2>About Me</h2>
+  <div id="about-me-content">
+    <!-- Dynamically loaded content from /about-me page will go here -->
+  </div>
+</div>
+
+<!-- Script to load the /about-me page content into the sidebar -->
+<script>
+  fetch('/about-me')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('about-me-content').innerHTML = html;
+      console.log("Loaded /about-me content into the sidebar.");
+    })
+    .catch(error => {
+      console.error('Error loading /about-me content:', error);
+      document.getElementById('about-me-content').innerHTML = '<p>Failed to load content.</p>';
+    });
+</script>
+
+
+<!-- Test Message to Confirm list.html is being used -->
+<p style="color: red;">This is the list layout!</p>
+
+
+
+
 
 
 

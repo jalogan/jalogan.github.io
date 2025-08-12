@@ -253,5 +253,23 @@ body.dark-mode figcaption {
 }
 
 
+/* while swiping from home page, change how we view what's beginning to appear behind it*/
+.swipe-lock {
+  opacity: 0.5; /* Dim the content during swipe */
+  pointer-events: none; /* Disable interaction during swipe */
+}
+
+/* Optional: Add transition effects for smooth sidebar movement */
+body.sidebar-active {
+  transform: translateX(-300px); /* Move homepage content offscreen to the left */
+  transition: transform 0.3s ease; /* Smooth transition */
+}
+
+/* Optional: Add some styles when page is locked */
+body.swipe-lock {
+  opacity: 0.5; /* Fade the content */
+  pointer-events: none; /* Prevent interaction while swiping */
+}
+
 
 

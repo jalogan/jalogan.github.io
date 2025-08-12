@@ -166,8 +166,8 @@ Let's begin by providing an intuitive understanding of what a SymBOP is, and wha
 Below, 2D square particles assemble in a 3D periodic box. The left panel shows the final configuration; the right shows domains SymBOPs pulled out. Each color is a separate domain with its own orientation. The domains in this case mirror the symmetry of the particles and form 2D sheets.
 
 <figure id="vid_2D_squares_domains_example">
-  <video width="450" poster="{{ "/assets/img/SymBOPs/2D_squares_domains_cover.png" | relative_url }}" autoplay loop muted playsinline>
-  <source src="{{ "/assets/videos/SymBOPs/2D_squares_domains.mp4" | relative_url }}?v={{ site.time | date: '%s' }}" type="video/mp4">
+  <video width="450" poster="{{ "/assets/img/SymBOPs_general/2D_squares_domains_cover.png" | relative_url }}" autoplay loop muted playsinline>
+  <source src="{{ "/assets/videos/SymBOPs_general/2D_squares_domains.mp4" | relative_url }}?v={{ site.time | date: '%s' }}" type="video/mp4">
   Your browser does not support the video tag.
   </video>
   <figcaption data-katex>
@@ -185,9 +185,11 @@ In this case there are particles in the configuration that were not found to fal
 
 ## **Deeper Understanding of SymBOPs**
 
-The example of the ideal pentagon crystal in the previous section shows that orthorhombic crystals and the symmetry group constrained the available space. In general we begin with the full space of symmetric, traceless tensors of rank $$\ell$$ with dimension $$2\ell + 1$$ and the identity is the only "symmetry". As we add symmetries, e.g., rotation by $$180^\circ$$ around the $$X$$-axis, reflection across the $$XY$$-plane, a constraint is added that either zeros elements or equates elements of the symmetric, traceless tensor. One of the main objects utilized by the SymBOPs method is what we call a *reference tensor* $$\widehat{R}^{(\ell)}$$. It is a traceless $$\ell$$-rank tensor that is invariant to all operations of a chosen point symmetry group and normalized $$\sqrt{\widehat{R}^{(\ell)} \cdot \widehat{R}^{(\ell)}} = 1$$. 
 
-The reference tensor acts as an ideal template of the subspace that satisfies all symmetries we have chosen to search for in our configuration. We define the SymBOP as the projection of our bond tensors into this subspace,
+
+The example of the ideal pentagon crystal in <a href="#fig_pentagon_lattice" data-fig-ref>??</a> shows that orthorhombic crystals and their symmetry group constrained the available space. In general, we begin with the full space of symmetric, traceless tensors of rank $$\ell$$ with dimension $$2\ell + 1$$ and the identity is the only "symmetry". As we add symmetries, e.g., rotation by $$180^\circ$$ around the $$X$$-axis, reflection across the $$XY$$-plane, a constraint is added that either zeros elements or equates elements of the symmetric, traceless tensor. The most constrained case is full isotropy (group O(3)), and this forces all $$\ell > 0$$ to vanish and only the scalar $$\ell=0$$ survives. One of the main objects utilized by the SymBOPs method is what we call a *reference tensor* $$\widehat{R}^{(\ell)}$$. It is a traceless $$\ell$$-rank tensor that is invariant to all operations of a chosen point symmetry group and normalized $$\sqrt{\widehat{R}^{(\ell)} \cdot \widehat{R}^{(\ell)}} = 1$$. 
+
+The reference tensor acts as the ideal template of the subspace that satisfies all symmetries we have chosen to search for in our configuration. We define the SymBOP as the projection of our bond tensors into this subspace,
 
 $$
 \widehat{q}^{*(\ell)} = \widehat{R}^{(\ell)} \left( \widehat{R}^{(\ell)} \cdot \widehat{b}_{ij}^{\otimes \ell} \right) = \widehat{\mathcal{P}}^{(\ell)} \widehat{b}_{ij}^{\otimes \ell}.

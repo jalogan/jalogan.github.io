@@ -47,6 +47,16 @@ The mathematical framework developed below is applicable to all topologies of sp
 In order to compute the entropies we use a statistical mechanical thought experiment and a novel Monte Carlo algorithm, developed for this work. The simulations are done for packings in a semi-periodic box (periodic in $$x$$ and $$y$$, closed at $$z=0$$ and open for positive $$z$$) and for packings in free space. Examples of these two types of packings are seen in the figure at the top of the page.
 
 
+<figure id="vid_making_isostatic_packing_example">
+  <video width="450" poster="{{ "/assets/img/entropy_of_sphere_packing/build_packing_faster_cover.png" | relative_url }}" autoplay loop muted playsinline>
+  <source src="{{ "/assets/videos/entropy_of_sphere_packing/build_packing_faster.mp4" | relative_url }}?v={{ site.time | date: '%s' }}" type="video/mp4">
+  Your browser does not support the video tag.
+  </video>
+  <figcaption data-katex>
+    Generating a strictly isostatic packing in a periodic box.
+  </figcaption>
+</figure>
+
 
 
 ### **Connecting to Traditional Statistical Mechanics**
