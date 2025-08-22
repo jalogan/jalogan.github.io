@@ -185,8 +185,6 @@ In this case there are particles in the configuration that were not found to fal
 
 ## **Deeper Understanding of SymBOPs**
 
-
-
 The example of the ideal pentagon crystal in <a href="#fig_pentagon_lattice" data-fig-ref>??</a> shows that orthorhombic crystals and their symmetry group constrained the available space. In general, we begin with the full space of symmetric, traceless tensors of rank $$\ell$$ with dimension $$2\ell + 1$$ and the identity is the only "symmetry". As we add symmetries, e.g., rotation by $$180^\circ$$ around the $$X$$-axis, reflection across the $$XY$$-plane, a constraint is added that either zeros elements or equates elements of the symmetric, traceless tensor. The most constrained case is full isotropy (group O(3)), and this forces all $$\ell > 0$$ to vanish and only the scalar $$\ell=0$$ survives. One of the main objects utilized by the SymBOPs method is what we call a *reference tensor* $$\widehat{R}^{(\ell)}$$. It is a traceless $$\ell$$-rank tensor that is invariant to all operations of a chosen point symmetry group and normalized $$\sqrt{\widehat{R}^{(\ell)} \cdot \widehat{R}^{(\ell)}} = 1$$. 
 
 The reference tensor acts as the ideal template of the subspace that satisfies all symmetries we have chosen to search for in our configuration. We define the SymBOP as the projection of our bond tensors into this subspace,
@@ -202,6 +200,65 @@ In 3D, high-rank tensors may be replaced with vectors of spherical harmonics. We
 $$
 \vert q_{ij}^{*})_{\ell} = \vert R)_{\ell} \, (R \vert \widehat{\mathbf{b}}_{ij})_{\ell} = \tilde{\mathcal{P}} \vert \widehat{\mathbf{b}}_{ij})_{\ell}.
 $$
+
+
+If $$\widehat{b}_{ij}^{\otimes \ell} \in V_\ell$$ is the vector space of all symmetric, traceless tensors of rank $$\ell$$ that holds the bond tensors, the subspace that we want to project our bond tensors into is 
+
+$$
+W^G_\ell = \{T \in V_\ell \, \vert \, D^{(\ell)}(g) T = T, \, \forall g \in G\}
+$$
+
+the subspace invariant under all operations of group $$G$$ acting on all elements of $$V_\ell$$ with $$D^{(\ell)}(g)$$. To perform this projection we use the projection operator for group $$G$$. 
+
+The projection operator may be found in several ways, which breaks SymBOPs into different categories:
+
+  1. *Point Group Symmetries* 
+
+      If there is a particular group of symmetries you want to investigate, the projection operator can be constructed in the usual manner from group theory,
+
+      $$
+        \mathcal{P}^G = \frac{1}{\vert G \vert}\sum\limits_{g \in G} D^{(\ell)}(g).
+      $$
+
+      Or for a specific irreducible representation
+
+      $$
+        \mathcal{P}^{G, \Gamma}_\ell = \frac{d_\Gamma}{\vert G \vert} \sum\limits_{g \in G} \chi_{\Gamma}(g)^* D^{(\ell)}(g).
+      $$
+
+      If a particle in the system has this symmetry, this operator will be equivalent to that found using the *particle reference* method below.
+
+
+  2. *Particle Reference*
+
+      If the building blocks in the system are anisotropic then there are two types of orientational order present: bond-orientational order between centers of neighboring particles, and the orientational order of the the particles themselves. It is often, but not always, the case that the order of the bond orientations follows the symmetry of the particle, e.g., self-assmebling cubes or octahedra forming crystals with cubic symmetry. If this is the case, the polyhedral nematic order parameter is a quick, convenient way to construct the projection operator such that it uses the preferred axes of the particle.
+
+      The projection operator can be most easily found by placing the origin at the particle's center of geometry and for each of the $$N_v$$ vertices of the polyhedron use the bond vector $$\hat{b}_{iv}$$ from the chosen origin $$i$$ to the vertex $$v$$. This unit vector defines the polar and azimuthal angles of the vertex with respect to the chosen origin. For each polyhedron you then create the $$2\ell + 1$$-dimensional vector of spherical harmonics based on these angles,
+
+      $$
+      \vert \tilde{s}_i )_\ell = \left\{ \frac{1}{N_v} \sum\limits_{v=1}^{N_v} Y_{lm}(\hat{b}_{iv}) \right\}_{m=-\ell \dots \ell}
+      $$
+
+      $$
+      \vert s_i )_\ell = \frac{\vert \tilde{s}_i )_\ell}{\sqrt{(\tilde{s}_i \vert \tilde{s}_i )_\ell}}
+      $$
+
+      Here $$\vert s_i )_\ell$$ is a $$2\ell + 1$$-D vector of spherical harmonics, where each component corresponds to a different $$m$$. 
+      
+      Given $$\vert s_i )_\ell$$ the projector is 
+      
+      $$
+        \widehat{\mathcal{P}}^{(\ell)} = \vert s_i)(s_i \vert_\ell.
+      $$
+
+      This is the preferred method when particles are anisotropic *and* we know the particle orientations--which is often not the case in experiment. In particular, this is demeonstrated in the publication "Controlling morphology in hybrid isotropic/patchy particle assemblies" (linked below). This method is powerful, and it can be used to construct a projector for any orientational geometry you'd like to search for. However, it's important to keep in mind if you want to create a custom projector for, e.g., a stick figure, that this is orientational only and, while the geometry is often constrained by the particle assembly, the geometry and topology of what is discovered may differ from the template.
+
+
+  3. *Self-consistent Reference*
+
+      In any case when the orientational information about the building blocks is not known or if the particles isotropic, the *particle reference* method is no longer possible, and we must find the projection operator and its preferred axes another way. The coordinate system associated with the projection operator is rotated to maximize the magnitude of the SymBOP signal averaged over a part of the system. Because SymBOPs is defined at the level of a single bond, we may identify individual bonds that belong to the same equivalance class, for the given point group. After bonds are selected, a bond percolation procedure can be used to locate local, coherent domains.
+
+      This method is used in "Symmetry-specific characterization of bond orientation order in DNA-assembled nanoparticle lattices" (linked below).
 
 
 
