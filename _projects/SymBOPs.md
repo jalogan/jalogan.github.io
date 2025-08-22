@@ -217,14 +217,16 @@ The projection operator may be found in several ways, which breaks SymBOPs into 
       If there is a particular group of symmetries you want to investigate, the projection operator can be constructed in the usual manner from group theory,
 
       $$
-        \mathcal{P}^G = \frac{1}{\vert G \vert}\sum\limits_{g \in G} D^{(\ell)}(g).
+        \widehat{\mathcal{P}}^{(\ell)}_G = \frac{1}{\vert G \vert}\sum\limits_{g \in G} D^{(\ell)}(g).
       $$
 
       Or for a specific irreducible representation
 
       $$
-        \mathcal{P}^{G, \Gamma}_\ell = \frac{d_\Gamma}{\vert G \vert} \sum\limits_{g \in G} \chi_{\Gamma}(g)^* D^{(\ell)}(g).
+        \widehat{\mathcal{P}}^{(\ell)}_{G, \Gamma} = \frac{d_\Gamma}{\vert G \vert} \sum\limits_{g \in G} \chi_{\Gamma}(g)^* D^{(\ell)}(g),
       $$
+
+      where $$\vert G\vert$$ are the number of elements in $$G$$, $$d_{\Gamma}$$ is the dimension of the irreducible representation $$\Gamma$$, $$D^{(\ell)}(g)$$ is the representation of group operation $$g$$ with character $$\chi_{\Gamma}$$, and the asterisk represents complex conjugation. In general, $$D^{(\ell)}(g)$$ is a $$(2\ell + 1) \times (2\ell + 1)$$ matrix describing how element $$g$$ acts on $$V_\ell$$. In the spherical harmonic basis these are the Wigner $$D$$-matrices $$D^{(\ell)}_{mm'}(g)$$. The first equation is a special case of the latter when the trivial representation, that gives the full $$G$$-invariant subspace, is used, and $$d_{\Gamma} = \chi_{\Gamma}(g) = 1$$.
 
       If a particle in the system has this symmetry, this operator will be equivalent to that found using the *particle reference* method below.
 
