@@ -231,6 +231,69 @@ The projection operator may be found in several ways, which breaks SymBOPs into 
       If a particle in the system has this symmetry, this operator will be equivalent to that found using the *particle reference* method below.
 
 
+
+<div class="aside-box">
+  <div class="aside-header">Aside: Simple Projection Operator</div>
+
+  <div class="aside-content" markdown="1">
+As an example of using the method above for finding a projection operator on $$\mathbb{R}^3$$, we use the group $$C_{2v}$$. This group $$G = \{ E, C_2, \sigma_{xz}, \sigma_{yz}\}$$ consists of the four elements the identity ($$E$$), rotation by $$180^\circ$$ ($$C_2$$), reflection about the $$xz$$ plane ($$\sigma_{xz}$$), and reflection about the $$yz$$ plane ($$\sigma_{yz}$$). One representation of this group is the diagonal matrices $$\mathrm{diag}(1,1,1)$$, $$\mathrm{diag}(-1,-1,1)$$, $$\mathrm{diag}(1,-1,1)$$, $$\mathrm{diag}(-1,1,1)$$.
+
+The projector is constructed as
+
+$$
+\widehat{\mathcal{P}}^{(\ell)}_{C_{2v}}
+= \frac{1}{\lvert G \rvert}\sum_{g \in G} D^{(\ell)}(g)
+= \frac{1}{4}\Biggl[
+\begin{pmatrix}
+1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1
+\end{pmatrix}
++
+\begin{pmatrix}
+-1 & 0 & 0\\
+0 & -1 & 0\\
+0 & 0 & 1
+\end{pmatrix}
++
+\begin{pmatrix}
+1 & 0 & 0\\
+0 & -1 & 0\\
+0 & 0 & 1
+\end{pmatrix}
++
+\begin{pmatrix}
+-1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1
+\end{pmatrix}
+\Biggr]
+=
+\begin{pmatrix}
+0 & 0 & 0\\
+0 & 0 & 0\\
+0 & 0 & 1
+\end{pmatrix}
+$$
+
+Using this projector on a general vector $$\vec{v} = (x,y,z)$$ renders $$\widehat{\mathcal{P}}^{(\ell)}_{C_{2v}} \vec{v} = (0,0,z)^T$$. It projects a general a vector to the $$z$$ axis because that is the only line invariant under all of the group operations. 
+
+On the other hand, if we were to construct the projection operator on $$\mathbb{R}^2$$ for the cyclic group $$C_4$$ which consists of rotations $$G = \{ E, R(\frac{\pi}{2}), R(\pi), R(\frac{3\pi}{2}) \}$$
+
+$$
+\widehat{\mathcal{P}}^{(\ell)}_{C_{4}} = \frac{1}{4} \left[ I + R\left(\frac{\pi}{2}\right) + R\left(\pi\right) + R\left(\frac{3\pi}{2}\right) \right] = \vec{0},
+$$
+
+because the only vector left invariant by all $$90^\circ$$ rotations in $$\mathbb{R}^2$$ is the zero vector.
+
+  </div>
+</div>
+
+
+
+
+
+
   2. *Particle Reference*
 
       If the building blocks in the system are anisotropic then there are two types of orientational order present: bond-orientational order between centers of neighboring particles, and the orientational order of the the particles themselves. It is often, but not always, the case that the order of the bond orientations follows the symmetry of the particle, e.g., self-assmebling cubes or octahedra forming crystals with cubic symmetry. If this is the case, the polyhedral nematic order parameter is a quick, convenient way to construct the projection operator such that it uses the preferred axes of the particle.

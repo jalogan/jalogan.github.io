@@ -177,10 +177,14 @@ defaults:
       seo:
         type:          WebPage
 
+#kramdown:
+#  math_engine:         katex
+#  math_engine_opts:    {}
+#  footnote_backlink:   '&#x21a9;&#xfe0e;'
+
 kramdown:
-  math_engine:         katex
-  math_engine_opts:    {}
-  footnote_backlink:   '&#x21a9;&#xfe0e;'
+  math_engine: mathjax
+  footnote_backlink: '&#x21a9;&#xfe0e;'
 
 
 # Hydejack Settings
