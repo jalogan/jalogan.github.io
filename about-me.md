@@ -14,11 +14,27 @@ cover: true
 # About Me
 {%endcomment%}
 
-<img src="/assets/img/about_me/photo1.jpg" alt="Me" width="200">
-<img src="/assets/img/about_me/photo2.jpg" alt="Me 2" width="200">
+
+
+
+<div style="max-width: 800px; margin: 0 auto; padding: 0 1rem;">
+  <div style="display: flex; justify-content: center; align-items: center; gap: 12px;">
+    <img src="/assets/img/about_me/about_me_photo_1.jpg" alt="Me"
+         style="display:block; height: clamp(220px, 40vh, 420px); width: auto;">
+    <img src="/assets/img/about_me/about_me_photo_2.jpg" alt="Me 2"
+         style="display:block; height: clamp(220px, 40vh, 420px); width: auto;">
+  </div>
+</div>
+
+
+
 
 ## Background
-I am a physicist with expertise in computational modeling, data analysis, and high-performance computing. I specialize in polymer physics, soft matter simulations, and accelerator physics.
+I am a PhD physicist with expertise in mathematical modeling, computational modeling, data analysis, and high-performance computing. I have specialized in theoretical soft-condensed matter physics working on everything from order parameters, sphere packings to the structure of proteins and protein folding dynamics. My PhD in physics was completed at Stony Brook University, and my PhD research was done with Dr. Alexei V. Tkachenko as part of the Center for Funcitonal Nanomaterials' Theory and Computation Group at Brookhaven National Laboratory. My post-doctoral work was completed at Yale University with Dr. Corey O'Hern.
+
+On this site you will find some of my past research with summaries or differing perspectives on the work and links to the publications, along with ongoing or current work.
+
+My current interests include, but are not limited to, understanding artificial neural networks through the lens of mathematical physics to better understand how they internal connections and circuits emerge. Elimintating this black box is a key to developing future technologies that will revolutionize society and are, above all, safe for use.
 
 
 {%comment%}
