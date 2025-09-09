@@ -4,7 +4,7 @@
 author1:
   name:              Jack Logan
   email:             ''
-  url:               /about-me/
+  url:               /
   # Used at the bottom of each page and at the top of the `about` layout
   # Markdown enabled, can use multiple paragraphs (enabled by `|`)
   about:             |    

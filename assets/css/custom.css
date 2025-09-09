@@ -20,6 +20,14 @@ body {
   margin: 2em auto;    /* centers it and adds vertical breathing room */
 }
 
+/* Force math inside .math-box to always be black */
+.math-box,
+.math-box .katex,
+.math-box .katex * {
+  color: #000 !important;
+}
+
+
 .wide-math.katex-display {
   max-width: 95%;      /* or 800px, or whatever you like */
   margin: 1.5em auto;  /* center it with some vertical breathing room */
@@ -53,6 +61,15 @@ body {
   font-size: 1em;
   line-height: 1.6;
 }
+
+/* Make font color of aside boxes black regardless of light or dark mode */
+.aside-content,
+.aside-content * {
+  color: #000 !important;
+}
+
+
+
 
 /* All figures (images or videos) */
 figure {
