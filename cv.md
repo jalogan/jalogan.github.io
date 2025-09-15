@@ -15,28 +15,22 @@ permalink: /cv/
 ## Summary
 - Extensive experience in computational and mathematical modeling, data analysis, analytical methods, and high-performance computing.  
 - Proven leadership in managing multidisciplinary teams, delivering impactful research and publications.  
-- Seeking to leverage technical expertise and project management skills in a challenging role within R&D to address complex problems.
+
 
 
 ## Education
-**PhD in Physics**  
+**PhD Physics**  
 Stony Brook University  
 *Advisor:* Alexei Tkachenko (Brookhaven National Laboratory)  
 *Dissertation:* ["Geometric and Topological Aspects of Self-Assembly: from spheres and rods to designer particles"](/projects/PhD_thesis/)
 
-**MA in Physics**
-Stony Brook University
+**MA Physics**   
+Stony Brook University   
 
-**MS in Applied Mathematics**
-Long Island University
-*Summa Cum Laude*
+**MS Applied Mathematics**    
+Long Island University   
+*Summa Cum Laude* 
 
-
-\vspace{1mm}
-
-\noindent \textbf{Long Island University}, Brookville, NY \hfill \\ %\textit{2014} \\
-Master of Science in Applied Mathematics \\ 
-{\em Summa Cum Laude}
 
 ## Technical Skills
 **Programming:** Python, C++, CUDA, Bash  
@@ -49,11 +43,11 @@ Master of Science in Applied Mathematics \\
 
 
 ## Professional Experience
-**Yale University**  
-Postdoctoral Fellow
-*Advisor:* Corey O'Hern
+**Yale University**   
+Postdoctoral Fellow    
+*Advisor:* Corey O'Hern    
 **Brookhaven National Laboratory**  
-Research Assistant, *Center for Functional Nanomaterials*  
+Research Assistant, *Center for Functional Nanomaterials*    
 *Advisor:* Alexei V. Tkachenko
 
 
