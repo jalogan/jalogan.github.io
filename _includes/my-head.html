@@ -87,3 +87,24 @@
 {%- unless page.cover -%}
   <script src="{{ '/assets/js/custom-swipe.js' | relative_url }}"></script>
 {%- endunless -%}
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const dest = '/?no-cover#about';   // or '/#about' if you prefer to keep the cover visible
+
+  // Rewrite any link that points exactly to the site root
+  const sameOriginRoot = (a) =>
+    a.origin === location.origin &&
+    (a.pathname === '/' || a.pathname === '{{ "/" | relative_url }}');
+
+  document.querySelectorAll('a[href]').forEach(a => {
+    try {
+      const url = new URL(a.href, location.href);
+      if (sameOriginRoot(url)) a.href = dest;
+    } catch(_) {}
+  });
+});
+</script>

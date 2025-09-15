@@ -45,10 +45,10 @@ Long Island University
 ## Professional Experience
 **Yale University**   
 Postdoctoral Fellow    
-*Advisor:* Corey O'Hern    
+   
 **Brookhaven National Laboratory**  
 Research Assistant, *Center for Functional Nanomaterials*    
-*Advisor:* Alexei V. Tkachenko
+
 
 
 ## Selected Publications

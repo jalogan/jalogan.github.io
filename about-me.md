@@ -10,6 +10,9 @@ cover: true
 #order: 1
 ---
 
+<div id="about"></div>
+
+
 {%comment%}
 # About Me
 {%endcomment%}

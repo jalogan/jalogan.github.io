@@ -290,3 +290,65 @@ body.swipe-lock {
 
 
 
+
+
+
+/* Contact Me Form customization */
+form button {
+  /*background: rgb(79,177,186);*/
+  background: rgb(55, 56, 56);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+form button:hover {
+  /*background: rgb(60,140,150);*/
+  background: rgb(96, 98, 98);
+}
+
+form {
+  max-width: 800px;    /* wider form */
+  margin: 0 auto;      /* center form in the page */
+  padding: 20px;
+}
+
+form textarea {
+  /* start a bit narrower so users can widen it */
+  width: 100%;
+  max-width: 100%;     /* can expand up to the form’s full width */
+  min-width: 280px;
+
+  min-height: 180px;
+  resize: both;        /* <- allow horizontal + vertical drag */
+  overflow: auto;      /* scrollbars if needed */
+
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+form input[type="text"],
+form input[type="email"] {
+  width: 80%;        /* or 100% to span the form */
+  max-width: 100%;   /* prevent overflow */
+  min-width: 280px;
+
+  height: 40px;      /* makes boxes taller */
+  padding: 8px 12px;
+  font-size: 1rem;
+
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+}
+
+
+/* Adjust where the About Me page starts--want it to start at the top */
+#about { scroll-margin-top: 16rem; }  /* try 8–10rem; tweak to taste */
