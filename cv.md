@@ -7,7 +7,7 @@ permalink: /cv/
 
 
 
-<button onclick="window.location.href='/assets/docs/CV_short.pdf'" class="cv-button">
+<button onclick="window.location.href='/assets/docs/CV_Jack_Logan_2025.pdf'" class="cv-button">
   <i class="fa fa-download"></i> View Full CV
 </button>
 
@@ -24,21 +24,41 @@ Stony Brook University
 *Advisor:* Alexei Tkachenko (Brookhaven National Laboratory)  
 *Dissertation:* ["Geometric and Topological Aspects of Self-Assembly: from spheres and rods to designer particles"](/projects/PhD_thesis/)
 
+**MA in Physics**
+Stony Brook University
+
+**MS in Applied Mathematics**
+Long Island University
+*Summa Cum Laude*
+
+
+\vspace{1mm}
+
+\noindent \textbf{Long Island University}, Brookville, NY \hfill \\ %\textit{2014} \\
+Master of Science in Applied Mathematics \\ 
+{\em Summa Cum Laude}
+
 ## Technical Skills
-**Programming:** Python, C++, CUDA, MATLAB, Bash  
+**Programming:** Python, C++, CUDA, Bash  
 **Simulation Tools:** Molecular Dynamics, Monte Carlo methods  
-**Data Analysis:** Machine Learning, Statistical Analysis, Optimization   
+**Data Analysis:** Statistical Analysis, Optimization, Machine Learning   
 **High-Performance Computing:** Parallel Computing, HPC Clusters   
+**Machine Learning:** Linear Regression | Support Vector Machines (SVMs) | Multilayer Perceptrons (MLPs) | PyTorch (Artificial Neural Networks) | PyTorch Geometric (Graph Neural Networks) | Physics-based Modeling using Neural Networks   
 **Collaboration Tools:** Git, GitHub  
+
+
 
 ## Professional Experience
 **Yale University**  
-Postdoctoral Fellow  
+Postdoctoral Fellow
+*Advisor:* Corey O'Hern
 **Brookhaven National Laboratory**  
 Research Assistant, *Center for Functional Nanomaterials*  
+*Advisor:* Alexei V. Tkachenko
+
 
 ## Selected Publications
-- ["The effect of constraints on the radius of gyration for collapsed polymers"](https://doi.org/10.48550/arXiv.2501.02424), **Jack A. Logan**, Alex T. Grigas, Jacob Sumner, Mark D. Shattuck, and Corey S. O’Hern  
+- ["The effect of stereochemical constraints on the structural properties of folded proteins"](https://doi.org/10.48550/arXiv.2501.02424), **Jack A. Logan**, Jacob Sumner, Alex T. Grigas, Mark D. Shattuck, and Corey S. O’Hern  
 - ["Geometric and Topological Entropies of Sphere Packing"](https://doi.org/10.1103/PhysRevE.105.014117), **Jack A. Logan** and Alexei V. Tkachenko  
 - ["Symmetry-specific orientational order parameters for complex structures"](https://doi.org/10.1063/5.0076915), **Jack A. Logan**, Srinivas Mushnoori, Meenakshi Dutt, Alexei V. Tkachenko  
 - ["Controlling morphology in hybrid isotropic/patchy particle assemblies"](https://doi.org/10.1063/5.0076914), Srinivas Mushnoori, **Jack A. Logan**, Alexei V. Tkachenko, Meenakshi Dutt  
