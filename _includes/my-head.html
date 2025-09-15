@@ -1,165 +1,89 @@
-<!-- ==== GUMROAD PREFETCH & EMBED LOADER ==== -->
+<!-- ==== GUMROAD PREFETCH & LIGHT LOADER ==== -->
 <link rel="dns-prefetch" href="https://assets.gumroad.com">
-<script type="module">
-  const loadJS = x => new Promise(r => window.loadJS(x).addEventListener('load', r));
-
-  let p1, p2, io1, io2, embedCreated, overlayCreated;
-  document.querySelector('hy-push-state').addEventListener('load', () => {
-    io1 ||= new IntersectionObserver(async (entries) => {
-      if (entries.some(x => x.isIntersecting)) {
-        p1 = p1 || loadJS('https://gumroad.com/js/gumroad-embed.js');
-        await p1;
-        !embedCreated && await new Promise(function check1(res) {
-          if (typeof createGumroadEmbed !== 'undefined')  {
-            embedCreated = 1;
-            res(createGumroadEmbed());
-          } else setTimeout(() => check1(res), 200);
-        });
-        await new Promise(function check2(res) {
-          if (typeof GumroadEmbed !== 'undefined') res(GumroadEmbed.reload());
-          else setTimeout(() => check2(res), 200);
-        });
-      }
-    }, { rootMargin: '1440px' });
-
-    io2 ||= new IntersectionObserver(async (entries) => {
-      if (entries.some(x => x.isIntersecting)) {
-        p2 = p2 || loadJS('https://gumroad.com/js/gumroad.js');
-        await p2;
-        !overlayCreated && await new Promise(function check(res) {
-          if (typeof createGumroadOverlay !== 'undefined') {
-            overlayCreated = 1;
-            res(createGumroadOverlay());
-          } else setTimeout(() => check(res), 200);
-        });
-      }
-    }, { rootMargin: '300px' });
-
-    document.querySelectorAll('.gumroad-product-embed').forEach(el => io1.observe(el));
-    document.querySelectorAll('.gumroad-button').forEach(el => io2.observe(el));
-  });
-</script>
-
-
-
-<!-- ==== KaTeX STYLES & SCRIPTS ==== -->
-<!-- ==== KaTeX CSS & JS ==== -->
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
-/>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"></script>
-
-
-
 <script>
 (function () {
-  const mathOptions = {
+  function loadJS(src) {
+    var s = document.createElement('script'); s.src = src; s.async = true;
+    document.head.appendChild(s); return s;
+  }
+  function initGumroad() {
+    // Lazy-load only if elements exist on the page
+    if (document.querySelector('.gumroad-product-embed'))
+      loadJS('https://gumroad.com/js/gumroad-embed.js');
+    if (document.querySelector('.gumroad-button'))
+      loadJS('https://gumroad.com/js/gumroad.js');
+  }
+  document.addEventListener('DOMContentLoaded', initGumroad);
+  document.addEventListener('hy-push-state-load', initGumroad);
+})();
+</script>
+
+<!-- ==== KATEX (DISPLAY $$...$$ + INLINE \(...\)) ==== -->
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"></script>
+<script>
+(function () {
+  var opts = {
     delimiters: [
       { left: "$$", right: "$$", display: true },
       { left: "\\(", right: "\\)", display: false }
     ],
     throwOnError: false,
-    ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+    ignoredTags: ['script','noscript','style','textarea','pre','code'],
     ignoredClasses: ['no-math']
   };
-
-  function renderAllMath() {
-    if (typeof renderMathInElement === "function") {
-      const root = document.querySelector("hy-push-state") || document.body;
-      renderMathInElement(root, mathOptions);
-      renderManualMathSpans();  // Add this line
-      console.log("[KaTeX] Rendered math inside:", root);
+  function renderAll() {
+    if (window.renderMathInElement) {
+      // Works whether PJAX is on or off
+      var root = document.querySelector('hy-push-state') || document.body;
+      renderMathInElement(root, opts);
     }
   }
-
-  function renderManualMathSpans() {
-    document.querySelectorAll('figcaption .math').forEach(el => {
-      try {
-        katex.render(el.textContent, el, { throwOnError: false });
-      } catch (e) {
-        console.error("KaTeX render error in figcaption:", e);
-      }
-    });
-  }
-
-
-
-  // Render immediately for initial paint
-  document.addEventListener("DOMContentLoaded", renderAllMath);
-
-  // Re-render on PJAX or back/forward navigation
-  window.addEventListener("pageshow", renderAllMath);
-  document.querySelectorAll("hy-push-state").forEach(el =>
-    el.addEventListener("load", renderAllMath)
-  );
-
-  // Re-render if DOM content changes (e.g., captions, embeds)
-  const mo = new MutationObserver(() => {
-    clearTimeout(window._mathDelay);
-    window._mathDelay = setTimeout(renderAllMath, 100);
-  });
-  mo.observe(document.body, { childList: true, subtree: true });
+  document.addEventListener('DOMContentLoaded', renderAll);
+  document.addEventListener('hy-push-state-load', renderAll);
+  window.addEventListener('pageshow', renderAll);
 })();
 </script>
-
-
-
-
-
-
-
 
 <!-- ==== YOUR CUSTOM CSS ==== -->
 <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
 
-<!-- ==== FIGURE AUTO-NUMBERING & LIVE UPDATE ==== -->
-<script defer>
+<!-- ==== FIGURE AUTO-NUMBERING (LIGHT) ==== -->
+<script>
+(function () {
   function updateFigureRefs() {
-    const figs   = Array.from(document.querySelectorAll("figure[id]"));
-    const figMap = new Map(figs.map((f, i) => [f.id, i + 1]));
-    document.querySelectorAll("a[data-fig-ref]").forEach(link => {
-      const tgt = link.getAttribute("href").replace(/^#/, "");
-      const n   = figMap.get(tgt);
-      link.textContent = n ? `Figure ${n}` : "??";
+    var figs = Array.from(document.querySelectorAll("figure[id]"));
+    var map  = new Map(figs.map(function(f,i){ return [f.id, i+1]; }));
+    document.querySelectorAll("[data-fig-ref]").forEach(function(a){
+      var id = (a.getAttribute("href")||"").replace(/^#/,'');
+      var n  = map.get(id);
+      if (n) a.textContent = "Figure " + n;
     });
   }
+  function run(){ updateFigureRefs(); }
+  document.addEventListener('DOMContentLoaded', run);
+  document.addEventListener('hy-push-state-load', run);
+  window.addEventListener('pageshow', run);
+})();
+</script>
 
-  function watchForReplacements() {
-    const root = document.querySelector("hy-push-state") || document.body;
-    if (!root) return;
-    const mo = new MutationObserver(updateFigureRefs);
-    mo.observe(root, {
-      childList: true,
-      subtree:   true,
-      characterData: true
+<!-- ==== AUTOPLAY VIDEOS (SAFE) ==== -->
+<script>
+(function () {
+  function start() {
+    document.querySelectorAll("video[autoplay]").forEach(function(v){
+      v.play().catch(function(){});
     });
   }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    updateFigureRefs();
-    watchForReplacements();
-  });
+  document.addEventListener('DOMContentLoaded', start);
+  document.addEventListener('hy-push-state-load', start);
+  window.addEventListener('pageshow', start);
+})();
 </script>
 
-<!-- ==== VIDEO AUTOPLAY ON NAVIGATION ==== -->
-<script defer>
-  function startAutoplayVideos() {
-    document.querySelectorAll("video[autoplay]").forEach(v => v.play().catch(()=>{}));
-  }
-
-  document.addEventListener("DOMContentLoaded", startAutoplayVideos);
-  window.addEventListener("pageshow",          startAutoplayVideos);
-  document.querySelectorAll("hy-push-state").forEach(el =>
-    el.addEventListener("load", startAutoplayVideos)
-  );
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") startAutoplayVideos();
-  });
-</script>
-
-<!--Modify what the website homepage swipe goes to-->
+<!-- ==== CUSTOM SWIPE (ONLY WHEN NO COVER) ==== -->
 {%- unless page.cover -%}
   <script src="{{ '/assets/js/custom-swipe.js' | relative_url }}"></script>
 {%- endunless -%}
