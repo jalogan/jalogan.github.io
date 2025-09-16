@@ -61,6 +61,10 @@ My current interests include, but are not limited to, understanding artificial n
   <a href="https://www.linkedin.com/in/jacklogan-physicist/" class="info-button">
     <img src="/assets/img/buttons/linkedin_logo_lego_button.png" alt="LinkedIn" height="100">
   </a>
+
+  <a href="https://jalogan.github.io/contact_me" class="info-button">
+    <img src="/assets/img/buttons/contact_button_envelope.png" alt="Contact" height="100">
+  </a>
 </div>
 
 <style>
