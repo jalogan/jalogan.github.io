@@ -7,7 +7,7 @@ permalink: /cv/
 
 
 
-<button onclick="window.location.href='/assets/docs/CV_Jack_Logan_2025.pdf'" class="cv-button">
+<button onclick="window.location.href='/assets/docs/CV_Jack_Logan_2025_no_contact_info.pdf'" class="cv-button">
   <i class="fa fa-download"></i> View Full CV
 </button>
 
