@@ -45,7 +45,7 @@ $$
 \vec{F}_i = \sum\limits_{j=1}^{K} f_{ij}(r) \hat{r}_{ij}.
 $$
 
-This assumption is not only necessary, because otherwise the problem is highly uncontrained, but leads to a huge dimensionality reduction. For a general force field, each particle feels a full 3D force that depends on the full configuration of neighbors $$\vec{F}_i = f(\vec{r}_{ij_1}, \vec{r}_{ij_2}, \dots)$$. The central force assumption reduces the problem to a scalar radial function $$f(r_{ij})$$, where $$r_ij = ||\vec{r}_j - \vec{r}_i||$$ and the direction is accounted for by the particle positions. $$f(r)$$ is just a 1D curve instead of a full 3D vector field. In addition, the scalar nature of the proposed force equation and because it only depends on relative distances ($$r_ij$$) makes it inherently **rotationally and translationally invariant**. 
+This assumption is not only necessary, because otherwise the problem is highly uncontrained, but leads to a huge dimensionality reduction. For a general force field, each particle feels a full 3D force that depends on the full configuration of neighbors $$\vec{F}_i = f(\vec{r}_{ij_1}, \vec{r}_{ij_2}, \dots)$$. The central force assumption reduces the problem to a scalar radial function $$f(r_{ij})$$, where $$r_ij = \vert\vert \vec{r}_j - \vec{r}_i \vert\vert$$ and the direction is accounted for by the particle positions. $$f(r)$$ is just a 1D curve instead of a full 3D vector field. In addition, the scalar nature of the proposed force equation and because it only depends on relative distances ($$r_{ij}$$) makes it inherently **rotationally and translationally invariant**. 
 
 
 
