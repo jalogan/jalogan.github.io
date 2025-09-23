@@ -39,13 +39,33 @@ The use of neural networks in physics opens a new avenue of possibility for simu
 
 While the real fruit of this idea lies in complex systems such as proteins and other complex systems where we do not know the precise potential, this work tests the idea on a well-known system of Lennard-Jones (LJ) spheres. We know this form the onset, but, to some extent, we pretend to not know the exact potential and try to infer information from the symmetries of the data provided. 
 
-While aniostropic potentials can appear naturally, the symmetry of the data suggests an isotropic potential---spherical particles have no preferred direction leaving us with separation distance $$r$$ as the only variable. A huge fraction of naturally occurring classical interaction potentials are central: hard-sphere, Lennard-Jones, Coulomb, Yukawa, to name a few. With the limited information we have from the data we discovered, assuming a central force is the least biased approach that respects the symmetry we know to be present. The assumption moving forward will be that the interaction force is central and the force on particle $$i$$ can be written as a sum of pair forces from all $$n_i$$ neighbors $$j$$
+While anisotropic potentials can appear naturally, the symmetry of the data suggests an isotropic potential---spherical particles have no preferred direction leaving us with separation distance $$r$$ as the only variable. A huge fraction of naturally occurring classical interaction potentials are central: hard-sphere, Lennard-Jones, Coulomb, Yukawa, to name a few. With the limited information we have from the data we discovered, assuming a central force is the least biased approach that respects the symmetry we know to be present. The assumption moving forward will be that the interaction force is central and the force on particle $$i$$ can be written as a sum of pair forces from all $$n_i$$ neighbors $$j$$
 
 $$
 \vec{F}_i = \sum\limits_{j=1}^{K} f_{ij}(r) \hat{r}_{ij}.
 $$
 
-This assumption is not only necessary, because otherwise the problem is highly uncontrained, but leads to a huge dimensionality reduction. For a general force field, each particle feels a full 3D force that depends on the full configuration of neighbors $$\vec{F}_i = f(\vec{r}_{ij_1}, \vec{r}_{ij_2}, \dots)$$. The central force assumption reduces the problem to a scalar radial function $$f(r_{ij})$$, where $$r_ij = \vert\vert \vec{r}_j - \vec{r}_i \vert\vert$$ and the direction is accounted for by the particle positions. $$f(r)$$ is just a 1D curve instead of a full 3D vector field. In addition, the scalar nature of the proposed force equation and because it only depends on relative distances ($$r_{ij}$$) makes it inherently **rotationally and translationally invariant**. 
+This assumption is not only necessary, because otherwise the problem is highly unconstrained, but leads to a huge dimensionality reduction. For a general force field, each particle feels a full 3D force that depends on the full configuration of neighbors $$\vec{F}_i = f(\vec{r}_{ij_1}, \vec{r}_{ij_2}, \dots)$$. The central force assumption reduces the problem to a scalar radial function $$f(r_{ij})$$, where $$r_ij = \vert\vert \vec{r}_j - \vec{r}_i \vert\vert$$ and the direction is accounted for by the particle positions. $$f(r)$$ is just a 1D curve instead of a full 3D vector field. In addition, the scalar nature of the proposed force equation and because it only depends on relative distances ($$r_{ij}$$) makes it inherently **rotationally and translationally invariant**. 
+
+
+
+While anisotropic potentials can appear naturally, the symmetry of the data suggests an isotropic potential—spherical particles have no preferred direction leaving us with separation distance $$r$$ as the only variable. ...
+
+The assumption moving forward will be that the interaction force is central and the force on particle $$i$$ can be written as a sum of pair forces from all $$n_i$$ neighbors $$j$$:
+
+$$
+\vec{F}_i = \sum_{j=1}^{K} f_{ij}(r) \hat{r}_{ij}.
+$$
+
+...
+
+The central force assumption reduces the problem to a scalar radial function $$f(r_{ij})$$, where
+
+$$
+r_{ij} = \lVert \vec{r}_j - \vec{r}_i \rVert
+$$
+
+and the direction is accounted for by the particle positions.
 
 
 
