@@ -2,7 +2,7 @@
 layout:      project
 title:       "Simple Random Walks"
 #date:        2 Jan 2014
-order: 6
+order: 7
 image:
   path:      /assets/img/random_walks/2D_random_walk_trans.png
   srcset:

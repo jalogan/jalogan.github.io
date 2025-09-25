@@ -2,7 +2,7 @@
 layout: default
 title: "Symmetrized Bond Order Parameters"
 #date:        2 Jan 2014
-order: 3
+order: 4
 image: 
   path:    /assets/img/SymBOPs_general/SymBOPs_main_full_w_bg.png
   srcset:

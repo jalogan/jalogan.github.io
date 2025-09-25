@@ -2,7 +2,7 @@
 layout:      project
 title:       "Physics-Informed Neural Networks as Surrogate Force Fields"
 #date:        2 Jan 2014
-order: 8
+order: 2
 image:
   path:      /assets/img/NN_predict_MD/spheres_moving_on_surface.png
   srcset:

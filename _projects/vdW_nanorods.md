@@ -3,7 +3,7 @@ layout:      project
 title:       "Compact interaction potential for vdW nanorods"
 header_title: "How Nanorods Stick Together: A Simple Approach to a Tricky Problem"
 #date:        2 Jan 2014
-order: 5
+order: 6
 image:
   path:      /assets/img/vdW_nanorods/vdW_nanorods_main2_full_w_bg.png
   srcset:

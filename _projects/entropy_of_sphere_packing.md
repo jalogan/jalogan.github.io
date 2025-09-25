@@ -3,7 +3,7 @@ layout:      project
 title:       "Geometric and topological entropy of sphere packing"
 header_title: "Exploring Entropy in Sphere Packings: A New Perspective with Statistical Mechanics"
 #date:        2 Jan 2014
-order: 4
+order: 5
 image:
   path:      /assets/img/entropy_of_sphere_packing/packing_entropy_main_full.png
   srcset:

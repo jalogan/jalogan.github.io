@@ -2,7 +2,7 @@
 layout:      project
 title:       "Sphere packing on curved 2D manifolds"
 #date:        2 Jan 2014
-order: 7
+order: 8
 #image:
 #  path:      /assets/img/spheres_on_curved_surfaces/spheres_on_sphere_cover_image.png
 #  srcset:

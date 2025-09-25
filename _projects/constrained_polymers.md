@@ -2,7 +2,7 @@
 layout:      project
 title:       "Constrained Polymers"
 #date:        2 Jan 2014
-order: 2
+order: 3
 image:
   path:      /assets/img/constrained_polymers/4096_polymer_full.png
   srcset:
