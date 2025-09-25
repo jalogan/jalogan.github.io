@@ -59,10 +59,65 @@ The prepared data is read into PyTorch, where the per component mean and standar
 ## **Results**
 
 
+<figure id="fig_force_vs_r_comparison_plot">
+  <img src="/assets/img/NN_predict_MD/fr_vs_lj.png" alt="f(r)_prediction" width="450" height="auto">
+  <figcaption>Comparison of standard LJ \(F(r)\) (dashed black) and the learned radial force (purple). </figcaption>
+</figure>
+
+The model rediscovers the LJ force law from data alone, including the steep repulsive wall and attractive well, as seen in <a href="#fig_force_vs_r_comparison_plot" data-fig-ref>??</a>. As the centers become closer and the particles overlap more, there is minor deviation, but it would mostly affect high temperature simulations that would allow for large overlaps.
+
+The force predictions in <a href="#fig_force_comparison_plots" data-fig-ref>??</a> align tightly along the one-to-one line across several orders of magnitude. The left plots shows a comparison of the individual force components and the right a comparison of the force magnitudes. Recall that the force direction is accounted for by the actual unit vector between the particle centers $$\hat{r}_{ij}$$. We observe a systematic deviation when the forces become large---approach contact and overlap. This deviation is expected, is small in relative error, and can mostly likely be decreased with increased weighting of higher forces.  
+
+
+<figure id="fig_force_comparison_plots">
+  <img src="/assets/img/NN_predict_MD/force_plots.png" alt="Force_comparisons" width="auto" height="450">
+  <figcaption>Comparisons of the predicted forces and the ground truth forces from the LAMMPS simulations. </figcaption>
+</figure>
+
+To demonstrate a typical run of the NN-predicted MD, we overlay it on a standard LJ MD run, using the same initial conditions in <a href="#vid_MD_comparison_example" data-fig-ref>??</a>. Particle positions from NN-MD follow the LJ reference closely; separations and local packing remain consistent. Collisions and short-range interactions look physically identical for most of the short simulation. As time progresses the differences in positions become more obvious, but typical energy drift and floating point error in MD would cause this regardless of what methods were used to compare two MD runs. MD simulations are very sensitive to initial conditions, and any two runs with common initial conditions will eventually diverge. 
+
+
+<figure id="vid_MD_comparison_example">
+  <video width="450" poster="{{ "/assets/img/NN_predict_MD/MD_comparison_001.png" | relative_url }}" autoplay loop muted playsinline>
+  <source src="{{ "/assets/videos/NN_predict_MD/MD_comparison.mp4" | relative_url }}?v={{ site.time | date: '%s' }}" type="video/mp4">
+  Your browser does not support the video tag.
+  </video>
+  <figcaption data-katex>
+    Demonstration of a standard LJ MD (red) and a MD with the force predicted by the NN model (gray) for 150k time steps.
+  </figcaption>
+</figure>
+
+
+We analyze the results of the short simulation shown in <a href="#vid_gr_evolution_of_MD" data-fig-ref>??</a> through the radial distribution function, which gives us information about the density of particles surrounding any given particle, and the root mean squared deviation (RMSD), which quantifies the deviation of particle centers in the predicted MD from the particle centers in the LJ MD <a href="#fig_MD_RMSD_plot" data-fig-ref>??</a>. The RMSD grows slowly, demonstrating that the NN-driven dynamics track LJ dynamics over long horizons. Residual drift is expected because we do not explicitly enforce energy conservation or Newton’s third law in this version.
+
+<figure id="fig_MD_RMSD_plot">
+  <img src="/assets/img/NN_predict_MD/rmsd_overlay.png" alt="MD_RMSD" width="450" height="auto">
+  <figcaption>As a measure of how well the positions of the predicted forces follow the standard LJ MD positions, we use the RMSD of the sphere centers. </figcaption>
+</figure>
+
+
+ This clip shows the evolution of g(r) during the simulation. The evolution shows peaks stabilizing in the same locations for all time steps, confirming matching equilibrium structure. As the system relaxes, the first peak sharpens at the LJ contact distance ($$r = 1.0$$), second/third peaks settle at the same positions as the reference, and the long-$$r$$ tail approaches 1.0---evidence that the NN surrogate preserves the correct short- and medium-range structure over time. The convergence of peak locations and heights is a strong indicator of dynamical and structural fidelity.
+
+<figure id="vid_gr_evolution_of_MD">
+  <video width="450" poster="{{ "/assets/img/NN_predict_MD/gr_compare0.png" | relative_url }}" controls autoplay loop muted playsinline>
+  <source src="{{ "/assets/videos/NN_predict_MD/gr_evolution.mp4" | relative_url }}?v={{ site.time | date: '%s' }}" type="video/mp4">
+  Your browser does not support the video tag.
+  </video>
+  <figcaption data-katex>
+    The evolution of the radial distribution functions \(g(r)\) for the MD comparison simulation.
+  </figcaption>
+</figure>
+
+
+### **TL;DR**
+
+The physics-informed NN reproduces LJ forces with near-1:1 accuracy, recovers the LJ force–distance curve, and preserves equilibrium structure (g(r)). When plugged into an MD loop, the surrogate yields trajectories that remain close to LJ reference dynamics over long horizons, with only mild long-time drift. Loss curves show smooth, stable convergence, indicating strong generalization.
+
+
 
 ## **Takeaways and Limitations of MLP**
 
-The neural network was able to learn the underlying force directly from data. To do so, it was necessary to embed the symmetries and invariants of the physics into the architecture, but, in the end, it produced interpretable and stable surrogate force fields. Scaling the system size up will lead to poorer results because of the limit on the number of neighbors accounted for, but if you choose a relatively high number it can do arbitrarily well---especially for interactions like LJ which have a cutoff. 
+The neural network was able to learn the underlying force directly from data. To do so, it was necessary to embed the symmetries and invariants of the physics into the architecture, but, in the end, it produced interpretable and stable surrogate force fields. Scaling the system size up will lead to poorer results because of the limit on the number of neighbors accounted for, but if you choose a relatively high number it can do arbitrarily well---especially for interactions like LJ which have a cutoff. Recall this model does not include explicit energy conservation or action-reaction constraints (Newton's Third Law), and adding pair-symmetric messages or energy-based training would further reduce long-time drift.
 
 This test work used a relatively simple potential, but the repulsive part of a LJ potential has a large gradient and can be difficult to learn. To extend the methods to more complex potentials, perhaps for protein-protein interactions or complex fluids, it would be necessary to include more physics and higher-order interactions. Anisotropic particles or polymers require 3- and 4-body interactions to capture the bond and dihedral angle degrees of freedom, they often include multiple particle types, and long-range forces (Coulomb interaction). 
 
