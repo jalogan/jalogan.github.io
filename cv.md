@@ -37,7 +37,7 @@ Long Island University
 **Simulation Tools:** Molecular Dynamics, Monte Carlo methods  
 **Data Analysis:** Statistical Analysis, Optimization, Machine Learning   
 **High-Performance Computing:** Parallel Computing, HPC Clusters   
-**Machine Learning:** Linear Regression | Support Vector Machines (SVMs) | Multilayer Perceptrons (MLPs) | PyTorch (Artificial Neural Networks) | PyTorch Geometric (Graph Neural Networks) | Physics-based Modeling using Neural Networks   
+**Machine Learning:** Linear Regression | Support Vector Machines (SVMs) | Multilayer Perceptrons (MLPs) | PyTorch (Artificial Neural Networks) | Physics-based Modeling using Neural Networks   
 **Collaboration Tools:** Git, GitHub  
 
 
