@@ -37,7 +37,7 @@ I am a PhD physicist with expertise in mathematical modeling, computational mode
 
 On this site you will find some of my past research with summaries or differing perspectives on the work and links to the publications, along with ongoing or current work.
 
-My current interests include, but are not limited to, swarm intelligence, playing around with artificial neural networks and building AI sandboxes to explore toy problems and AI applications to physics, understanding neural networks through the lens of mathematical physics to better understand how the internal connections and circuits emerge. Elimintating this black box is a key to developing future technologies that will revolutionize society and are, above all, safe for use.
+My current interests include, but are not limited to, swarm intelligence, playing around with artificial neural networks and building AI sandboxes to explore toy problems and AI applications to physics, reinforcement learning and emergent interactions between AI agents, understanding neural networks through the lens of mathematical physics to better understand how the internal connections and circuits emerge. Elimintating this black box is a key to developing future technologies that will revolutionize society and are, above all, safe for use.
 
 
 {%comment%}
