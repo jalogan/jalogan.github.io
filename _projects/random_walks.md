@@ -1,8 +1,10 @@
 ---
 layout:      project
 title:       "Simple Random Walks"
+published:   true
+
 #date:        2 Jan 2014
-order: 7
+order: 2
 image:
   path:      /assets/img/random_walks/2D_random_walk_trans.png
   srcset:

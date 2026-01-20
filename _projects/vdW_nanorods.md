@@ -2,15 +2,17 @@
 layout:      project
 title:       "Compact interaction potential for vdW nanorods"
 header_title: "How Nanorods Stick Together: A Simple Approach to a Tricky Problem"
+published:   true
+
 #date:        2 Jan 2014
-order: 6
+order: 3
 image:
   path:      /assets/img/vdW_nanorods/vdW_nanorods_main2_full_w_bg.png
   srcset:
     1920w:   /assets/img/vdW_nanorods/vdW_nanorods_main2_full_w_bg.png
     960w:    /assets/img/vdW_nanorods/vdW_nanorods_main2_half.png
     480w:    /assets/img/vdW_nanorods/vdW_nanorods_main2_quarter.png
-caption:     Modeling proteins as constrained polymers
+#caption:     Modeling proteins as constrained polymers
 #description: >
 #  Hyde is a brazen two-column [Jekyll](http://jekyllrb.com) theme.
 #  It's based on [Poole](http://getpoole.com), the Jekyll butler.

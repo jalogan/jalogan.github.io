@@ -7,7 +7,12 @@ layout: default
 {% endcomment %}
 
 <div class="grid">
+  {% comment %}
   {% assign sorted_projects = site.projects | sort: "order" %}
+  {% endcomment %}
+  
+  {% assign sorted_projects = site.projects | sort: "order" | reverse %}
+
     {% for project in sorted_projects %}
 
     {% unless project.hidden %}

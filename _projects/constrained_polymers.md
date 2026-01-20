@@ -1,8 +1,10 @@
 ---
 layout:      project
 title:       "Constrained Polymers"
+published:   true
+
 #date:        2 Jan 2014
-order: 3
+order: 6
 image:
   path:      /assets/img/constrained_polymers/4096_polymer_full.png
   srcset:
@@ -31,6 +33,11 @@ featured:    false
 <!--
 # Polymers and Coarse-Grained Proteins
 -->
+
+<a href="https://engineering.yale.edu/news-and-events/news/unfolding-secrets-proteins" class="info-button" target="_blank">
+  <span class="Featured in Yale news!" style="font-size: 32px;"></span>
+</a>
+
 
 
 The structural properties of folded proteins are key to understanding their biological function and evolutionary constraints. One of the fundamental descriptors of protein structure is the radius of gyration ($$R_g$$), which quantifies the spatial distribution of atomic mass around the protein’s center of mass. The $$R_g$$ of a protein is influenced by its sequence, secondary structure content, and global packing constraints. A long-standing question in protein physics is how various factors, such as stereochemical constraints and sequence properties, shape the $$R_g$$ of folded proteins.

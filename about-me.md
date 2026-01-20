@@ -2,7 +2,7 @@
 layout: page
 title: "About Me"
 #permalink: /about-me/
-permalink: /         # ← becomes the home page
+permalink: /         # <- becomes the home page
 redirect_from:
   - /about-me/       # keep the old URL working (requires jekyll-redirect-from)
 cover: true
@@ -33,11 +33,11 @@ cover: true
 
 
 ## Background
-I am a PhD physicist with expertise in mathematical modeling, computational modeling, data analysis, and high-performance computing. I have specialized in theoretical soft-condensed matter physics working on everything from order parameters, sphere packings to the structure of proteins and protein folding dynamics. My PhD in physics was completed at Stony Brook University, and my PhD research was done with Dr. Alexei V. Tkachenko as part of the Center for Funcitonal Nanomaterials' Theory and Computation Group at Brookhaven National Laboratory. My post-doctoral work was completed at Yale University with Dr. Corey O'Hern.
+I am a PhD physicist with expertise in mathematical modeling, computational modeling, data analysis, and high-performance computing. I have specialized in theoretical soft-condensed matter physics working on everything from order parameters, sphere packings to the structure of proteins and protein folding dynamics. My PhD in physics was completed at Stony Brook University, and my PhD research was done with Dr. Alexei V. Tkachenko as part of the Center for Functional Nanomaterials' Theory and Computation Group at Brookhaven National Laboratory. My post-doctoral work was completed at Yale University with Dr. Corey O'Hern.
 
 On this site you will find some of my past research with summaries or differing perspectives on the work and links to the publications, along with ongoing or current work.
 
-My current interests include, but are not limited to, swarm intelligence, playing around with artificial neural networks and building AI sandboxes to explore toy problems and AI applications to physics, reinforcement learning and emergent interactions between AI agents, studying neural networks through the lens of mathematical physics to better understand how the internal connections and circuits emerge. Elimintating this black box is a key to developing future technologies that will revolutionize society and are, above all, safe for use.
+My current interests include, but are not limited to, swarm intelligence, playing around with artificial neural networks and building AI sandboxes to explore toy problems and AI applications to physics, reinforcement learning and emergent interactions between AI agents, mechanistic interpretability and studying neural networks through the lens of mathematical physics to better understand how the internal connections and circuits emerge. Elimintating this black box is a key to developing future technologies that will revolutionize society and are, above all, safe for use.
 
 
 {%comment%}

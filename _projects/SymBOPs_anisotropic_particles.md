@@ -3,6 +3,7 @@ layout: project
 title: "SymBOPs for Anisotropic Particles"
 category: SymBOPs
 hidden: true
+published:   true
 image: 
   path: /assets/img/SymBOPs_anisotropic/SymBOPs_anisotropic_main_full_w_bg.png
   srcset:

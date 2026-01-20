@@ -301,6 +301,10 @@ hydejack:
     # Set to `true` to allow visitors to switch between light and dark mode.
     icon:              true
 
+  scripts:
+    - /assets/js/custom.js
+
+
   # ⚡️ DANGER ZONE ⚡️
   # ----------------
   # This is an _experimental_ feature.

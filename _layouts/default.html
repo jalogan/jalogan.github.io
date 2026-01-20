@@ -24,7 +24,13 @@ layout: base
     {%- comment -%}
     <h1 class="page-title">{{ page.title | default:strings.home | default:"Home" }}</h1>
     {%- endcomment -%}
+
     <h1 class="page-title">{{ page.header_title | default: page.title | default: strings.home | default: "Home" }}</h1>
+
+    {% if page.header_subtitle %}
+      <p class="page-subtitle">{{ page.header_subtitle }}</p>
+    {% endif %}
+
     {% include components/message.html text=page.description hide=page.hide_description %}
   </header>
 

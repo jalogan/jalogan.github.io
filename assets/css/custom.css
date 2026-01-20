@@ -7,6 +7,7 @@ body {
   counter-reset: figure;
 }
 
+
 /* Math and aside styles (unchanged) */
 .math-box {
   background-color: #f0f0f0;
@@ -70,6 +71,53 @@ body {
 
 
 
+/* ===============================
+   Numbered Figures, Videos, Tables
+   (Hydejack-compatible)
+   =============================== */
+
+/* Reset counters only in page content (NOT body) */
+/*
+main, .content, .page {
+  counter-reset: figure table;
+}
+*/
+/* ---------- FIGURES & VIDEOS ---------- */
+/* Only count figures explicitly marked for numbering */
+/*
+figure[data-fig] {
+  display: block;
+  margin: 2em auto;
+  text-align: center;
+  counter-increment: figure;
+}
+
+figure[data-fig] > figcaption::before {
+  content: "Figure " counter(figure) ": ";
+  font-weight: bold;
+}
+*/
+/* ---------- TABLES ---------- */
+/* Only count tables explicitly marked for numbering */
+/*
+table[data-tab] {
+  counter-increment: table;
+}
+
+table[data-tab] > caption::before {
+  content: "Table " counter(table) ": ";
+  font-weight: bold;
+}
+*/
+/* Responsive media inside numbered figures */
+/*
+figure[data-fig] img,
+figure[data-fig] video {
+  max-width: 100%;
+  height: auto;
+}
+*/
+
 
 /* All figures (images or videos) */
 figure {
@@ -83,6 +131,7 @@ figcaption::before {
   content: "Figure " counter(figure) ": ";
   font-weight: bold;
 }
+
 
 /* Shared figcaption styling */
 figcaption {
@@ -352,3 +401,71 @@ form input[type="email"] {
 
 /* Adjust where the About Me page starts--want it to start at the top */
 #about { scroll-margin-top: 16rem; }  /* try 8–10rem; tweak to taste */
+
+
+/* Make section expandable and collapsible */
+/*
+.toggle-content {
+  display: none;
+  margin-left: 0;
+}
+
+.toggle-open + .toggle-content {
+  display: block;
+}
+*/
+/* Collapsed state: keep in DOM/layout engine for counters, but remove from page flow */
+.toggle-content {
+  display: block;            /* MUST NOT be none, or counters will change */
+  position: absolute;        /* remove from normal flow so it won't affect layout */
+  left: -10000px;            /* move offscreen */
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;          /* ensure no visual bleed */
+  visibility: hidden;        /* hide it */
+  pointer-events: none;      /* avoid interaction */
+}
+
+/* Expanded state: restore normal layout */
+.toggle-open + .toggle-content {
+  position: static;
+  left: auto;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+
+
+
+/* Make headings look clickable */
+h2.toggle-open, h3.toggle-open,
+h2.toggle-closed, h3.toggle-closed {
+  cursor: pointer;
+}
+
+h2.toggle-closed::before, h3.toggle-closed::before { content: "▸ "; }
+h2.toggle-open::before,   h3.toggle-open::before   { content: "▾ "; }
+
+/* Add style for subtitle */
+/*
+.page-subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 1.4;
+  opacity: 0.8;
+}
+*/
+.page-subtitle {
+  margin-top: 0.15rem;
+  font-size: 1.8rem;
+  line-height: 1.35;
+  opacity: 0.75;
+}
+
+
+

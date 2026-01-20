@@ -1,8 +1,10 @@
 ---
 layout:      project
 title:       "Physics-Informed Neural Networks as Surrogate Force Fields"
+published:   true
+
 #date:        2 Jan 2014
-order: 2
+order: 7
 image:
   path:      /assets/img/NN_predict_MD/spheres_moving_on_surface.png
   srcset:
@@ -48,7 +50,7 @@ The use of neural networks in physics opens a new avenue of possibility for simu
 
 
 ## **Motivation and Assumptions**
-
+<div class="toggle-content" markdown="1">
 The long-term goal is to learn force fields in complex systems (proteins, soft matter, fluids) where the true potential is unknown. As a first step, we test the idea on the well-known Lennard–Jones (LJ) system, treating it as if the potential were hidden and asking: *can a neural network discover the underlying force law from data alone?*
 
 Key assumptions:
@@ -79,9 +81,10 @@ $$
 This assumption is not only necessary, because otherwise the problem is highly unconstrained, but leads to a huge dimensionality reduction. For a general force field, each particle feels a full 3D force that depends on the full configuration of neighbors $$\vec{F}_i = f(\vec{r}_{ij_1}, \vec{r}_{ij_2}, \dots)$$. The central force assumption reduces the problem to a scalar radial function $$f(r_{ij})$$, where $$r_{ij} = \lVert \vec{r}_j - \vec{r}_i \rVert$$ and the direction is accounted for by the particle positions. $$f(r)$$ is just a 1D curve instead of a full 3D vector field. In addition, the scalar nature of the proposed force equation and because it only depends on relative distances ($$r_{ij}$$) makes it inherently **rotationally and translationally invariant**. 
 {% endcomment %}
 
+</div>
 
 ## **Data Preparation and Neural Network Architecture**
-
+<div class="toggle-content" markdown="1">
 Training data was generated with the open-source MD package **LAMMPS**, simulating isotropic particles of diameter $$\sigma$$ interacting through a Lennard–Jones potential. For each configuration:  
 
 - **Positions and forces** were extracted for all particles.  
@@ -105,11 +108,11 @@ The data was prepared using the open-source MD software LAMMPS. We performed man
 The prepared data is read into PyTorch, where the per component mean and standard deviation is computed over all particles in all time steps in order to Z-score the force components independently. This centers the training targets near zero with unit variance. For every particle $$i$$, we compute the distance $$r_{ij}$$ to each of its neighbors $$j$$, and we expand it in a vector of **radial basis functions** (RBFs). The RBFs provide a smooth, expressive input representation of the neighbor interactions. The RBFs are passed to a MLP, which maps the features to the scalar force magnitude for each pair of neighbors. For each particle these force magnitudes are summed over the nearest $$K$$ neighbors to compute the predicted net force.
 {% endcomment %}
 
-
+</div>
 
 
 ## **Results**
-
+<div class="toggle-content" markdown="1">
 The physics-informed neural network (NN) was trained on Lennard–Jones (LJ) trajectory data and tested on its ability to recover forces, reproduce the LJ force law, and generate stable MD trajectories. The results demonstrate that the model is capable of rediscovering the LJ interaction and preserving structural and dynamical properties of the system.
 
 
@@ -273,10 +276,10 @@ We analyze the results of the short simulation shown in <a href="#vid_gr_evoluti
 
 The physics-informed NN reproduces LJ forces with near-1:1 accuracy, recovers the LJ force–distance curve, and preserves equilibrium structure (g(r)). When plugged into an MD loop, the surrogate yields trajectories that remain close to LJ reference dynamics over long horizons, with only mild long-time drift. Loss curves show smooth, stable convergence, indicating strong generalization. See the side-by-side MD overlay and evolving $$g(r)$$.
 
-
+</div>
 
 ## **Takeaways and Limitations**
-
+<div class="toggle-content" markdown="1">
 This project shows that embedding physical symmetries into neural networks yields interpretable and stable surrogate force fields. The approach works well for Lennard–Jones, but also highlights the limitations of MLPs for scaling to more complex systems.
 
 - The model accurately reproduces LJ forces but does not enforce **energy conservation** or **Newton’s third law**, leading to mild long-time drift.  
@@ -308,3 +311,5 @@ In future work, we will attempt to predict the forces of a more complex system. 
 {% comment %}
 Next steps include extending to multi-particle types, anisotropic interactions, and long-range forces. Graph neural networks are better suited here, as they naturally encode topology, higher-order interactions, and enforce physical symmetries. This progression moves from toy LJ systems toward the ultimate challenge: data-driven surrogates for protein folding and complex fluids.
 {% endcomment %}
+
+</div>
