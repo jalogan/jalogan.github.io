@@ -7,56 +7,57 @@ permalink: /cv/
 
 
 
-<button onclick="window.location.href='/assets/docs/CV_Jack_Logan_2025_no_contact_info.pdf'" class="cv-button">
+<button onclick="window.location.href='/assets/docs/CV_Jack_Logan_2026_no_contact_info.pdf'" class="cv-button">
   <i class="fa fa-download"></i> View Full CV
 </button>
 
 
-## Summary
+## Research Profile
+Theoretical and computational physicist with a PhD and 9+ years of experience working at the intersection of statistical mechanics, geometry, and machine learning. My research focuses on emergent structure, representation learning, and physically grounded modeling, with applications spanning soft matter, polymers, proteins, and interpretable neural networks. I work across theory, simulation, and computation to develop models that reveal underlying mechanisms and structure.
+
 - Extensive experience in computational and mathematical modeling, data analysis, analytical methods, and high-performance computing.  
 - Proven leadership in managing multidisciplinary teams, delivering impactful research and publications.  
+
+## Professional Experience
+**Yale University**, New Haven, CT  
+Postdoctoral Fellow, Mechanical Engineering & Materials Science  
+*Advisor*: Corey O'Hern  
+*2022-2025*  
+
+**Brookhaven National Laboratory**, Upton, NY  
+Research Assistant, Center for Functional Nanomaterials  
+*2016-2022*  
 
 
 
 ## Education
-**PhD Physics**  
+**PhD Physics**, 2022   
 Stony Brook University  
-*Advisor:* Alexei Tkachenko (Brookhaven National Laboratory)  
-*Dissertation:* ["Geometric and Topological Aspects of Self-Assembly: from spheres and rods to designer particles"](/projects/PhD_thesis/)
+*Advisor*: Alexei V. Tkachenko (Brookhaven National Laboratory)  
+*Dissertation*: ["Geometric and Topological Aspects of Self-Assembly: from spheres and rods to designer particles"](/projects/PhD_thesis/)
 
 **MA Physics**   
 Stony Brook University   
 
-**MS Applied Mathematics**    
+**MS Applied Mathematics**   
 Long Island University   
 *Summa Cum Laude* 
 
 
-## Technical Skills
-**Programming:** Python, C++, CUDA, Bash  
-**Simulation Tools:** Molecular Dynamics, Monte Carlo methods  
-**Data Analysis:** Statistical Analysis, Optimization, Machine Learning   
-**High-Performance Computing:** Parallel Computing, HPC Clusters   
-**Machine Learning:** Linear Regression | Support Vector Machines (SVMs) | Multilayer Perceptrons (MLPs) | PyTorch (Artificial Neural Networks) | Physics-based Modeling using Neural Networks | Mechanistic Interpretability   
-**Collaboration Tools:** Git, GitHub  
+## Research Tools
+**Programming & HPC**: Python, C++, CUDA, parallel computing on HPC clusters  
+**Modeling & Simulation**: Molecular Dynamics, Monte Carlo methods  
+**Machine Learning**: PyTorch, neural networks, physics-informed ML, mechanistic interpretability  
+**Data & Collaboration**: statistical analysis, optimization, Git/GitHub  
 
-
-
-## Professional Experience
-**Yale University**   
-Postdoctoral Fellow    
-   
-**Brookhaven National Laboratory**  
-Research Assistant, *Center for Functional Nanomaterials*    
-
-
+  
 
 ## Selected Publications
 - ["The effect of stereochemical constraints on the structural properties of folded proteins"](https://doi.org/10.48550/arXiv.2501.02424), **Jack A. Logan**, Jacob Sumner, Alex T. Grigas, Mark D. Shattuck, and Corey S. O’Hern  
-- ["Geometric and Topological Entropies of Sphere Packing"](https://doi.org/10.1103/PhysRevE.105.014117), **Jack A. Logan** and Alexei V. Tkachenko  
-- ["Symmetry-specific orientational order parameters for complex structures"](https://doi.org/10.1063/5.0076915), **Jack A. Logan**, Srinivas Mushnoori, Meenakshi Dutt, Alexei V. Tkachenko  
-- ["Controlling morphology in hybrid isotropic/patchy particle assemblies"](https://doi.org/10.1063/5.0076914), Srinivas Mushnoori, **Jack A. Logan**, Alexei V. Tkachenko, Meenakshi Dutt  
 - ["Symmetry-specific characterization of bond orientation order in DNA-assembled nanoparticle lattices"](https://doi.org/10.1063/5.0168604), **Jack A. Logan**, Aaron Michelson, Ajith Pattammattel, Hanfei Yan, Oleg Gang, Alexei V. Tkachenko  
+- ["Geometric and Topological Entropies of Sphere Packing"](https://doi.org/10.1103/PhysRevE.105.014117), **Jack A. Logan** and Alexei V. Tkachenko  
+- ["Controlling morphology in hybrid isotropic/patchy particle assemblies"](https://doi.org/10.1063/5.0076914), Srinivas Mushnoori, **Jack A. Logan**, Alexei V. Tkachenko, Meenakshi Dutt  
+- ["Symmetry-specific orientational order parameters for complex structures"](https://doi.org/10.1063/5.0076915), **Jack A. Logan**, Srinivas Mushnoori, Meenakshi Dutt, Alexei V. Tkachenko  
 - ["Compact interaction potential for van der Waals nanorods"](https://doi.org/10.1103/PhysRevE.98.032609), **Jack A. Logan** and Alexei V. Tkachenko  
 
 ## Other Resources
