@@ -27,7 +27,16 @@ featured:    false
 
 
 ## **Why This Work Matters**
-The goal of this work is to organize interpretability quantities important for analyzing neural networks (NNs) by developing a unified object $$\mathcal{N}$$. This object combines events and internal components---input examples and possible mechanisms of a neural network---and allows for easy derivation of superposition, polysemanticity, interactions, and entropies. Using this framework entropies derived from dual conditional distributions give measurable superposition and polysemanticity, combining interactions and signature similarity distinguishes redundant vs complementary circuits. The entropies and interactions become targets for regularization, which enables controlled shaping of the internal circuits. We derive physically-motivated knobs that allow us to control such quantities and we hope to include a new perspective through a lens of physics. There are many parallels between the two fields when aligned correctly, and it feels natural to explore superposition as an entropically-driven effect. 
+{% comment %}
+The goal of this work is to organize interpretability quantities important for analyzing neural networks (NNs) by combining it all into a unified object $$\mathcal{N}$$. This object combines events and internal components---input examples and possible mechanisms of a neural network---and allows for easy derivation of superposition, polysemanticity, interactions, and entropies. Using this framework entropies derived from dual conditional distributions give measurable superposition and polysemanticity, combining interactions and signature similarity distinguishes redundant vs complementary circuits. The entropies and interactions become targets for regularization, which enables controlled shaping of the internal circuits. We derive physically-motivated knobs that allow us to control such quantities and we hope to include a new perspective through a lens of physics. There are many parallels between the two fields when aligned correctly, and it feels natural to explore superposition as an entropically-driven effect. 
+
+All derived quantities (marginals, conditionals, entropies, and co-usage statistics) are standard probabilistic functionals. This work is a possible method to package them into a single, reusable interpretability workflow across choices of events, components, and coarse-grainings.
+{% endcomment %}
+
+
+The goal of this work is to organize common interpretability measurements for neural networks (NNs) using a single event–component participation matrix $$\mathcal{N}$$. Rows index events (e.g., inputs, tokens, or event groups) and columns index internal components (e.g., neurons, heads, SAE features, or other measured component candidates). After choosing a nonnegative measurement lens and normalizing, $$\mathcal{N}$$ induces a joint distribution from which superposition, polysemanticity, global usage, and component–component co-usage structure follow in a unified way. In particular, dual conditional entropies quantify input-centric superposition and component-centric reuse, while normalized co-usage statistics together with signature similarity help distinguish redundant components from complementary circuit elements. These quantities can also be used as regularization targets, providing practical knobs for shaping internal organization and studying how representations reorganize under controlled perturbations.
+All derived quantities (marginals, conditionals, entropies, and co-usage statistics) are standard probabilistic functionals. The aim of this work is to package them into a reusable interpretability workflow that is consistent across choices of events, components, and coarse-grainings, and to motivate the approach using a physics-style ensemble perspective.
+
 
 
 ## **Motivating Example: A Unified Statistical Framework**
@@ -49,7 +58,7 @@ $$M \in \{A, B, C\}$$
 ---
 
 ### **The Primitive Object $$\mathcal{N}$$**
-The sole primitive object of the framework is a non-negative matrix of statistical weights with elements $$\mathcal{N}_{mM}$$, which quantifies the statistical weight associated with the joint occurrence of event $$m$$ and components $$M$$. Importantly, $$\mathcal{N}$$ is not assumed to be normalized, probabilistic, or exclusive.
+The primitive object of the framework is a non-negative matrix of statistical weights with elements $$\mathcal{N}_{mM}$$, which quantifies the statistical weight associated with the joint occurrence of event $$m$$ and components $$M$$. Importantly, $$\mathcal{N}$$ is not assumed to be normalized, probabilistic, or exclusive.
 
 $$
 \mathcal{N} = \,
