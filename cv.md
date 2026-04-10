@@ -7,13 +7,13 @@ permalink: /cv/
 
 
 
-<button onclick="window.location.href='/assets/docs/CV_Jack_Logan_2026_no_contact_info.pdf'" class="cv-button">
+<button onclick="window.location.href='/assets/docs/master_CV_2026_no_contact.pdf'" class="cv-button">
   <i class="fa fa-download"></i> View Full CV
 </button>
 
 
 ## Research Profile
-Theoretical and computational physicist with a PhD and 9+ years of experience working at the intersection of statistical mechanics, geometry, and machine learning. My research focuses on emergent structure, representation learning, and physically grounded modeling, with applications spanning soft matter, polymers, proteins, and interpretable neural networks. I work across theory, simulation, and computation to develop models that reveal underlying mechanisms and structure.
+Theoretical and computational physicist with a PhD and 9+ years of experience working at the intersection of statistical mechanics, geometry, and machine learning. My research focuses on emergent structure, representation learning, and physically grounded modeling, with applications spanning soft matter, polymers, proteins, and interpretable neural networks. I work across theory, simulation, and computation to develop models that reveal underlying mechanisms and structure in complex physical systems.
 
 - Extensive experience in computational and mathematical modeling, data analysis, analytical methods, and high-performance computing.  
 - Proven leadership in managing multidisciplinary teams, delivering impactful research and publications.  

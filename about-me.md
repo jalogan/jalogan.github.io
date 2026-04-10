@@ -33,11 +33,22 @@ cover: true
 
 
 ## Background
+{%comment%}
 I am a PhD physicist with expertise in mathematical modeling, computational modeling, data analysis, and high-performance computing. I have specialized in theoretical soft-condensed matter physics working on everything from order parameters, sphere packings to the structure of proteins and protein folding dynamics. My PhD in physics was completed at Stony Brook University, and my PhD research was done with Dr. Alexei V. Tkachenko as part of the Center for Functional Nanomaterials' Theory and Computation Group at Brookhaven National Laboratory. My post-doctoral work was completed at Yale University with Dr. Corey O'Hern.
 
 On this site you will find some of my past research with summaries or differing perspectives on the work and links to the publications, along with ongoing or current work.
 
 My current interests include, but are not limited to, swarm intelligence, playing around with artificial neural networks and building AI sandboxes to explore toy problems and AI applications to physics, reinforcement learning and emergent interactions between AI agents, mechanistic interpretability and studying neural networks through the lens of mathematical physics to better understand how the internal connections and circuits emerge. Elimintating this black box is a key to developing future technologies that will revolutionize society and are, above all, safe for use.
+{%endcomment%}
+
+
+I am a PhD physicist with expertise in mathematical modeling, computational simulation, data analysis, and high-performance computing. My work has focused on theoretical soft condensed matter physics, including problems in structure, self-assembly, sphere packings, and protein folding. I completed my PhD at Stony Brook University, and my research was done with Dr. Alexei V. Tkachenko as part of the Center for Functional Nanomaterials' Theory and Computation Group at Brookhaven National Laboratory. My postdoctoral research was done with Dr. Corey O'Hern at Yale University, where I developed simulation frameworks and analyzed complex physical systems.
+
+This site highlights selected research projects, including both published work and ongoing independent research, with summaries and links to further details.
+
+My current interests lie at the intersection of statistical mechanics, simulation, and machine learning. I am particularly interested in how data-driven models can be combined with physical principles to capture structure, constraints, and dynamics in complex systems. This includes developing machine learning models for physical systems, exploring representation structure in neural networks, and building computational frameworks that integrate simulation, learning, and analysis. I’m broadly interested in using computational methods to better understand and model complex systems, and in developing tools that can contribute to scientific discovery.
+
+
 
 
 {%comment%}
