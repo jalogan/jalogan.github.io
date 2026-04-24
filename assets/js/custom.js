@@ -21,3 +21,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const typedTarget = document.getElementById("typed-role");
+  if (!typedTarget) return;
+
+  const phrases = [
+    "AI for Science",
+    "Scientific Machine Learning",
+    "Quantitative Modeling",
+    "Computational Physics"
+  ];
+
+  let phraseIndex = 0;
+  let charIndex = 0;
+  let deleting = false;
+
+  function typeLoop() {
+    const phrase = phrases[phraseIndex];
+
+    typedTarget.textContent = deleting
+      ? phrase.slice(0, charIndex--)
+      : phrase.slice(0, charIndex++);
+
+    if (!deleting && charIndex > phrase.length) {
+      deleting = true;
+      setTimeout(typeLoop, 1200);
+      return;
+    }
+
+    if (deleting && charIndex < 0) {
+      deleting = false;
+      phraseIndex = (phraseIndex + 1) % phrases.length;
+      charIndex = 0;
+    }
+
+    setTimeout(typeLoop, deleting ? 35 : 65);
+  }
+
+  typeLoop();
+});

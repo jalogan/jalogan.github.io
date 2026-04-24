@@ -9,6 +9,35 @@
   <header id="_sidebar" class="sidebar{% if include.invert %} invert{% endif %}" role="banner">
     {% include_cached body/sidebar-bg.html image=include.image color=include.color theme_color=include.theme_color %}
     {% include_cached body/sidebar-sticky.html %}
+    {% if include.cover%}
+    <div class="cover-featured-section">
+      <h3>Featured Projects</h3>
+
+      <div class="cover-project-row">
+
+        <a class="cover-project-thumb" href="/projects/NN_predict_MD/">
+          <img src="/assets/img/NN_predict_MD/spheres_moving_on_surface.png" alt="MD Surrogate">
+          <span>MD Surrogate</span>
+        </a>
+
+        <a class="cover-project-thumb" href="/projects/SymBOPs/">
+          <img src="/assets/img/SymBOPs_general/SymBOPs_main_quarter.png" alt="SymBOPs">
+          <span>SymBOPs</span>
+        </a>
+
+        <a class="cover-project-thumb" href="/projects/superposition_entropy/">
+          <img src="/assets/img/superposition_entropy/cover_image2_cropped.png" alt="Superposition Entropy">
+          <span>Superposition Entropy</span>
+        </a>
+
+        <a class="cover-project-thumb" href="/projects/entropy_of_sphere_packing/">
+          <img src="/assets/img/entropy_of_sphere_packing/packing_entropy_main_quarter.png" alt="Sphere Packing Entropy">
+          <span>Sphere Packing Entropy</span>
+        </a>
+
+      </div>
+    </div>
+    {% endif %}
   </header>
 </hy-drawer>
 <hr class="sr-only" hidden />
