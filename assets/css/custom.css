@@ -626,3 +626,64 @@ h2.toggle-open::before,   h3.toggle-open::before   { content: "▾ "; }
   margin-top: 1.1rem;
 }
 */
+
+
+
+
+
+
+
+@media (max-width: 700px) {
+  .sidebar-sticky {
+    transform: translateY(-2.0rem);
+  }
+
+  .cover-summary {
+    max-width: 20rem;
+    font-size: 0.74rem;
+    line-height: 1.25;
+    margin-bottom: 0.35rem;
+  }
+
+  .sidebar-nav {
+    margin-top: 0.2rem;
+  }
+
+  .sidebar-social {
+    margin-top: 0.4rem;
+  }
+
+  .cover-featured-section {
+    position: static;
+    transform: none;
+    width: 100%;
+    max-width: 21rem;
+    margin: 0.65rem auto 0 auto;
+    text-align: center;
+  }
+
+  .cover-featured-section h3 {
+    font-size: 0.78rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .cover-project-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.45rem;
+  }
+
+  .cover-project-thumb {
+    min-height: 6.2rem;
+    padding: 0.28rem;
+  }
+
+  .cover-project-thumb img {
+    height: 3.6rem;
+  }
+
+  .cover-project-thumb span {
+    font-size: 0.62rem;
+    line-height: 1.0;
+  }
+}
