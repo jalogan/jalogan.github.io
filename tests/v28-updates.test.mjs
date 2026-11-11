@@ -11,11 +11,13 @@ test('publication order follows the finalized public-site sequence', () => {
   const entries = [...pub.matchAll(/title:'([^']+)'/g)].map(m => m[1]);
   assert.deepEqual(entries, [
     'Effect of stereochemical constraints on the structural properties of folded proteins',
+	'Protein folding as a jamming transition',
     'Symmetry-specific characterization of bond orientation order in DNA-assembled nanoparticle lattices',
     'Geometric and topological entropies of sphere packing',
-    'Symmetry-specific orientational order parameters for complex structures',
     'Controlling morphology in hybrid isotropic/patchy particle assemblies',
+    'Symmetry-specific orientational order parameters for complex structures',
     'Compact interaction potential for van der Waals nanorods',
+	'Near-field spectroscopic investigation of dual-band heavy fermion metamaterials',
   ]);
 });
 
