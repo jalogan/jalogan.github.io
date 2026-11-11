@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ResearchCard from '../components/ResearchCard.astro';
+import AnimatedOrderArt from '../components/AnimatedOrderArt.astro';
+import { getCollection } from 'astro:content';
+const featuredNotes = (await getCollection('notes')).sort((a,b)=>a.data.order-b.data.order);
+const research = (await getCollection('research'))
+  .sort((a,b) => a.data.order-b.data.order)
+  .slice(0,6).map(entry => ({
+    href: `/research/${entry.id.replace(/\.mdx?$/,'')}/`,
+    title: entry.data.title,
+    category: entry.data.category,
+    description: entry.data.summary,
+    image: entry.data.image || '/art/prismatic-order.webp',
+    imageAlt: entry.data.imageAlt || 'Mathematical visualization',
+    video: entry.data.video
+  }));
+---
+<BaseLayout>
+<section class="hero">
+  <AnimatedOrderArt />
+  <div class="shell hero-inner"><div class="hero-content">
+    <div class="eyebrow">Mathematical modeling · Simulation · Scientific computing</div>
+    <h1>Theoretical &<br/><em>Computational</em><br/>Physicist</h1>
+    <p>I develop mathematical theories, numerical methods, and computational models to understand complex physical systems—from emergent structure and statistical mechanics to molecular simulations and scientific machine learning.</p>
+    <div class="hero-actions"><a class="button" href="/research/">Explore research <span aria-hidden="true">↗</span></a><a class="button ghost" href="/about/">About <span aria-hidden="true">↗</span></a></div>
+    <ul class="hero-specialties"><li>Statistical mechanics</li><li>Numerical algorithms</li><li>Scientific computing</li></ul>
+  </div></div>
+</section>
+<section class="section shell home-research-section" aria-labelledby="research-heading">
+  <div class="section-head"><div><div class="section-kicker">01 — Research</div><h2 id="research-heading">Selected work</h2></div><a href="/research/" class="section-link">View all research ↗</a></div>
+  <div class="research-grid">{research.map((item,index)=><ResearchCard {...item} index={`0${index+1}`}/>)}</div>
+</section>
+<section class="shell thesis-feature" aria-labelledby="thesis-feature-heading">
+  <div class="thesis-feature-visual">
+    <div class="section-kicker">Doctoral research</div>
+    <img src="/figures/thesis-frontispiece.png" alt="Original dissertation frontispiece: a contemplative person beside scattered construction bricks" loading="lazy" decoding="async" />
+  </div>
+  <div class="thesis-feature-content">
+    <h2 id="thesis-feature-heading">PhD dissertation & research foundations</h2>
+    <p class="thesis-feature-title"><em>Geometric and Topological Aspects of Self-Assembly: from spheres and rods to designer particles</em></p>
+    <p>My doctoral research at Stony Brook University, carried out at Brookhaven National Laboratory, developed analytical theories, statistical-mechanical models, and computational algorithms for interacting-particle systems. It connects nanoscale interaction potentials, self-assembly, symmetry-based structural characterization, and packing statistics—work grounded in mathematical modeling and scientific computing.</p>
+    <div class="thesis-feature-links">
+      <a href="https://www.proquest.com/openview/cfe4c4a9c07c976b765b4474a40b6436/1?pq-origsite=gscholar&amp;cbl=18750&amp;diss=y" target="_blank" rel="noopener noreferrer">Read dissertation ↗</a>
+      <a href="/about/#doctoral-research">Research background ↗</a>
+    </div>
+  </div>
+</section>
+<section class="section writing-section">
+ <div class="shell"><div class="section-head"><div><div class="section-kicker">02 — Writing</div><h2>Notes & Explorations</h2></div><a class="section-link" href="/notes/">Explore the notebook ↗</a></div>
+ <div class="note-home-grid">{featuredNotes.slice(0,2).map(note => <a class="note-home-card" href={`/notes/${note.id.replace(/\.mdx?$/,'')}/`}><div class="section-kicker">{note.data.category} · {note.data.status}</div><h3>{note.data.title}</h3><p>{note.data.summary}</p><span class="text-link">Read note ↗</span></a>)}</div>
+ </div>
+</section>
+<div class="shell about-band"><div><div class="section-kicker">03 — Background</div><h2>Research across theory and computation</h2><p>Doctoral research at Stony Brook University and Brookhaven National Laboratory, followed by postdoctoral research at Yale University. My work spans statistical physics, mathematical theory, computational modeling, and scientific algorithms.</p></div><a class="button ghost" href="/about/">Read more ↗</a></div>
+<section class="shell contact-feature" aria-labelledby="contact-feature-title">
+  <div class="contact-feature-copy">
+    <div class="section-kicker">04 — Get in touch</div>
+    <h2 id="contact-feature-title">Research, collaboration, or a new question?</h2>
+    <p>I'm happy to hear about interesting scientific problems, potential collaborations, and research opportunities.</p>
+  </div>
+  <a class="button" href="/contact/">Contact me <span aria-hidden="true">↗</span></a>
+</section>
+</BaseLayout>

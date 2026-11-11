@@ -1,0 +1,8 @@
+---
+interface Props { id:string; number?:number|string; src:string; poster?:string; caption:string; credit?:string; softColors?:boolean; className?:string }
+const {id,number,src,poster,caption,credit,softColors=false,className}=Astro.props;
+---
+<figure class:list={["scientific-figure","video-figure",softColors?"video-subtle":"",className]} id={id}>
+ <div class="video-frame"><video controls preload="metadata" playsinline poster={poster} aria-label={caption}><source src={src} type="video/mp4" />Your browser does not support embedded video.</video></div>
+ <figcaption><strong>Figure {number}.</strong> {caption}{credit && <span class="figure-credit"> {credit}</span>}</figcaption>
+</figure>

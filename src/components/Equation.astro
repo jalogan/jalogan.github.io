@@ -1,0 +1,7 @@
+---
+import katex from 'katex';
+interface Props { id:string; number?:number|string; latex:string }
+const {id,number,latex}=Astro.props;
+const math=katex.renderToString(latex,{displayMode:true,throwOnError:true,output:'htmlAndMathml'});
+---
+<div class="numbered-equation" id={id}><div class="eq-math" set:html={math}/><span class="eq-number">({number})</span></div>

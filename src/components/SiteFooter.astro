@@ -1,0 +1,11 @@
+---
+import { hasResearchCv, hasIndustryResume } from '../lib/cv';
+const showCv = hasResearchCv || hasIndustryResume;
+---
+<footer class="site-footer">
+  <div class="shell footer-inner">
+    <div><span class="footer-name">Jack Logan</span><p>Theoretical & computational physics · Mathematical modeling · Scientific computing</p></div>
+    <div class="footer-links"><a href="/research/">Research</a><a href="/publications/">Publications</a><a href="/notes/">Notes</a><a href="/about/">About</a>{showCv && <a href="/about/#cv">CV</a>}<a href="/contact/">Contact</a><a href="https://linkedin.com/in/jacklogan-physicist/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://github.com/jalogan" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
+  </div>
+  <div class="shell footer-bottom"><span>© {new Date().getFullYear()} Jack Logan</span><span>Visual identity: coarse-grained bond-orientational order</span></div>
+</footer>

@@ -1,0 +1,245 @@
+---
+title: 'Emergent Dihedral Symmetry in a 1-Layer Transformer'
+summary: 'A self-contained mechanistic investigation of how a one-layer Transformer learns triangle symmetries, how to test internal group composition, and what sparse features and hidden-state geometry reveal.'
+category: 'Machine learning · Mechanistic interpretability'
+status: 'Independent research'
+order: 7
+featured: false
+image: '/figures/d3/hidden_space_heatmap_cover_image.png'
+imageAlt: 'Original analysis heat map of learned hidden-state representations for D3 symmetry operations'
+problem: 'Can a one-layer Transformer learn the algebra of the triangle’s six rotation and reflection symmetries from examples of individual operations, without direct training on compositions?'
+contribution: 'Designed the controlled group-action task, trained the Transformer, developed internal-activation composition tests, and investigated operator representations using sparse autoencoders, activation overlap, and PCA.'
+result: 'The model learned the isolated triangle transformations, but the tested internal activation-reinjection circuits did not reliably reproduce sequential group composition. The representations exhibited systematic vertex-dependent equivalences and shared features that motivate a more precise study of compositional structure.'
+methods: ['PyTorch', 'Group theory', 'Mechanistic interpretability', 'Activation interventions', 'Sparse autoencoders', 'PCA and representation analysis']
+originalUrl: 'https://github.com/jalogan/emergent-dihedral-symmetry-transformer'
+---
+
+import Figure from '../../components/Figure.astro';
+import FigureGroup from '../../components/FigureGroup.astro';
+import Equation from '../../components/Equation.astro';
+
+## The question: can a network learn the algebra behind a symmetry?
+
+A neural network can learn to recognize or apply a set of transformations without necessarily learning how those transformations **combine**. This project investigates that distinction in a setting where the correct answer is mathematically precise and the model is small enough to inspect.
+
+The test system is an equilateral triangle. Its rotations and reflections form the dihedral group $D_3$, a six-element **non-Abelian** group. Rather than hard-code an equivariant architecture, I trained a one-layer Transformer on examples of *individual* symmetry operations, then studied what representations it learned internally and whether those representations could be composed.
+
+The motivation reaches beyond a toy geometry problem. Scientific machine learning often depends on symmetries, and mechanistic interpretability asks whether the internal computations of a model reflect the structure of the task—or merely produce the correct outputs by a less systematic route.
+
+An important distinction runs through the analysis: correctly predicting isolated group elements, composing complete input/output transformations, and reusing a *particular internal subcircuit* as a group-action operator are three different tests. Success on one does not establish success on the others.
+
+## Six operations, one small Transformer
+
+The symmetry group of an equilateral triangle contains the identity $E$, two nontrivial rotations $R$ and $R^2$, and three reflections $S$, $SR$, and $SR^2$ (with the convention that the rightmost operation acts first).
+
+<Figure id="fig-d3-operations" src="/figures/d3/D3_operators.png" alt="Original diagram showing the six rotations and reflections of a colored equilateral triangle" caption="The six operations in D₃, shown on an equilateral triangle with red, green, and blue vertices. Rotations move every vertex cyclically; each reflection fixes one vertex and exchanges the other two. The colors make it possible to follow individual vertices across different operations." />
+
+The group is characterized by the relations
+
+<Equation id="eq-d3-relations" latex={String.raw`R^3=E,\qquad S^2=E,\qquad SRS=R^{-1}.`}/>
+
+These rules determine how operations compose. In particular, **order matters**: performing a reflection and then a rotation is generally different from performing them in the opposite order. In abstract notation,
+
+<Equation id="eq-d3-multiplication" latex={String.raw`D_3=\{E,R,R^2,S,SR,SR^2\},\qquad SR=R^{-1}S\ne RS.`}/>
+
+The group contains identity and inverses, and its multiplication is associative and closed. For instance, $RR^2=E$ and $S^2=E$. These are not merely rules for recognizing a transformed triangle; they describe the structure of *sequences* of transformations.
+
+For a labeled input triangle with vertex positions $X=(\mathbf x_0,\mathbf x_1,\mathbf x_2)$, the mathematical action $T_g$ applies the same physical rotation or reflection to the **whole configuration**. The three colored vertex labels are useful because they let us see whether two globally distinct operations send a particular vertex to the same position without agreeing on the other vertices. This will matter when interpreting the hidden features.
+
+The model receives the coordinates of the three triangle vertices and a token identifying which operation to apply. Its target is the set of transformed vertex coordinates. Training examples show the network how to perform each operation *separately*; they do not explicitly supervise the six-by-six multiplication table.
+
+That gives the experiment a clear separation between two questions: *Can the network predict individual transformations?* and *Has it developed an internal mechanism that combines transformations consistently?*
+
+### Model, data, and what was actually supervised
+
+The experimental model was a **minimal one-encoder-layer Transformer** whose hidden representation had **64 dimensions**. The input supplied the triangle vertex coordinates along with a token identifying one of the six group elements; the output was the transformed triangle. I deliberately used a small model so internal activations could be captured and compared directly, without claiming that any single attention head must correspond to a symmetry operator.
+
+The training examples paired **one** operation token $g$ with the output $T_g(X)$. They did not present the network with an explicit supervision term requiring the group law $T_{g_2}(T_{g_1}(X))=T_{g_2g_1}(X)$, nor did the architecture hard-code the matrices for these group actions. Thus low error on the individual-operation training task would not, on its own, prove that the network represented the algebra in an internal, reusable form.
+
+The results reported here focus on the trained model and its internal representations. A systematic study of optimizer settings, training-set size, different random seeds, and numerical error bounds would be needed to establish how robustly these findings generalize. Implementation details are available in the linked code repository.
+
+### What it would mean to learn the group algebra
+
+There are at least two valid notions of composition here. **Behavioral composition** is to feed the first transformed triangle to a second full network invocation, with the next operator token. **Internal circuit composition**, the test used below, is stronger and more delicate: it asks whether an identified internal region can be traversed twice by reinjecting activations at a chosen architectural boundary. A failure of the second test does not automatically imply failure of the first.
+
+## Experiment 1: testing the composition of internal circuits
+
+Suppose the network implements an operation $g_1$ on a triangle. If the resulting state can truly be passed through the same kind of operator mechanism for a second operation $g_2$, the result should agree with applying the single combined operation $g_2g_1$.
+
+<Equation id="eq-d3-composition" latex={String.raw`T_{g_2}\!\left(T_{g_1}(X)\right)=T_{g_2g_1}(X),`}/>
+
+where $X$ denotes the full triangle configuration and $T_g$ the mathematical action of group element $g$.
+
+For the model $F_\theta(X,g)$, a useful behavior-level reference would be $F_\theta(F_\theta(X,g_1),g_2)$ compared with $F_\theta(X,g_2g_1)$ and the exact $T_{g_2g_1}(X)$. Those are ordinary model calls, with any coordinate normalization and tokenization applied as in training. The **internal** test instead asks whether a subcircuit can realize the composition by itself.
+
+The experiment tested a **specific candidate mechanism** for achieving that composition inside the trained model. I captured vertex-token activations after one network subcircuit under operation $g_1$, reinjected them at an earlier boundary of a second pass with operation $g_2$, and compared the resulting outputs with a direct pass using the known product $g_2g_1$.
+
+<Figure id="fig-d3-circuit-test" src="/figures/d3/circuit_composition_diagram.png" alt="Original activation capture and reinjection schematic for sequential composition of D3 operator circuits" caption="The activation-reinjection test. Internal activations are captured after a candidate operator subcircuit during a pass for g₁ and injected into a second pass for g₂. The composed intervention is compared against a direct forward pass for the group product g₂g₁." />
+
+### Capture, reinjection, and the comparison
+
+The intervention can be described without assuming the circuit we seek has already been identified:
+
+1. Choose a triangle $X$ and two group elements $g_1,g_2$, whose product is known from $D_3$.
+2. Run the network with $g_1$ and capture its vertex activations immediately **after** a chosen candidate block $C$.
+3. Start a second pass using $g_2$, replacing the vertex activations at the chosen **input** boundary of $C$ with those captured after the first pass.
+4. Complete the pass, decode the triangle, and compare it to a direct network pass with the composed token $g_2g_1$.
+5. Repeat for operator pairs and many input triangles; organize the measured differences as a heatmap.
+
+This procedure was repeated using three different candidate boundaries: the **full encoder Transformer**, the **first normalization-and-attention region**, and **attention alone**. The comparison used mean-squared error between the two-pass and direct-composition outputs. Conceptually, for a chosen boundary $C$, the reported statistic measures a discrepancy of the form
+
+<Equation id="eq-d3-mse" latex={String.raw`\mathrm{MSE}_C(g_1,g_2)=\left\langle\left\|\widehat T_{C,g_2\circ g_1}(X)-F_\theta(X,g_2g_1)\right\|_2^2\right\rangle_X,`}/>
+
+where the first term represents the **intervention output**, not a separately trained mathematical transformation. The exact tensor handoff is important: residual additions, normalization, token interactions, and position-dependent information can all affect whether captured states are legitimate inputs to the same block on a later pass.
+
+<Figure id="fig-d3-composition-heatmaps" src="/figures/d3/all_CLR_heatmaps.png" alt="Original heat maps comparing direct and activation-reinjected compositions for three candidate Transformer circuits" caption="Composition-test errors across pairs of D₃ operations and three candidate subcircuits. A near-zero cell would indicate agreement between the particular internal two-pass intervention and the direct composed operation. The full encoder boundary performs better than the narrower candidates, but the errors are not uniformly small." />
+
+Each heatmap cell corresponds to an ordered pair of operations. Perfect agreement for this *particular* intervention would produce a matrix of values near zero. A dark or light region is meaningful only relative to its numerical scale; the key observation is the **nonuniform errors**, which reveal that some operator pairs agree more closely than others. In the original comparisons, the whole-encoder boundary performed best among the three candidates, but not uniformly well.
+
+The heatmaps in <FigRef id="fig-d3-composition-heatmaps" /> show that the tested internal circuits are **not reliably composition-consistent**. Some pairs of operations agree better than others, but none of the three candidate boundaries behaves as a clean, reusable realization of the group action across all pairs.
+
+This is a meaningful negative result, but it has a precise scope: the tests show that **these activation-reinjection constructions did not compose reliably**. They do not prove that the Transformer is mathematically incapable of representing $D_3$, or that a differently chosen boundary, state interface, or training objective would fail. In particular, an internal activation need not be a valid input state for the next copy of a subcircuit merely because the two tensors have the same dimensions.
+
+## Experiment 2: what features represent the operations?
+
+To investigate the learned representation, I examined the model's hidden states after the encoder. The hidden dimension was 64. I trained separate sparse autoencoders (SAEs) for each vertex token, expanding a hidden activation into a 256-dimensional feature space with a top-$k$ sparsity constraint.
+
+<Equation id="eq-d3-sae" latex={String.raw`\mathbf z=\operatorname{TopK}\!\bigl(f_{\mathrm{enc}}(\mathbf h)\bigr),\qquad
+\widehat{\mathbf h}=f_{\mathrm{dec}}(\mathbf z),\qquad
+\mathcal L_{\mathrm{rec}}=\|\widehat{\mathbf h}-\mathbf h\|_2^2.`}/>
+
+The 256-dimensional SAE feature vector $\mathbf z$ is intentionally **overcomplete** relative to the 64-dimensional hidden state $\mathbf h$. A top-$k$ sparsity operator retains only a limited number of active features for each input state. The reconstruction loss trains the encoder/decoder to recover the hidden activations; it does not impose the group multiplication law.
+
+To read the feature heatmaps, condition on both a **vertex token** $v$ and an **operator** $g$, then average the feature coefficients across many triangle configurations. Denoting the SAE feature vector by $\mathbf z_v(X,g)$, the observable plotted is conceptually
+
+<Equation id="eq-d3-mean-features" latex={String.raw`\overline{\mathbf z}_{v,g}=\mathbb E_X\!\left[\mathbf z_v(X,g)\right].`}/>
+
+This average tells us which features are repeatedly associated with the experimental condition, not what individual neurons causally compute. Repeating it for each of the three vertices lets us distinguish a global operator label from its vertex-specific action.
+
+The SAE is an analysis tool, not a new component of the Transformer doing the original task. Its purpose is to find a sparse vocabulary of recurring patterns in the transformer's hidden-state activations. An individual learned feature is a direction in activation space; **it should not automatically be identified with a complete computational circuit or a specific symmetry operator**.
+
+### Which features activate for each vertex and operation?
+
+For many triangle inputs, I collected the sparse features activated by each operation and averaged them separately for the three vertex tokens.
+
+<Figure id="fig-d3-sae-features" src="/figures/d3/all_verts_SAE_feature_heatmap.png" alt="Original SAE activation heat maps for every D3 operation and each triangle vertex" caption="Average SAE feature activity for the three vertex tokens under the six D₃ operations. Rows correspond to operations and columns to learned SAE features. Repeated patterns across operator rows reveal similarities in the local hidden-state descriptions." />
+
+A striking pattern appears: some *different* operators produce similar feature responses **for the same vertex**. That is not necessarily an error. Two globally different symmetries can send a particular colored vertex to exactly the same destination.
+
+For example, each vertex has a two-element stabilizer: the identity and the reflection that fixes that vertex. From the perspective of that one vertex's final position, these two operations are indistinguishable. Similarly, other pairs of operations can move that vertex to the same one of the three possible positions while acting differently on the other vertices.
+
+This distinction is central: **equality of a local action is not equality of group elements**. The action on all three labeled vertices is what uniquely identifies the full symmetry operation. For the red vertex (vertex 0) in the original labeling, the familiar pairs include $(E,S)$, $(R,SR^2)$, and $(R^2,SR)$: in each pair, both operators send that chosen vertex to the same destination, even though they act differently on the *complete triangle*. Corresponding pairs arise for the other vertices under relabeling.
+
+This observation has two competing interpretations worth separating. A network that only needs one vertex's **final coordinate** can economically reuse an internal code for two operations with the same local output. But a code meant to represent the **group element itself** must preserve distinctions needed to act on arbitrary vertices and to participate consistently in the global multiplication law. The heatmaps suggest local reuse; they do not independently prove that the global distinctions are absent from all network states.
+
+<Figure id="fig-d3-sae-overlap" src="/figures/d3/all_SAE_operator_overlap_heatmaps.png" alt="Original within-vertex overlap matrices of average SAE feature vectors for D3 operators" caption="Similarity between the average sparse feature vectors for each pair of operations, calculated separately for each vertex. Off-diagonal similarity can reflect shared local action or feature reuse; overlap alone does not establish that two complete symmetry operators are represented identically." />
+
+For the operator-overlap matrix, compare mean feature signatures for two operators $g,h$ at fixed vertex $v$. A standard similarity measure is cosine similarity,
+
+<Equation id="eq-d3-feature-sim" latex={String.raw`\operatorname{sim}_v(g,h)=\frac{\overline{\mathbf z}_{v,g}\cdot\overline{\mathbf z}_{v,h}}{\left\|\overline{\mathbf z}_{v,g}\right\|\left\|\overline{\mathbf z}_{v,h}\right\|},`}/>
+
+when the norms are nonzero. High off-diagonal similarity means the two measured feature profiles point in similar directions. It does **not** imply exact equality of the operator transformations or identical causal computations. In an overcomplete feature dictionary, shared coordinates and correlations can have several explanations.
+
+The operator-overlap matrices in <FigRef id="fig-d3-sae-overlap" /> make those local equivalences more visible. They suggest the model uses substantial **vertex-conditioned structure** rather than one clean, globally distinct code per group element.
+
+## From sparse features back to the 64-dimensional hidden space
+
+The SAE decoder maps the 256 latent features back to the transformer's 64-dimensional representation. In a linear decoder this has the form
+
+<Equation id="eq-d3-decoder" latex={String.raw`\widehat{\mathbf h}=W_d\mathbf z+\mathbf b_d.`}/>
+
+If the decoder is linear, each column $W_d[:,k]$ points in the original hidden space along the direction contributed by one SAE latent coefficient. Hence a sparse code $\mathbf z$ reconstructs the hidden vector as a weighted sum of those columns. Because there are **256 candidate directions in only 64 dimensions**, many dictionary columns are linearly dependent and may be nonorthogonal. This is a feature of the analysis dictionary; it is not proof that a unique representation of $D_3$ has been compressed or destroyed.
+
+This reconstruction can be dense even when $\mathbf z$ is sparse: a small number of active decoder columns may contribute to many hidden coordinates. That is one reason feature interpretation is easier in the SAE representation than in the raw hidden vectors.
+
+<FigureGroup id="fig-d3-hidden-maps" columns={1} panels={[
+  {label:'a',src:'/figures/d3/all_hidden_space_heatmaps.png',alt:'Original hidden neuron activation heat maps for D3 operator and vertex pairs',caption:'Decoded hidden activations.'},
+  {label:'b',src:'/figures/d3/all_hidden_operator_overlap_heatmaps.png',alt:'Original overlap matrices of mean hidden activations for D3 operator and vertex pairs',caption:'Similarity of decoded hidden states.'}
+]} caption="The corresponding 64-dimensional hidden-state view. Decoded activations are distributed across more coordinates, and their average vectors show substantial overlap between operations. These plots characterize the representation, not a proof that group multiplication has become commutative." />
+
+The two panels in <FigRef id="fig-d3-hidden-maps" /> are deliberately **stacked vertically**. The upper panel shows operator-conditioned patterns in hidden coordinates; the lower panel compares similarity of the averaged decoded states. Both panels should be read together: a dense hidden-space signature may still carry discriminative information in subtle directions, while a sparse SAE description can expose localized feature reuse more easily.
+
+### The geometry of the representations
+
+I also used principal component analysis (PCA) to inspect the geometry of the post-encoder activations. PCA is a low-dimensional view of the model's features; it helps reveal clustering, but projection can hide distinctions that still exist in the full 64-dimensional state.
+
+<FigureGroup id="fig-d3-pca" columns={1} panels={[
+  {label:'a',src:'/figures/d3/PCA_hidden_samples_scatter_all_verts.png',alt:'PCA scatter plot of individual hidden activations across operator and vertex labels',caption:'Individual activation samples.'},
+  {label:'b',src:'/figures/d3/PCA_hidden_means_scatter.png',alt:'PCA scatter plot of average hidden activations for operator and vertex pairs',caption:'Operator/vertex averages.'}
+]} caption="PCA views of the learned hidden states. Individual samples and their operator-conditioned averages reveal structured clusters and local overlaps. The low-dimensional arrangement is descriptive evidence of learned representation geometry—not an algebraic test of D₃ closure." />
+
+The two panels of <FigRef id="fig-d3-pca" /> are also **stacked vertically** for readability. Individual activation clouds and centroids answer different questions: a centroid can merge broad or multimodal populations, while a two-dimensional PCA plot can make distinct high-dimensional states appear to overlap. In the original study, several operator/vertex clusters were close in the projection, with some organized approximately by identity, rotations, and reflections. Such visual groupings are useful hypotheses but do not establish that the non-Abelian multiplication has become commutative.
+
+Finally, I compared average hidden states **across different vertex tokens**, rather than only within a vertex.
+
+<Figure id="fig-d3-cross-vertex" src="/figures/d3/global_cross_vertex_overlap_hidden.png" alt="Original cross-vertex similarity matrix for D3 operator-conditioned hidden states" caption="Cross-vertex similarity of average hidden activations under all operator and vertex combinations. The off-diagonal blocks compare corresponding operations at different vertices, revealing that the learned codes are not simply identical across tokens." />
+
+A cross-vertex matrix consists of three-by-three blocks indexed by vertex, with a six-by-six operator comparison within each block. Diagonal blocks summarize similarities among operators **at one vertex**; off-diagonal blocks compare patterns across **different vertices**. A faithful global action need not encode an operator using literally identical coordinate vectors at all positions—positional and token-dependent encodings are permissible. The test instead asks whether there is a consistent way to recover the same *global action* from the complete representation.
+
+The cross-vertex comparison matters because the symmetry operation is **global**, even though the network processes individual vertex tokens. If the model uses strongly vertex-specific codes, a circuit that transforms one token's representation is not automatically a reusable operator acting independently of vertex identity. This is a plausible mechanism to investigate when internal composition tests fail.
+
+## Why did composition fail? A careful interpretation
+
+The local patterns can be understood by distinguishing the action of a group element on one vertex from its action on the triangle as a whole.
+
+The network had enough training signal to perform the six individual transformations. But **single-operation supervision does not require the network to implement an explicit, reusable group representation internally**. It may instead learn a collection of input- and vertex-conditioned transformations that give the correct output on the training task.
+
+The observed patterns fit that possibility. Some operations have the same effect on one vertex, so local representations can legitimately overlap. If a chosen internal state loses the information that distinguishes those operations *globally*, or if the output of one subcircuit is not a valid input to the next, an activation-reinjection composition test can fail even while individual predictions are accurate.
+
+An example makes the information problem clearer. Let $v$ be one of the triangle's labeled vertices. There can be two different group elements $g\ne h$ with
+
+<Equation id="eq-d3-local-alias" latex={String.raw`g(v)=h(v),\qquad \text{but}\qquad g\ne h.`}/>
+
+If a representation of an operator retains **only its action on this one vertex**, it cannot tell $g$ from $h$. They can differ on the other vertices; hence the full group element cannot generally be reconstructed from one vertex destination. One must be precise about composition here: if $g(v)=h(v)$, any **left** composition $k\circ g$ and $k\circ h$ also agrees at that *same* vertex, because $k(g(v))=k(h(v))$. However, **right** composition can act on another intermediate vertex and expose the distinction: $g(k(v))$ need not equal $h(k(v))$. More importantly, the transformations are already different on the *full configuration*. The reason a vertex-local alias might be problematic is the loss of information required to represent the **global operator**, not an assertion that every subsequent single-vertex action must differ.
+
+<Figure id="fig-d3-aliasing" src="/figures/d3/NN_equiv_ops_fails_composition.png" alt="Original conceptual diagram showing how different D3 operations can be locally equivalent at a vertex but differ after composition" caption="Why local equivalence is not global equivalence. Different D₃ operations can move one chosen vertex to the same location even though they are distinct transformations of the whole triangle. Confusing those operations can break later composition if the needed distinction has genuinely been discarded." />
+
+### Shared features and non-Abelian structure are not themselves the obstacle
+
+It is important not to overstate the mathematics. The group $D_3$ has a perfectly valid **faithful two-dimensional real representation**, using ordinary rotation and reflection matrices:
+
+<Equation id="eq-d3-faithful" latex={String.raw`\rho(R)=\begin{pmatrix}\cos(2\pi/3)&-\sin(2\pi/3)\\\sin(2\pi/3)&\cos(2\pi/3)\end{pmatrix},\qquad
+\rho(S)=\begin{pmatrix}1&0\\0&-1\end{pmatrix}.`}/>
+
+These matrices operate in the **same two-dimensional space** and satisfy exactly
+
+<Equation id="eq-d3-faithful-law" latex={String.raw`\rho(g_2g_1)=\rho(g_2)\rho(g_1),\qquad \rho(S)\rho(R)\rho(S)=\rho(R)^{-1}.`}/>
+
+A useful contrast is the rotation subgroup $C_3=\{E,R,R^2\}$. Even though all three actions share the same two real coordinate axes, their rotation matrices compose exactly. The full $D_3$ similarly shares those axes and composes exactly, despite being non-Abelian. Therefore *sharing a representational subspace* is not equivalent to *collapsing distinct operations*. It is only destructive if the model's effective transformations or the selected intervention discard information essential to the multiplication law.
+
+Thus neither feature overlap nor noncommutativity makes faithful composition impossible. The key question is whether the network's **actual implementation and the particular tested activation interface** realize a consistent multiplication law. The observed overlap and vertex dependence are clues about its organization, not by themselves a mathematical proof of the reason for failure.
+
+### Candidate explanations and discriminating experiments
+
+There are several nonexclusive explanations for the measured negative result:
+
+- **Training identifiability:** the data only require correct single-operation outputs, so many internally different algorithms solve the supervised task without implementing a reusable operator algebra.
+- **Local encoding:** some post-encoder features track the effect on an individual vertex; these features can alias different global operations while being sufficient for a local prediction.
+- **Invalid circuit interface:** an activation captured after a block under one operator may not lie on the manifold of states that the block expects as input with a different operation token, especially with residual connections and normalization.
+- **Hidden information elsewhere:** even when one token or SAE projection looks ambiguous, other tokens, attention states, or nonlinear readout paths might still distinguish the operators.
+
+The current figures provide evidence of structured, sometimes overlapping hidden representations and nonzero internal-composition errors. They do not assign a unique causal weight to any explanation in this list. In particular, the SAE features are correlational measurements, not proof that activating or ablating one feature would change the composition error.
+
+### What would establish the mechanism more strongly?
+
+A decisive follow-up would separate three issues: (1) composing two complete network calls by feeding the first output triangle into the second; (2) composing the *internal* operator mechanism through activation reinjection at carefully matched interfaces; and (3) decoding the global operator identity from complete multi-token states rather than each vertex separately.
+
+Controlled comparisons with models explicitly trained on compositions, or with genuinely equivariant operator representations, would further show whether the current failure comes from the training objective, the learned code, or the intervention itself.
+
+A particularly clean test would compare (a) the exact $D_3$ multiplication table, (b) **behavioral two-pass prediction**, (c) **internal-state reinjection** at several candidate boundaries, and (d) **causal patching or ablation** of the operator-conditioned features. If a two-pass behavioral test succeeds but the reinjection test fails, the natural next question is whether the attempted internal boundary is a valid reusable state interface—not whether the network has violated a mathematical law of group theory.
+
+The [**Participation Ensembles**](/research/participation-ensembles/) proposal offers one possible additional lens: compare event-conditioned component reuse and co-usage against these independent composition-error and intervention tests. It has **not yet been shown** to fix this Transformer's composition failures.
+
+## Scope and reproducibility
+
+This study examines a small Transformer trained on a controlled group-action task. Its central result is **a contrast between accurate individual transformations and nonzero errors in selected internal activation-reinjection composition tests**. These interventions assess specific candidate subcircuits; they do not, on their own, measure the model's ability to compose two complete forward passes. The reported results characterize the analyzed model rather than establishing robustness across random seeds or generalization beyond the training distribution. The implementation is available in the linked code repository.
+
+## What this project demonstrates
+
+The model learned the individual symmetry transformations, while the tested activation-reinjection pathways did not consistently implement the $D_3$ composition law. Sparse autoencoders and hidden-state analyses revealed structured, sometimes overlapping representations that depend on vertex identity. Together, these observations distinguish successful task performance from the stronger claim that a particular internal circuit implements a reusable group action.
+
+**Accurate predictions for individual operations do not, by themselves, establish an internally compositional mechanism.** Understanding that distinction requires algebraic tests, carefully designed interventions, and an interpretation of learned features that respects both their mathematical structure and their computational context.
+
+## Code
+
+[View the project's code repository](https://github.com/jalogan/emergent-dihedral-symmetry-transformer).

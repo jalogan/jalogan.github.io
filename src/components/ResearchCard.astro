@@ -1,0 +1,41 @@
+---
+interface Props { href: string; title: string; category: string; description: string; image: string; imageAlt: string; video?: string; index?: string; }
+const {href,title,category,description,image,imageAlt,video,index}=Astro.props;
+const mediaTreatment = video?.includes('curved-manifolds-spheres-moving.mp4') ? 'media-manifolds-contained'
+  : image.includes('/cards/symbops-sphere-card-v27.') ? 'media-symbops-contained'
+  : image.includes('/cards/sphere-packing-card-v') ? 'media-packing-contained'
+  : image.includes('/cards/protein-') ? 'media-protein-contained'
+  : image.includes('/cards/surrogate-force-field-v') ? 'media-surrogate-contained'
+  : '';
+---
+<a class="research-card" href={href}>
+  <div class:list={["research-card-media", mediaTreatment]}>
+    {video ? <>
+      <video class="research-card-motion" src={video} poster={image} muted autoplay loop playsinline preload="metadata" aria-hidden="true"></video>
+      <img class="research-card-still" src={image} alt={imageAlt} loading="lazy" decoding="async" />
+    </> : <img src={image} alt={imageAlt} loading="lazy" decoding="async" />}
+  </div>
+  <div class="research-card-text"><div class="card-meta">{category}{index && <span>{index}</span>}</div><h3>{title}</h3><p>{description}</p><span class="text-link">Explore project <span aria-hidden="true">↗</span></span></div>
+</a>
+
+<script>
+  // A cached page restored from Safari's back/forward cache can leave muted
+  // card videos paused even though their autoplay attribute is still set.
+  const restartCardVideos = () => {
+    if (document.hidden || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll<HTMLVideoElement>('.research-card-motion').forEach(video => {
+      if (!video.paused) return;
+      const rect = video.getBoundingClientRect();
+      if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
+      video.muted = true;
+      const attempt = video.play();
+      attempt?.catch(() => { /* Poster remains if autoplay is blocked. */ });
+    });
+  };
+  window.addEventListener('pageshow', () => requestAnimationFrame(restartCardVideos));
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) requestAnimationFrame(restartCardVideos);
+  });
+  // Handles component scripts that execute after the initial pageshow event.
+  requestAnimationFrame(restartCardVideos);
+</script>

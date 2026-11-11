@@ -1,0 +1,91 @@
+---
+title: 'Polymer Loops, Radius of Gyration, and Length Scales'
+summary: 'A fixed bond angle in three-dimensional, non-overlapping chains produces an intriguing two-regime subchain-size curve. What can geometry alone explain?'
+category: 'Polymer physics · Geometric intuition'
+status: 'Exploration'
+order: 1
+---
+import Figure from '../../components/Figure.astro';
+import Equation from '../../components/Equation.astro';
+
+## Looking for structure at different chain lengths
+
+The radius of gyration, $R_g$, measures how far a polymer's monomers lie from their collective center of mass. But a single value for a chain of $N$ monomers can hide important differences between its local and global geometry. A chain might be relatively extended over short segments yet repeatedly turn back toward itself over longer segments.
+
+For a **contiguous subchain of $n$ equal-mass monomers** at positions $\mathbf r_1,\ldots,\mathbf r_n$, the squared radius of gyration is
+
+<Equation id="eq-rg-definition" latex={String.raw`R_g^2(n)=\frac{1}{n}\sum_{j=1}^{n}\left|\mathbf r_j-\mathbf r_{\mathrm{cm}}\right|^2,\qquad \mathbf r_{\mathrm{cm}}=\frac{1}{n}\sum_{j=1}^{n}\mathbf r_j.`}/>
+
+Here $\mathbf r_{\mathrm{cm}}$ is the **center of mass of that particular subchain**, not necessarily the center of mass of the full polymer. Calculating $R_g(n)$ over many contiguous windows and chain configurations reveals how typical spatial extent changes as progressively more monomers are included.
+
+The shape of this curve is especially interesting in protein physics, where local conformational constraints and larger-scale folding can give rise to distinct scaling regimes. The present exploration asks a simpler question: **can fixed local bond geometry generate a crossover in $R_g(n)$, even before introducing realistic protein-specific interactions?**
+
+## A characteristic length from bond geometry
+
+Consider a chain with fixed bond lengths and a fixed *interior* bond angle $\theta$. By this convention, $\theta=180^\circ$ is locally straight. A planar chain turning consistently in one direction changes its heading by $\pi-\theta$ at each step. A full revolution requires a total turn of $2\pi$, suggesting a characteristic loop length
+
+<Equation id="eq-rg-loop-length" latex={String.raw`n^*\approx\frac{2\pi}{\pi-\theta}=\frac{360^\circ}{180^\circ-\theta}.`}/>
+
+Angles in the first fraction are measured in radians; the second form uses degrees. Thus $\theta=150^\circ$ gives $n^*\approx12$, while $\theta=165^\circ$ gives $n^*\approx24$. The quantity $n^*$ counts approximately the number of bonds needed to turn through one revolution; differences of one bond versus one monomer do not matter at this level of approximation.
+
+**This construction is planar, but the simulations shown here are not.** They contain three-dimensional chains of non-overlapping spheres with a fixed bond angle. Their geometry need not form regular planar polygons. The planar expression is therefore a useful *reference length* for recognizing when a chain might begin to fold back, rather than a requirement that a three-dimensional chain close into a perfect loop.
+
+<Figure id="fig-rg-loop-conformations" src="/figures/notes/rg-loop-geometry.png" alt="Three-dimensional non-overlapping bead-chain configurations exhibiting loop-like paths, with early monomers highlighted and the remaining chain shown in different colors" caption="Three-dimensional bead-chain conformations with fixed local bond geometry. The highlighted early monomers illustrate how the growing chain can bend around a loop-like region; the remaining beads extend the same non-overlapping chain. The colors identify portions of the chain, not distinct types of physical interaction." />
+
+## A pronounced crossover in the measured subchain size
+
+The angle-dependent curves below are the most suggestive result of the exploration. The horizontal axis is $\log n$; the vertical axis is $\log[R_g(n)/\sigma_{\min}]$, where $\sigma_{\min}$ is the reference bead-size scale used for normalization. Each color corresponds to a different fixed bond angle. The stars indicate the estimates $n^*$ for $150^\circ$ and $165^\circ$.
+
+<Figure id="fig-rg-crossover" src="/figures/notes/rg-loop-scaling.png" alt="Three-dimensional bead-chain conformations beside log-log curves of subchain radius of gyration versus subchain length for fixed bond angles, with strong flattening at large angles" caption="Subchain-size curves for non-overlapping, three-dimensional chains with fixed bond angles. At larger angles, $R_g(n)$ initially increases rapidly and then grows much more slowly after a characteristic length. The marked planar-loop estimates fall near the visible changes in slope. In the chain visualizations, red highlights the first $n$ monomers; subsequent beads remain part of the same chain." />
+
+For the larger bond angles, the crossover is striking: **adding monomers beyond a characteristic $n$ produces far less additional growth in $R_g$ than adding the first $n$ monomers did.** In log-log coordinates this appears as an initially steep regime followed by a much shallower one. The chain is not required to keep extending at its original rate simply because more contour length is being added.
+
+One possible explanation is that the accumulating local turns make it easier for later segments to occupy regions near previously visited portions of the chain rather than continuing away from them. The proximity of the crossover to $n^*(\theta)$ makes this geometric picture worth testing quantitatively. It is a hypothesis about the mechanism, not yet a demonstrated one-to-one correspondence between $n^*$ and a fitted crossover length $n_c$.
+
+The plots show a **strong slowdown over the lengths sampled**, not an established asymptotic plateau. In particular, fixed bond angle and non-overlap alone do not prove that an arbitrarily long chain stays within a bounded volume. Determining whether $R_g(n)$ eventually resumes growing requires longer chains and a defined analysis of the late-$n$ slope.
+
+{/*
+### What kind of chain was simulated?
+
+The available figures establish the three-dimensional, non-overlapping, fixed-angle geometry, but do not by themselves specify the complete chain-generation protocol. In particular, they do not establish whether conformations were produced by sequential stochastic growth, relaxed using attractive interactions, or generated by another construction. A compact-looking configuration is not sufficient evidence of energetic collapse, and a non-overlapping chain is not automatically an ordinary equilibrium self-avoiding walk. That distinction matters when interpreting the origin and generality of the crossover.
+*/}
+
+### Why the two slopes are interesting for proteins
+
+An ideal random-walk polymer has $R_g\propto n^{1/2}$ at sufficiently large $n$. For a long self-avoiding chain in a good solvent, the three-dimensional exponent is approximately $0.588$; for a roughly uniform-density compact object, its characteristic size scales as $n^{1/3}$. These are useful reference behaviors, not exponents fitted to the curves above.
+
+Protein subchain-size curves can also show two scaling regimes, reflecting differences between local backbone organization and larger-scale structure. **The resemblance here is qualitative: two slopes, not the same numerical slopes or necessarily the same physics.** That is precisely what makes the simplified result intriguing. A constant-angle polymer is not a realistic protein model, yet its geometry may already contribute to the emergence of distinct local and global length scales. The next question is how much of that behavior survives more realistic torsional freedom, excluded-volume rules, and sequence-dependent interactions.
+
+## Coarse-graining monomers into blocks
+
+A complementary way to examine length scales is to replace groups of consecutive monomers with their centers of mass and ask how much of the original size comes from the arrangement of those blocks versus the internal structure within them.
+
+Suppose an entire chain has $N$ equal-mass monomers, divided into $M$ consecutive blocks with **$k$ monomers per block**, so that $N=Mk$. Define:
+
+- $b=1,\ldots,M$: the **block index**, and $j=1,\ldots,k$: the **monomer index within a block**.
+- $\mathbf r_{b,j}$: the position of monomer $j$ in block $b$.
+- $\mathbf R_b=\frac{1}{k}\sum_{j=1}^k\mathbf r_{b,j}$: the center of mass of block $b$.
+- $\mathbf R_{\mathrm{cm}}=\frac{1}{M}\sum_{b=1}^{M}\mathbf R_b$: the center of mass of the **entire chain** (equivalently, the mean of the equal-size block centers).
+- $R_{g,b}^2=\frac{1}{k}\sum_{j=1}^k|\mathbf r_{b,j}-\mathbf R_b|^2$: the squared radius of gyration **inside block $b$**.
+
+With these definitions, the full-chain radius of gyration obeys the exact identity
+
+<Equation id="eq-rg-coarse-identity" latex={String.raw`R_g^2(N)=\underbrace{\frac{1}{M}\sum_{b=1}^{M}|\mathbf R_b-\mathbf R_{\mathrm{cm}}|^2}_{\text{spread of block centers}}+\underbrace{\frac{1}{M}\sum_{b=1}^{M}R_{g,b}^2}_{\text{mean internal spread}}.`}/>
+
+**Equation 3 separates two different sources of spatial extent.** The first term measures how far the centers of the coarse-grained blocks are from the chain's overall center. This is the squared radius of gyration of the coarse-grained chain when every block has equal weight. The second term measures how spread out the original monomers remain *within* each block. The two terms add to the exact original $R_g^2(N)$; coarse-graining does not make the missing local contribution disappear mathematically.
+
+To see why, write a monomer's displacement from the whole-chain center as
+
+$\mathbf r_{b,j}-\mathbf R_{\mathrm{cm}}=(\mathbf R_b-\mathbf R_{\mathrm{cm}})+(\mathbf r_{b,j}-\mathbf R_b).$
+
+The first piece locates the block; the second describes the monomer's position relative to its block. When the squared displacement is summed within a block, the mixed term vanishes because $\sum_j(\mathbf r_{b,j}-\mathbf R_b)=0$. What remains is exactly the two terms in Equation 3.
+
+Two limits make the meaning especially clear. For $k=1$, every block is one monomer: the internal term is zero, and the block-center term equals the original $R_g^2$. For $k=N$, there is only one block: its center has no spread, and the entire radius of gyration resides in that block's internal term. Between these extremes, changing $k$ transfers spatial variation between the two descriptions without changing their sum.
+
+This decomposition could help identify the length scales responsible for a two-regime $R_g(n)$ curve. If changes in block size reveal a strong shift in the relative contributions near the same characteristic length as the fixed-angle crossover, that would give a more direct way to connect local geometric organization to larger-scale polymer size.
+
+## What to test next
+
+The most informative next steps are to compare fixed-angle chains of increasing length under controlled torsional and interaction rules. Fitting the early- and late-$n$ slopes separately would distinguish a genuine crossover from a finite-size visual plateau. Direct loop-closure statistics would also help determine whether the scale $n^*(\theta)$ predicts actual returns to previously occupied regions of the chain.
+
+A second set of tests would measure the two terms in Equation 3 as functions of block size $k$, both for these simplified polymers and for more realistic protein-like models. Together, those tests could reveal whether a simple geometric turning scale helps explain the appearance of distinct subchain-size regimes—and which additional physical ingredients are needed to reproduce protein behavior quantitatively.

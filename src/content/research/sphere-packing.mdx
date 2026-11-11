@@ -1,0 +1,186 @@
+---
+title: 'Geometric & Topological Entropies of Sphere Packing'
+summary: 'How many ways can spheres assemble while preserving their contacts? A statistical-mechanical theory and two new numerical methods separate geometric weighting from the enormous multiplicity of contact networks.'
+category: 'Statistical mechanics & algorithms'
+status: 'Published research'
+year: 2022
+order: 3
+featured: true
+image: '/figures/cards/sphere-packing-card-v29.webp'
+imageAlt: 'Three-dimensional free-cluster packing with removable blue spheres and candidate green attachment sites'
+problem: 'How can we calculate the entropy of disordered, contact-constrained sphere packings without enumerating the contact networks or restricting the configurations to jammed states?'
+contribution: 'Led the theoretical and computational work with my advisor: statistical-mechanical formulation, geometric Jacobian analysis, isostaticity-preserving Monte Carlo and virtual exchange algorithms, C++ simulation code, Python analysis, and POV-Ray scientific visualization.'
+result: 'Separated geometric and topological entropy; measured both contributions for 2D and 3D isostatic packings; developed efficient constraint-preserving sampling and extrapolation methods; and predicted strong-adhesion behavior of sticky spheres.'
+methods: ['Statistical mechanics and partition functions', 'Rigidity matrices and Jacobians', 'Isostaticity-preserving Monte Carlo', 'Virtual particle exchange', 'C++ simulation', 'Python analysis and POV-Ray rendering']
+publicationUrl: 'https://doi.org/10.1103/PhysRevE.105.014117'
+originalUrl: 'https://jalogan.github.io/projects/entropy_of_sphere_packing/'
+---
+import Figure from '../../components/Figure.astro';
+import Equation from '../../components/Equation.astro';
+import VideoFigure from '../../components/VideoFigure.astro';
+
+## What does it mean to count sphere packings?
+
+A contact-constrained assembly of spheres is not characterized only by how many contacts it has. What matters is **which particles touch**, **how those contacts are arranged**, and **how much nearby configuration space that arrangement occupies**. A useful counting theory should therefore distinguish between the number of distinct contact networks and the statistical weight of each one.
+
+That is the goal of this work. In our [2022 *Physical Review E* paper](https://doi.org/10.1103/PhysRevE.105.014117), we developed an equilibrium statistical-mechanical description of sticky-sphere packings with a fixed number of contacts. This gives a practical way to measure how many packings are available, how strongly geometry weights them, and how those contributions differ in two and three dimensions.
+
+<Figure id="fig-packing-types" src="/figures/packing/sample-packings.webp" alt="Two simulated sphere packings shown side by side: a periodic-boundary packing in a container and an isolated free cluster" caption="Two representative contact-constrained packings from the study: a periodic-boundary packing on the left and a free cluster on the right. These are the two main ensemble types analyzed in the paper." />
+
+This distinction matters because sphere packings appear across colloidal self-assembly, disordered materials, and granular or adhesive aggregates. If we want a statistical theory of such structures, we need methods that count packings and weight them correctly—not only methods that identify a single jammed state or a single mechanically stable realization.
+
+## A partition function that separates two kinds of entropy
+
+Let $C_{ij}=1$ when particles $i$ and $j$ touch, and $0$ otherwise. Here $Z$ is a **thermodynamic control variable**: it labels the family of packings being counted by fixing the number of sphere-to-sphere contacts per particle under this convention. In the same way that density labels a thermodynamic ensemble, specifying $Z$ selects which contact networks contribute to the entropy. It is **not** itself the partition function; the restricted statistical sum appears in the next equation. We define
+
+<Equation id="eq-packing-coordination" latex={String.raw`Z=\frac{1}{N}\sum_{i<j}C_{ij}.`}/>
+
+The central counting expression is a sum over distinct contact matrices $\widehat C$:
+
+<Equation id="eq-packing-ensemble" latex={String.raw`e^{N S_{\mathrm{pack}}(Z)}=\frac{1}{N!}\sum_{\widehat C}\delta\!\left(Z(\widehat C)-Z\right)e^{N S_{\mathrm{geo}}(\widehat C)}.`}/>
+
+The factor $N!$ accounts for particle labeling. The decomposition is already visible here: $e^{N S_{\mathrm{geo}}}$ is the statistical weight of one specific network, while the sum counts how many distinct networks occur at the chosen contact density.
+
+More precisely, define the surface-to-surface gap $x_{ij}=|\mathbf r_i-\mathbf r_j|-(a_i+a_j)/2$, with particle diameters $a_i$ and mean diameter $\bar a$. The geometric weight for a single connected cluster is
+
+<Equation id="eq-packing-config-integral" latex={String.raw`e^{N S_{\mathrm{geo}}(\widehat C)}=\frac{1}{\Omega_d\,\bar a^{(N-1)d}}\int d^d\mathbf r_2\cdots d^d\mathbf r_N\,\prod_{\substack{i<j\\C_{ij}=1}}\bar a\,\delta(x_{ij})\prod_{\substack{i<j\\C_{ij}=0}}\Theta(x_{ij}).`}/>
+
+Here $\delta(x)$ enforces designated contacts and $\Theta(x)$ excludes overlaps. We fix one particle to remove global translations, and $\Omega_d$ removes rigid rotations. Energies are measured in thermal units, so $k_B T=1$.
+
+For fixed $Z$, the entropy per particle decomposes into
+
+<Equation id="eq-packing-entropy" latex={String.raw`S_{\mathrm{pack}}=\langle S_{\mathrm{geo}}\rangle+S_{\mathrm{topo}}.`}/>
+
+The average is weighted by the statistical weight of each network. **Geometric entropy** tells us how much a particular arrangement contributes; **topological entropy** tells us how many inequivalent arrangements are available.
+
+## Why the isostatic case is special
+
+The central simplification is that **at exact isostaticity, the constrained configuration integral reduces to the Jacobian of a change of coordinates**, after removing rigid translations and rotations. There are no unconstrained internal directions left to integrate over. This is why the geometric entropy can be evaluated directly from the constraint geometry rather than by separately treating a full spectrum of vibrational modes.
+
+An isostatic packing has just enough **independent** contacts to eliminate all internal infinitesimal motions. A free cluster of $N$ frictionless spheres in $d$ dimensions has $Nd$ coordinate degrees of freedom, of which $d(d+1)/2$ belong to rigid translations and rotations. The corresponding independent contact count is
+
+<Equation id="eq-packing-isostatic" latex={String.raw`N_c^*=Nd-\frac{d(d+1)}{2}.`}/>
+
+Having exactly that many contacts is necessary but not sufficient. Constraints can still be linearly dependent, leaving a residual zero mode in one part of the cluster while another part is overconstrained. Later in the article this becomes important algorithmically: the correct contact count does **not** by itself guarantee the correct rigidity.
+
+### The rigidity matrix: how bond motions and particle motions are connected
+
+For a contacting pair $i,j$, let $\widehat{\mathbf n}_{ij}$ be the unit vector along the contact direction. If the particle displacements are $\mathbf u^{(i)}$ and $\mathbf u^{(j)}$, then the first-order change in surface gap is
+
+<Equation id="eq-packing-linear-gap" latex={String.raw`\delta x_{ij}=\widehat{\mathbf n}_{ij}\cdot\left(\mathbf u^{(i)}-\mathbf u^{(j)}\right),\qquad \delta\mathbf x=\mathcal R\,\mathbf u.`}/>
+
+Each row of the rigidity matrix $\mathcal R$ corresponds to one contact, and each column corresponds to one particle-coordinate degree of freedom. The matrix therefore tells us, linearly, how particle motions change bond gaps. A null vector of $\mathcal R$ leaves every constrained bond unchanged to first order. Rigid translations and rotations are always null vectors; any additional null vector is an internal floppy mode.
+
+This is why the rigidity matrix is so useful: it converts the qualitative idea of *rigid versus floppy* into a concrete linear-algebra test.
+
+### Why this avoids the usual normal-mode route
+
+A more conventional cluster free-energy calculation replaces rigid contacts by stiff springs, constructs the Hessian, and then evaluates the vibrational normal modes together with rotational and symmetry factors. For colloidal clusters, that style of calculation is discussed clearly in [Klein, Perry, and Manoharan (2018)](https://doi.org/10.1103/PhysRevE.98.032608).
+
+Our approach instead starts directly from the constrained configuration integral above. For an isostatic packing, the bond gaps together with the rigid-body angles form a complete local coordinate system. Changing variables gives the central geometric expression
+
+<Equation id="eq-packing-jacobian" latex={String.raw`N S_{\mathrm{geo}}(\widehat C)=\ln\left|\frac{\partial(\mathbf r_2,\ldots,\mathbf r_N)}{\partial(\boldsymbol\theta,x_1,\ldots,x_{N_c^*})}\right|.`}/>
+
+Because the number of independent bond-gap variables exactly matches the internal degrees of freedom, the contact delta functions perform the remaining integrals and leave the **Jacobian** as the local statistical weight (together with the stated normalization). In underconstrained structures, additional internal coordinates would still need to be integrated; in overconstrained ones, the constraints are not independent. So instead of computing every vibrational frequency and rotational factor separately, we work directly with the Jacobian of the constrained coordinate transformation. In the isostatic case, that is enough to recover the local equilibrium statistical weight.
+
+## Minimal examples: geometry enters through a Jacobian
+
+Why are two contacts the minimal case in 2D and three contacts the minimal case in 3D? Because in $d$ dimensions, a newly attached sphere must be fixed by $d$ independent contact directions. In the full theory this enters through the Jacobian above. In the minimal examples below, that Jacobian reduces to a simple geometric object: a 2D cross product or a 3D scalar triple product.
+
+<Figure id="fig-packing-minimal-combined" src="/figures/packing/minimal-combined.webp" alt="A combined minimal-contact illustration: in 2D a new sphere touches two existing spheres, and in 3D a new sphere touches three existing spheres" caption="Minimal geometric building blocks. Left: in 2D, a new sphere is fixed by two independent contact directions n̂₁ and n̂₂. Right: in 3D, three independent directions n̂₁, n̂₂, and n̂₃ are needed. In the full Jacobian these are the simplest local examples of the geometric factor." />
+
+For the 2D case,
+
+<Equation id="eq-packing-minimal-2d" latex={String.raw`\Delta (N S_{\mathrm{geo}})=-\ln|\widehat{\mathbf n}_1\times\widehat{\mathbf n}_2|.`}/>
+
+The quantity inside the logarithm is the area factor associated with the two contact directions. Orthogonal bonds give $|\hat n_1\times \hat n_2|=1$, so the geometric-entropy increment is $0$. For an equilateral-triangle attachment, the factor is $\sqrt{3}/2$, giving $-\ln(\sqrt{3}/2)$. In 3D, the analogous quantity is the scalar triple product of three contact directions.
+
+This also clarifies why equal contact counts do not imply equal geometric entropy. In 2D, for example, a locally square arrangement can have zero geometric contribution where a triangular one has a nonzero contribution. The determinant structure of the Jacobian—not the raw contact count—sets the weight.
+
+<Figure id="fig-packing-equal-geometry" className="figure-medium" src="/figures/packing/equal-geometric-entropy.webp" alt="Three different six-sphere contact topologies, each with triangles drawn over the contacts" caption="Different topologies, the same geometric entropy. These three six-sphere clusters have different contact networks, but each local addition contributes the same geometric factor, so their total geometric entropy is identical. This is why geometric and topological entropy must be separated." />
+
+## Moving through isostatic packings without losing the contacts
+
+Ordinary random particle displacements violate the bond constraints. We therefore developed a Monte Carlo move that changes the contact network while returning the system to a new isostatic packing.
+
+A selected bond is gradually elongated while the packing moves along the one-dimensional zero mode created by releasing that constraint. The remaining contacts are maintained and overlaps are forbidden. The move ends when a previously unbonded pair first reaches contact, restoring the original number of bonds in a new network. The schematic below shows the geometry of such a move, and the movie directly beneath it shows the corresponding rearrangement process in motion.
+
+<Figure id="fig-packing-bond-move" className="figure-medium" src="/figures/packing/contact-rearrangement.webp" alt="Three successive 2D stages of a zero-mode contact rearrangement with highlighted colored disks" caption="Isostaticity-preserving rearrangement. A selected contact is elongated, the structure follows the resulting zero mode, and the move stops when a new contact forms. The total number of contacts is preserved, but the topology changes." />
+
+<VideoFigure id="fig-packing-mc-movie" src="/video/sphere-mc-moves.mp4" poster="/video/sphere-mc-moves-poster.png" caption="Monte Carlo rearrangement in motion. The simulation follows the constrained zero-mode path until a new contact forms, providing an intuitive complement to Figure 4." />
+
+The displacement direction can be expressed in terms of the inverse constrained linear system. In practice, the implementation used **QR decomposition with column pivoting**, which avoided constructing a large explicit inverse.
+
+### Why the correct number of contacts is not enough
+
+Finite numerical precision can cause the *wrong* pair to appear to touch first. The resulting network may still have the nominal isostatic contact count, yet possess a residual internal zero mode because some constraints are dependent. This is the concrete version of the earlier warning that counting constraints and proving rigidity are not the same thing.
+
+That error leaves a clear statistical signature: spurious floppy configurations have anomalously large geometric entropy, creating a secondary peak in the measured distribution. We used that bimodality as a diagnostic and removed outliers outside a three-standard-deviation window.
+
+<Figure id="fig-packing-zero-mode-diagnostic" className="figure-medium" src="/figures/packing/zero-mode-diagnostic.webp" alt="Histogram of geometric entropy values showing a main peak and a secondary peak from residual zero modes" caption="Diagnostic for unintended zero modes. The main peak corresponds to properly isostatic configurations; the smaller high-entropy peak signals states in which an incorrect contact replacement leaves residual internal freedom." />
+
+## Counting contact networks by virtual particle exchange
+
+Sampling isostatic packings tells us about geometry, but not directly about how many distinct networks exist. To measure the topological multiplicity, we introduced a second method: **virtual exchange** with a much larger square (2D) or cubic (3D) reference lattice.
+
+At a given configuration, we count the available $N_+$ locations where a particle could be added with exactly $d$ new contacts, and the $N_-$ particles that could be removed without destroying isostaticity. These are hypothetical counting operations, not actual particle transfers. Balancing the corresponding insertion and removal probabilities gives
+
+<Equation id="eq-packing-exchange" latex={String.raw`S_{\mathrm{pack}}^{(0)}=\ln\frac{\langle N_+\rangle}{\langle N_-\rangle}.`}/>
+
+<Figure id="fig-packing-virtual-2d" src="/figures/packing/virtual-exchange-2d.webp" alt="Two-dimensional virtual-exchange construction showing removable particles and candidate insertion sites" caption="Virtual exchange in 2D. Red particles belong to the packing, blue particles can be removed while preserving isostaticity, and dashed open circles mark sites where a particle could be attached while keeping the packing isostatic." />
+
+<Figure id="fig-packing-virtual-3d" src="/figures/packing/virtual-exchange-3d.webp" alt="Three-dimensional virtual-exchange construction showing red cluster particles, blue removable particles, green insertion sites, and a purple reference packing" caption="Virtual exchange in 3D. Red spheres are the current packing, blue spheres are removable without breaking isostaticity, green transparent spheres are candidate attachment sites, and purple spheres denote the reference packing used for bookkeeping." />
+
+### Recovering the physical statistical weights
+
+The physical weight of a topology is proportional to $\exp(N S_{\mathrm{geo}})$, but sampling directly with that weight is numerically rough. We therefore introduced an auxiliary parameter $\lambda$:
+
+<Equation id="eq-packing-effective" latex={String.raw`H_{\mathrm{eff}}(\widehat C)=-\lambda N S_{\mathrm{geo}}(\widehat C),\qquad 0\leq\lambda\leq 1.`}/>
+
+At $\lambda=0$, all allowed topologies at fixed contact number are equally weighted. We then measure the distribution of $S_{\mathrm{geo}}$ in that ensemble and extrapolate to $\lambda=1$, where the correct geometry weighting is recovered. Together, **constrained rearrangement**, **virtual exchange**, and **response extrapolation** make it possible to estimate the full packing entropy without enumerating all networks.
+
+## Numerical results in 2D and 3D
+
+We simulated both free clusters and systems with periodic horizontal boundaries, with sizes up to 400 spheres. In both dimensions, the topological contribution is much larger than the geometric one.
+
+<Figure id="fig-packing-results" src="/figures/sphere-entropy-data-axes-fixed.png" alt="Published curves for geometric and topological entropy in two- and three-dimensional sphere packings" caption="Entropy contributions versus system size for 2D and 3D packings. The geometric contribution remains much smaller than the topological one in both the free-cluster and periodic-boundary ensembles." />
+
+<div className="scientific-table-wrap">
+  <table className="scientific-results-table">
+    <caption>Table 1. Entropy per particle for systems with 400 spheres.</caption>
+    <thead><tr><th scope="col">Contribution</th><th scope="col">2D periodic</th><th scope="col">2D cluster</th><th scope="col">3D periodic</th><th scope="col">3D cluster</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Geometric, <span className="math-text">S<sub>geo</sub></span></th><td>0.15</td><td>0.15</td><td>0.35</td><td>0.42</td></tr>
+      <tr><th scope="row">Topological, <span className="math-text">S<sub>topo</sub></span></th><td>1.52</td><td>1.43</td><td>3.02</td><td>2.62</td></tr>
+      <tr className="table-total"><th scope="row">Total, <span className="math-text">S<sub>pack</sub></span></th><td>1.66</td><td>1.58</td><td>3.37</td><td>3.04</td></tr>
+    </tbody>
+  </table>
+</div>
+
+To give these numbers some intuition: the total number of statistically weighted packings scales as $\exp(N S_{\mathrm{pack}})$. For $N=400$, that means roughly $10^{274}$ effective configurations for the 2D free-cluster ensemble and about $10^{528}$ for the 3D free-cluster ensemble. The geometric factor matters, but the truly explosive growth comes from the topological multiplicity of distinct networks.
+
+The figures also show that these entropies are ensemble-dependent rather than universal constants. The corresponding 3D packing fractions were about $0.54\pm0.02$, with periodic-boundary packings near $0.52$ and free clusters near $0.56$.
+
+## Beyond exact isostaticity
+
+The paper also extends the theory to **weakly underconstrained** packings. If one contact is removed from an isostatic network, a single zero mode appears. Counting the ways to remove a small number of contacts gives a near-isostatic correction of the form
+
+<Equation id="eq-packing-floppy" latex={String.raw`S_{\mathrm{topo}}(Z)\simeq S_{\mathrm{topo}}(Z^*)+\frac{Z^*-Z}{2}\ln\!\left[\frac{Z^*}{2(Z^*-Z)}\right].`}/>
+
+The geometric correction then depends on how much motion is available along the released modes, not only on how many constraints are missing.
+
+## Predicting the strong-binding behavior of sticky spheres
+
+Sticky spheres gain free energy from each contact, competing with the entropies above. In the strong-adhesion regime, the dense phase is close to isostatic while the dilute phase is approximately an ideal gas. If $\tau$ is the Baxter stickiness parameter, the asymptotic prediction is
+
+<Equation id="eq-packing-sticky" latex={String.raw`\rho(\tau)\simeq(12\tau)^d e^{-S_{\mathrm{pack}}},\qquad\tau\ll\tau_c.`}/>
+
+<Figure id="fig-packing-sticky-plot" src="/figures/sphere-sticky-phase-yaxis-fixed.png" alt="Strong-binding coexistence prediction compared with sticky-sphere numerical data" caption="Strong-binding coexistence prediction for sticky spheres. The asymptotic formula derived from the packing entropy is compared with previously reported numerical coexistence data." />
+
+## What this work contributes
+
+The main contribution is a practical route to a hard counting problem. Starting from the constrained partition function, we showed how isostatic geometry turns the local weight into a Jacobian, how constrained Monte Carlo can move through the space of packings, and how virtual exchange can measure topological multiplicity. Together these ideas make it possible to separate **geometric** and **topological** entropy and to connect those quantities to the thermodynamics of sticky spheres.
+
+## Publication
+
+[**J. A. Logan and A. V. Tkachenko, “Geometric and topological entropies of sphere packing,” *Physical Review E* 105, 014117 (2022).**](https://doi.org/10.1103/PhysRevE.105.014117)

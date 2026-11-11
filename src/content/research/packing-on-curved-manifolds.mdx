@@ -1,0 +1,157 @@
+---
+title: 'Sphere Packing and Jamming on Curved Manifolds'
+summary: 'Constrained molecular dynamics of finite-size spheres tangent to curved substrates, with an original surface-mesh approach to estimating packing fraction.'
+category: 'Constrained dynamics & computational geometry'
+status: 'Independent research'
+order: 6
+featured: true
+image: '/figures/curved-manifolds/spheres-on-sphere-original.png'
+imageAlt: 'Original simulated polydisperse spheres tangent to a spherical substrate'
+video: '/video/curved-manifolds-spheres-moving.mp4'
+problem: 'How do substrate curvature and particle size affect the motion, spatial organization, and achievable packing density of three-dimensional spheres tangent to two-dimensional surfaces?'
+contribution: 'Developed a C++ constrained-dynamics framework for planes, spheres, cylinders, and tori using RATTLE; generated mono- and polydisperse assemblies; and investigated an original surface-envelope approach to estimating the effective packing fraction of curved particle monolayers.'
+result: 'Constructed and visualized tangent-sphere packings on multiple substrates and developed preliminary packing-fraction comparisons for mono- and polydisperse layers, clarifying both the physical role of curvature and the numerical role of the chosen effective-volume definition.'
+methods: ['C++ molecular dynamics', 'RATTLE constrained integration', 'Differential geometry', 'Particle packing and jamming', 'Surface sampling and triangulation', 'Mesh-based geometric analysis']
+---
+import Figure from '../../components/Figure.astro';
+import FigureGroup from '../../components/FigureGroup.astro';
+import VideoFigure from '../../components/VideoFigure.astro';
+import VideoGroup from '../../components/VideoGroup.astro';
+import Equation from '../../components/Equation.astro';
+
+## The physical problem: spheres touching a curved substrate
+
+Imagine arranging identical spheres in a densely packed layer on a flat table. Their centers lie a fixed distance above the table, while the spheres themselves touch it. Rolling the supporting plane into a cylinder, or replacing it with a spherical surface, changes the geometry in which the spheres can move and make contact with one another.
+
+That is the problem studied here: **three-dimensional spherical particles that remain tangent to a prescribed surface**, not flat disks whose centers are constrained to the surface. The distinction becomes especially important when the surface radius of curvature approaches the particle diameter, or when the particles have different sizes. In those cases, a model with all centers lying directly on the substrate describes a different physical system.
+
+<Figure id="fig-manifold-cylinder" src="/figures/curved-manifolds/flat-to-cylinder-tangent-spheres.png" alt="Original close-packed sphere layer shown on a flat supporting plane and rolled around a cylinder" caption="Rolling a close-packed layer from a plane onto a cylinder. The spheres are tangent to the substrate, with their centers outside it. Although a cylinder has zero Gaussian curvature, the finite size of the spheres changes how their three-dimensional contacts fit around the circumference." />
+
+A cylinder can be unrolled into a plane without stretching its surface: its **intrinsic** Gaussian curvature is zero. Yet the chord distance between two sphere centers on the cylinder is not generally the same as their distance measured along the substrate. Packing finite-size spheres thus depends not just on intrinsic curvature, but also on how the surface is **embedded in three-dimensional space**. A sphere introduces a further complication: it has nonzero Gaussian curvature everywhere, so perfect planar hexagonal order cannot extend across it without defects or distortion.
+
+The broader goal is to study how substrate shape, particle-size distribution, and the protocol used to increase density influence the resulting order, contacts, and packing fraction.
+
+## Geometry: the centers occupy offset surfaces
+
+Let the substrate be a smooth surface $S$, with point $\mathbf s_i\in S$ and unit normal $\widehat{\mathbf n}(\mathbf s_i)$ pointing toward the particles. If particle $i$ has radius $a_i$, its center is
+
+<Equation id="eq-manifold-offset" latex={String.raw`\mathbf c_i=\mathbf s_i+a_i\widehat{\mathbf n}(\mathbf s_i).`}/>
+
+The **contact point** $\mathbf s_i$ lies on the substrate; the **center** $\mathbf c_i$ lies on a parallel or *offset surface*. An equivalent local formulation uses the signed distance $d_S$ from the substrate,
+
+<Equation id="eq-manifold-offset-constraint" latex={String.raw`g_i(\mathbf c_i)\equiv d_S(\mathbf c_i)-a_i=0.`}/>
+
+The signed-distance description is valid in regions where the closest substrate point is unique and the offset surface remains smooth. It is particularly convenient because the particle's radius enters directly into the constraint.
+
+For simple outward-facing surfaces, the constraints can be written explicitly:
+
+<Equation id="eq-manifold-examples" latex={String.raw`\begin{aligned}
+\text{Plane:}\quad &z_i-a_i=0,\\
+\text{Sphere:}\quad &\|\mathbf c_i\|-(R+a_i)=0,\\
+\text{Cylinder:}\quad &\sqrt{x_i^2+y_i^2}-(R+a_i)=0,\\
+\text{Torus:}\quad &\sqrt{\bigl(\sqrt{x_i^2+y_i^2}-R\bigr)^2+z_i^2}-(b+a_i)=0.
+\end{aligned}`}/>
+
+Here $R$ is the substrate sphere or cylinder radius, or the torus major radius; $b$ is the torus minor radius. The torus expression describes the regular outward offset, subject to the usual restrictions on the tube geometry. **In polydisperse packings, different particle sizes imply different offset surfaces**, even though every particle touches the same physical substrate.
+
+A separate condition prevents the spheres from overlapping:
+
+<Equation id="eq-manifold-nonoverlap" latex={String.raw`\|\mathbf c_i-\mathbf c_j\|\ge a_i+a_j.`}/>
+
+These two equations have different jobs: the first governs where a sphere may move; the second governs whether two spheres may occupy the same space. Because the spheres are genuinely three-dimensional, the nonoverlap condition uses **Euclidean center-to-center distance**, rather than the length of the shortest path along the substrate.
+
+## Constrained dynamics in Cartesian coordinates
+
+A three-dimensional sphere touching a smooth surface has two allowed positional degrees of freedom: it can move in the local tangent directions, but not in the normal direction. Using three-dimensional Cartesian coordinates keeps the particle forces and contact geometry natural, while requiring the dynamics to enforce the offset-surface constraint.
+
+If $\mathbf F_i$ is the unconstrained interaction force, the constrained equation of motion is
+
+<Equation id="eq-manifold-newton" latex={String.raw`m_i\ddot{\mathbf c}_i=\mathbf F_i-\lambda_i\nabla g_i(\mathbf c_i).`}/>
+
+The Lagrange multiplier $\lambda_i$ supplies the normal force needed to maintain tangency. At a given position, the tangent-plane projector is
+
+<Equation id="eq-manifold-projector" latex={String.raw`P_i=I-\widehat{\mathbf n}_i\widehat{\mathbf n}_i^{\mathsf T},\qquad \mathbf F_{\parallel,i}=P_i\mathbf F_i.`}/>
+
+The projector shows which component of the force drives local motion, but force projection by itself does not guarantee that a finite numerical time step ends precisely on the constraint. As the particle moves, the surface normal rotates, and small discretization errors can accumulate.
+
+### RATTLE: enforcing both position and velocity constraints
+
+I implemented the **RATTLE** constrained integrator. After a velocity-Verlet-like prediction, it corrects the new position and then the velocity so that
+
+<Equation id="eq-manifold-rattle" latex={String.raw`g_i(\mathbf c_i^{n+1})=0,\qquad \nabla g_i(\mathbf c_i^{n+1})\cdot\mathbf v_i^{n+1}=0.`}/>
+
+The position condition keeps the center on its appropriate radius-dependent offset surface. The velocity condition keeps the motion tangent there. Both matter: a correctly positioned particle with an outward-pointing velocity would leave the allowed surface on the next step. The numerical method therefore enforces the intended geometry through the constraint, rather than relying on an artificial high-stiffness restoring potential.
+
+<VideoFigure id="fig-manifold-moving-sphere" src="/video/curved-manifolds-spheres-moving.mp4" poster="/figures/curved-manifolds/spheres-on-sphere-original.png" caption="Original molecular-dynamics visualization of polydisperse spheres moving while remaining tangent to a spherical substrate. The three-dimensional spheres follow the substrate without passing through it as they reorganize on the curved surface." />
+
+The rearrangements in <FigRef id="fig-manifold-moving-sphere" /> illustrate how the constraint governs an entire trajectory, not merely an initial configuration. The spheres can circulate around the supporting sphere, rearrange relative to one another, and retain their finite, excluded-volume geometry.
+
+<VideoGroup id="fig-manifold-mono-jamming" columns={2} caption="Monodisperse jamming trajectories on two substrates. These examples show the same tangent-sphere framework driven toward increasingly dense states on a plane and on a sphere." panels={[
+  {label:'a',src:'/video/curved-manifolds/mono-small-plane-jamming.mp4',poster:'/video/curved-manifolds/mono-small-plane-jamming-poster.png',alt:'Monodisperse spheres jamming on a plane',caption:'Monodisperse spheres driven toward jamming on a plane.'},
+  {label:'b',src:'/video/curved-manifolds/mono-small-sphere-jamming.mp4',poster:'/video/curved-manifolds/mono-small-sphere-jamming-poster.png',alt:'Monodisperse spheres jamming on a sphere',caption:'Monodisperse spheres driven toward jamming on a spherical substrate.'}
+]} />
+
+<FigRef id="fig-manifold-mono-jamming" /> provides a direct visual comparison between flat and curved substrates under a jamming protocol. The plane offers a useful reference case, while the spherical substrate shows how curvature reorganizes the available surface area and frustrates the extension of flat-space packing motifs.
+
+## Curvature, local coordination, and unavoidable defects
+
+<FigureGroup id="fig-manifold-hexatic-defects" columns={2} caption="Monodisperse local order on two substrates. The flat case shows the familiar six-neighbor hexatic motif, whereas the spherical case shows a fivefold-coordinated local defect required by curvature." panels={[
+  {label:'a',src:'/figures/curved-manifolds/plane-six-neighbor-closeup.png',alt:'Close-up of a monodisperse flat packing with local six-neighbor coordination',caption:'A plane: locally six neighbors, as in ordinary hexatic order.'},
+  {label:'b',src:'/figures/curved-manifolds/sphere-five-neighbor-closeup.png',alt:'Close-up of a monodisperse spherical packing with a local five-neighbor coordination defect',caption:'A sphere: a fivefold-coordinated defect induced by curvature.'}
+]} />
+
+The local contrast in <FigRef id="fig-manifold-hexatic-defects" /> is the geometric signature of the curved problem. On a plane, dense monodisperse packings naturally favor sixfold local coordination. On a sphere, that pattern cannot cover the surface everywhere without defects, so fivefold sites must appear somewhere in the packing.
+
+### What Euler's theorem actually says
+
+For a triangulation of a closed surface, the local coordination numbers $z_i$ obey
+
+<Equation id="eq-manifold-euler" latex={String.raw`\sum_i(6-z_i)=6\chi,`}/>
+
+where $\chi$ is the Euler characteristic. On a sphere, $\chi=2$, so the total coordination deficit is 12; on a torus, $\chi=0$. For an ideal triangulated crystal on a sphere, twelve isolated fivefold disclinations would account for that deficit, but additional fivefold–sevenfold defect pairs may occur. This is a **topological identity for a triangulation**, not a measured count of defects in the polydisperse simulations.
+
+This distinction is useful because curvature changes which extended patterns are possible, while real three-dimensional tangent-sphere contacts and polydispersity change how neighbors and defects should be identified. Both effects are relevant, but they are not interchangeable.
+
+## A second problem: what is the packing fraction of a curved monolayer?
+
+Even after obtaining a dense configuration, there is a nontrivial measurement problem. In a bulk three-dimensional packing, one usually divides the volume occupied by the particles by the volume of a clearly defined container. For disks on a two-dimensional surface, one can instead define an occupied-area fraction. **A single curved layer of finite-size three-dimensional spheres fits neither convention automatically.**
+
+One could define an area fraction using footprints on the substrate, or a volume fraction using a chosen three-dimensional shell around it. Those need not agree, especially with polydispersity or strong curvature. A numerical packing fraction is meaningful only after its *effective region* or *enclosing volume* has been specified.
+
+For **monodisperse** particles there is a simple shell-based definition: enclose the particles between the original substrate and a larger copy of the same surface offset outward by one particle diameter. On a spherical substrate of radius $R$ with particle radius $a$, for example, the monolayer lies between radii $R$ and $R+2a$, so the packing fraction can be computed as the total particle volume divided by the volume of that spherical shell. The same idea works for planes, cylinders, and other smooth surfaces when every particle has the same radius.
+
+That construction becomes much less satisfactory for **polydisperse** layers. A single global shell thickness is then set by the largest particles, leaving unnecessary void space around smaller ones. To make the enclosing surface follow the actual outer envelope more closely, I explored a mesh-based geometric construction instead.
+
+### Sampling the particle surfaces and building a mesh
+
+<Figure id="fig-manifold-seeds" src="/figures/curved-manifolds/surface-seed-samples.png" alt="Original polydisperse spherical packing with sampled mesh points on the particle surfaces next to an initial wireframe mesh" caption="Surface sampling and an initial geometric reconstruction for a polydisperse spherical packing. In the exploratory procedure, points are seeded from a larger surrounding surface and moved inward until they first contact particle surfaces, providing input for an enclosing triangulated representation." />
+
+Starting from a configuration such as <FigRef id="fig-manifold-seeds" />, a finite set of surface points is connected into a mesh. The sampled points can be used in several ways: as a raw point cloud, as input to a convex hull, or as vertices of a triangulated surface. Different seeding procedures are also possible—random or more uniform, depending on the substrate. The common goal is to construct a surface that hugs the outer envelope of the tangent-sphere layer more faithfully than a single fixed-thickness shell.
+
+<Figure id="fig-manifold-refinement" src="/figures/curved-manifolds/surface-mesh-refinement.png" alt="Original sequence of six increasingly refined triangulated mesh renderings of a curved particle assembly" caption="Progressive mesh refinement. Additional points and edges change the reconstructed surface geometry substantially. The denser meshes demonstrate the numerical resolution problem: a geometric estimator should stabilize as refinement increases, not depend arbitrarily on the sampling density." />
+
+<Figure id="fig-manifold-overlay" src="/figures/curved-manifolds/polydisperse-packing-and-mesh.png" alt="Side-by-side rendering of polydisperse packed spheres and a green triangulated mesh reconstructed from sampled surface points" caption="The physical packing and one of its geometric representations. The mesh is an analysis object derived from the particle configuration; it is not the substrate on which the particles move and does not replace the RATTLE constraint." />
+
+If a mesh is closed, consistently oriented, and non-self-intersecting, its enclosed volume can be computed from its triangles. This is a standard geometric operation. The more delicate step is choosing **which boundary the mesh should represent** so that the resulting volume—or any density constructed from it—corresponds to a meaningful curved monolayer rather than including arbitrary void space.
+
+### Preliminary packing-fraction estimates and mesh resolution
+
+<Figure id="fig-manifold-mesh-results" src="/figures/curved-manifolds/mesh-estimate-mono-poly-labeled.png" alt="Plot of packing fraction versus number of mesh points, with labeled blue polydisperse and black monodisperse curves" caption="Preliminary packing-fraction estimates versus the number of mesh points, with blue indicating the polydisperse packing and black the monodisperse packing. The upward trend with refinement emphasizes that the estimator depends on how the enclosing geometry is constructed." />
+
+The plot in <FigRef id="fig-manifold-mesh-results" /> is informative for two reasons. First, it shows that the estimated value depends strongly on mesh resolution, especially at low point counts. Second, the **polydisperse** packing lies above the **monodisperse** one across the displayed range.
+
+That trend also makes physical sense. When a smaller particle sits beside a larger particle, it can tuck slightly underneath the larger one in the normal direction while both still remain tangent to the substrate. Their *projections* onto the substrate can therefore overlap even though the three-dimensional spheres do not. This additional geometric freedom is one reason a tangent-sphere polydisperse layer can pack more densely than a monodisperse one. It is also a configuration that would be impossible in a model that forced all particle centers to lie directly on the substrate itself.
+
+A more revealing numerical diagnostic is a comparison of *different ways to refine the mesh*.
+
+<Figure id="fig-manifold-mesh-methods" src="/figures/curved-manifolds/mesh-construction-comparison.png" alt="Numerical comparison of two mesh-estimation procedures: one red curve decreases with mesh points, another black curve increases" caption="Two exploratory mesh-construction procedures. The upper red series starts from a coarse mesh and adds points near triangle incenters; the lower black series starts with points on particles and adds further points. Importantly, the original runs used different particle configurations, so the difference between curves cannot be attributed solely to the mesh algorithm." />
+
+The contrasting trends in <FigRef id="fig-manifold-mesh-methods" /> suggest that mesh refinement is a central part of the measurement problem. They **do not** yet show that the two methods bracket or converge to a common packing fraction: the underlying packings were different. A decisive comparison would apply both methods to the same frozen configurations, establish a precise effective-volume definition, inspect mesh validity, and check convergence as the mesh is refined.
+
+## What the project demonstrates
+
+The work combines several pieces of computational physics: constrained dynamics on radius-dependent offset surfaces; excluded-volume interactions between true three-dimensional spheres; mono- and polydisperse packing; and geometric approaches to measuring the density of a curved monolayer.
+
+The C++ simulator and its moving spherical configurations establish the numerical framework. The local coordination images highlight how curvature frustrates ordinary sixfold order, while the packing-fraction discussion shows that **the observable itself is part of the scientific problem**. For monodisperse systems a simple offset-shell definition is available; for polydisperse systems one is pushed toward a more adaptive enclosing geometry.
+
+The next scientific test is a controlled comparison of mesh algorithms on identical configurations, with documented error and convergence behavior. That would separate the effect of curvature and size distribution on the physical packing from the effect of the numerical procedure used to measure it.

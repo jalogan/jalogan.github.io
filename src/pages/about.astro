@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { hasResearchCv, hasIndustryResume, researchCvUrl, industryResumeUrl } from '../lib/cv';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+const photos = [
+  { filename: 'about-photo-1.jpg', alt: 'Portrait photograph', label: 'Portrait photograph', landscape: false },
+  { filename: 'about-photo-2.jpg', alt: 'Outdoor photograph', label: 'Outdoor photograph', landscape: true },
+].map(photo => ({ ...photo, src: `/images/about/${photo.filename}`, available: existsSync(join(process.cwd(), 'public', 'images', 'about', photo.filename)) }));
+const availablePhotos = photos.filter(photo => photo.available);
+const showCv = hasResearchCv || hasIndustryResume;
+---
+<BaseLayout title="About & CV | Jack Logan">
+<section class="page-intro"><div class="shell"><div class="section-kicker">Background</div><h1>About</h1><p>Theoretical and computational physicist developing mathematical and numerical tools for understanding complex physical systems.</p></div></section>
+<section class="page-body shell"><div class:list={["about-layout", { "about-layout-no-photos": availablePhotos.length === 0 }]}><div class="about-copy">
+  <h2>Research background</h2>
+  <p>I am a theoretical and computational physicist who develops mathematical models, numerical algorithms, and scientific software to understand complex physical systems. My research combines analytical theory, statistical mechanics, geometry, and computational methods, with a particular emphasis on developing original approaches to problems that existing methods do not fully address. I frequently draw connections between different areas of physics and mathematics, adapting concepts and techniques to new applications.</p>
+  <p>I earned my PhD in Physics at Stony Brook University, conducting my doctoral research at Brookhaven National Laboratory's Center for Functional Nanomaterials. I subsequently held a postdoctoral appointment at Yale University, where I developed and evaluated computational models of protein structure. Across my research, I have developed theoretical frameworks, interaction models, numerical algorithms, and simulation methods to reveal physical mechanisms, characterize complex structures, and make quantitative predictions. My work spans statistical mechanics, interacting-particle dynamics, self-assembly, coarse-grained molecular modeling, and scientific machine learning.</p>
+  <p>For research discussions, collaborations, and professional inquiries, please use the <a href="/contact/">contact form</a>.</p>
+  <nav class="about-social-links" aria-label="Professional profiles">
+    <a href="https://linkedin.com/in/jacklogan-physicist/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile (opens in a new tab)">LinkedIn <span aria-hidden="true">↗</span></a>
+    <a href="https://github.com/jalogan" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile (opens in a new tab)">GitHub <span aria-hidden="true">↗</span></a>
+  </nav>
+  <h2 id="doctoral-research">Doctoral research</h2>
+  <p>My dissertation, <em>Geometric and Topological Aspects of Self-Assembly: From Spheres and Rods to Designer Particles</em>, focused on developing mathematical theories and computational methods to understand how particle geometry, interactions, and symmetry determine the organization of complex physical systems.</p>
+  <p>The research spanned several complementary contributions: a statistical-mechanical framework separating the geometric and topological contributions to sphere-packing entropy; a compact analytical potential describing van der Waals interactions between finite nanorods; and symmetry-specific bond-orientational order parameters for characterizing complex self-assembled structures and identifying coherent domains.</p>
+  <p>Across these problems, I combined analytical derivations, original mathematical models, numerical algorithms, and computational simulations to establish quantitative relationships between microscopic interactions, structural organization, and collective behavior. Selected projects are presented in my <a href="/research/">research portfolio</a>, including the <a href="/research/vdw-rods/">nanorod potential</a>, <a href="/research/symbops/">SymBOPs</a>, and <a href="/research/sphere-packing/">packing-entropy</a> research.</p>
+  <p><a href="https://www.proquest.com/openview/cfe4c4a9c07c976b765b4474a40b6436/1?pq-origsite=gscholar&amp;cbl=18750&amp;diss=y" target="_blank" rel="noopener noreferrer">Read the full PhD dissertation ↗</a></p>
+  {showCv && <section class="about-cv-section" aria-label="Curriculum vitae">
+    <h2 id="cv">Curriculum vitae</h2>
+    <p>Available CVs highlight research, publications, scientific computing, and technical experience.</p>
+    <div class="cv-options" aria-label="Curriculum vitae documents">
+      {hasResearchCv && <div class="cv-option">
+        <div><div class="cv-option-title">Research CV</div><div class="cv-option-description">Research, publications & academic experience</div></div>
+        <div class="cv-option-actions"><a href={researchCvUrl} target="_blank" rel="noopener noreferrer">View PDF ↗</a><a class="cv-download" href={researchCvUrl} download>Download ↓</a></div>
+      </div>}
+      {hasIndustryResume && <div class="cv-option">
+        <div><div class="cv-option-title">Industry CV</div><div class="cv-option-description">Technical skills, methods & applied research</div></div>
+        <div class="cv-option-actions"><a href={industryResumeUrl} target="_blank" rel="noopener noreferrer">View PDF ↗</a><a class="cv-download" href={industryResumeUrl} download>Download ↓</a></div>
+      </div>}
+    </div>
+  </section>}
+  <aside class="about-contact-panel">
+    <div><div class="section-kicker">Contact</div><h2>Get in touch</h2><p>Questions about my research, or interested in discussing collaborations or professional opportunities?</p></div>
+    <a class="button ghost" href="/contact/">Send a message <span aria-hidden="true">↗</span></a>
+  </aside>
+</div>
+  {availablePhotos.length > 0 && <aside class="about-photo-rail" aria-label="Photographs">
+    {availablePhotos.map(photo => <figure class="about-photo">
+      <div class:list={["about-photo-frame", { landscape: photo.landscape }]}><img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" /></div>
+    </figure>)}
+  </aside>}
+</div></section>
+</BaseLayout>

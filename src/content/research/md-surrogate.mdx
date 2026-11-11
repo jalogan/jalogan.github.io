@@ -1,0 +1,119 @@
+---
+title: 'Physics-Informed Surrogate Force Fields'
+summary: 'Learning a pairwise interaction law from molecular-dynamics data, then testing whether the learned forces reproduce both particle-level dynamics and the structure of a Lennard–Jones fluid.'
+category: 'Scientific machine learning'
+status: 'Independent research'
+order: 4
+featured: true
+image: '/figures/cards/surrogate-force-field-v28.png'
+imageAlt: 'Scientific illustration of molecular separation, a neural network predicting a radial force function, and agreement with a molecular-dynamics reference'
+problem: 'Can a neural network infer an interaction force from trajectory data without being given its analytic equation—and remain useful when its predictions drive a new simulation?'
+contribution: 'Developed the PyTorch force-learning pipeline, prepared LAMMPS molecular-dynamics data, designed a radial-basis neural interaction model, reconstructed vector forces, and evaluated force fidelity, learned dynamics, radial distribution functions, and trajectory divergence.'
+result: 'Recovered the Lennard–Jones radial force curve within the sampled range, achieved strong agreement with reference forces, and reproduced key structural features in neural-network-driven simulations; identified high-force and long-time limitations.'
+methods: ['LAMMPS and molecular dynamics', 'PyTorch and neural networks', 'Radial basis functions', 'Symmetry-aware modeling', 'Periodic neighbor lists', 'Force and trajectory validation', 'Radial distribution functions']
+originalUrl: 'https://jalogan.github.io/projects/NN_predict_MD/'
+---
+import Figure from '../../components/Figure.astro';
+import FigureGroup from '../../components/FigureGroup.astro';
+import Equation from '../../components/Equation.astro';
+import VideoFigure from '../../components/VideoFigure.astro';
+
+## Can we recover a force law from simulation data?
+
+Molecular dynamics (MD) advances particles through time by repeatedly calculating the forces acting on them. For a simple system such as Lennard–Jones (LJ) particles, the force law is known analytically. For more complicated physical systems, useful interactions may be expensive to evaluate or difficult to determine directly.
+
+This project asks a controlled version of that problem: **if we hide the Lennard–Jones equation from a neural network, can it infer the interaction from example particle configurations and forces—and then run its own MD simulation?** Using a system with a known answer makes it possible to inspect not only prediction accuracy but also what the model has actually learned.
+
+<Figure id="fig-surrogate-concept" className="figure-medium" src="/figures/surrogate/concept-illustration.webp" alt="Conceptual scientific illustration showing a molecular system, a continuous force landscape, and a neural-network representation" caption="The modeling idea: learn how a local configuration generates forces, then use the learned interaction in a simulation. This is a conceptual illustration, not a frame from the Lennard–Jones experiments." />
+
+The important distinction is that a low force-prediction error does not, by itself, establish a reliable simulation. We also need to examine the inferred law, how particle trajectories evolve when it is integrated, and whether the resulting system retains the relevant statistical structure.
+
+## Putting physical structure into the model
+
+A fully general force on a particle could depend on every nearby particle position, orientation, and higher-order interaction. That is too broad for the present test. Instead, we assume **identical isotropic particles interacting through central, pairwise forces**. The net force on particle $i$ is written as
+
+<Equation id="eq-surrogate-net-force" latex={String.raw`\mathbf F_i=\sum_{j\in\mathcal N_i} f_\theta(r_{ij})\,\widehat{\mathbf r}_{ij}, \qquad r_{ij}=\lVert\mathbf r_j-\mathbf r_i\rVert.`}/>
+
+Here $\mathcal N_i$ is the neighbor set, $\widehat{\mathbf r}_{ij}=(\mathbf r_j-\mathbf r_i)/r_{ij}$ points **from particle $i$ toward particle $j$**, and $f_\theta(r)$ is the **one-dimensional scalar function learned by the neural network**. With this direction convention, a negative coefficient pushes particle $i$ away from $j$ (repulsion), while a positive coefficient pulls it toward $j$ (attraction).
+
+This assumption greatly reduces the learning problem. Relative distances are unchanged by translations and rotations, while the reconstructed vector force rotates with the configuration. Summation over neighbors makes the result insensitive to their ordering. These are useful built-in physical symmetries, rather than properties the model must learn from scratch.
+
+The restriction also matters: this experiment does **not** discover an unrestricted, many-body molecular potential. It learns a radial interaction within a specifically chosen family, which is an appropriate controlled test for Lennard–Jones particles.
+
+## From trajectories to a learned interaction
+
+### Reference data and local environments
+
+Reference trajectories and forces were generated with **LAMMPS**, using Lennard–Jones particles with periodic boundary conditions. For each particle, neighbor vectors were computed with the minimum-image convention and a cutoff of $2.5\sigma$, where $\sigma$ is the Lennard–Jones length scale.
+
+The neighbor environment was stored using up to $K$ neighbors. Padding and masks gave uniform tensor shapes without treating nonexistent neighbors as real interactions. Force components were standardized using training-data means and standard deviations before optimization.
+
+### Neural-network architecture
+
+Each neighbor distance $r_{ij}$ is expanded using **Gaussian radial basis functions (RBFs)**. These smooth, localized distance features are passed through a multilayer perceptron (MLP), which returns the scalar contribution $f_\theta(r_{ij})$. Multiplying by the known unit direction and summing over neighbors reconstructs a three-dimensional net force.
+
+The learned representation is therefore interpretable at an important level: after training, we can plot the **single learned radial force function** and compare it directly with the known Lennard–Jones law, instead of relying only on aggregate test errors.
+
+## Did the network recover the interaction law?
+
+<Figure id="fig-surrogate-radial-law" src="/figures/surrogate/fr_vs_lj.webp" alt="Plot of the learned neural-network radial force as a function of separation compared with the analytic Lennard–Jones force curve" caption="Learned radial force (purple) compared with the Lennard–Jones reference (dashed black). The horizontal axis is separation r in units of the LJ diameter σ, and the vertical axis is the scalar radial force f(r) in reduced LJ units. The plotted scalar multiplies a vector pointing from particle i toward particle j, so its Lennard–Jones reference is f(r) = dU/dr. The customary outward radial force, −dU/dr, has the opposite sign. Negative values here represent repulsion and positive values attraction. The learned curve captures both the steep short-range repulsion and the attractive tail, with the largest mismatch only at the shortest, least-sampled separations." />
+
+The strongest direct test appears in <FigRef id="fig-surrogate-radial-law" />. The network was trained on particle configurations and resulting forces, not on the analytic LJ equation. Nonetheless, the reconstructed $f_\theta(r)$ closely follows the known force–distance curve over the sampled interval. The negative short-range branch may look inverted relative to the customary outward radial-force plot, but the sign follows directly from the chosen unit vector $\widehat{\mathbf r}_{ij}$, which points toward the neighbor. The agreement here tests the recovered interaction law itself rather than only an aggregate error metric.
+
+The result is especially informative because the curve changes rapidly near short separations and then passes through the attractive regime. The remaining deviations near the steep repulsive wall identify the part of configuration space where strong overlaps and extreme forces are sparsely represented in the data. Over most of the physically important range, however, the two curves are visually almost indistinguishable.
+
+### Does that agreement extend to net particle forces?
+
+<FigureGroup id="fig-surrogate-force-scatter" columns={2} caption="Predicted versus reference particle forces: (a) Cartesian force components and (b) total force magnitudes. In both panels, the horizontal axis is the reference MD force and the vertical axis is the neural-network prediction, in the same reduced LJ force units. The diagonal is the one-to-one reference; close adherence to it indicates accurate force prediction." panels={[
+  {label:'a',src:'/figures/surrogate/force_scatter_all.webp',alt:'Comparison of predicted and reference Cartesian force components',caption:'Force components'},
+  {label:'b',src:'/figures/surrogate/force_mag_scatter_all.webp',alt:'Comparison of predicted and reference force magnitudes',caption:'Force magnitudes'}
+]}/>
+
+The comparison in <FigRef id="fig-surrogate-force-scatter" /> tests the complete force reconstructed from all neighbors, rather than the isolated pair function. Both Cartesian components and total magnitudes follow the reference closely, with the points clustering tightly around the one-to-one line. As with the radial curve, the most noticeable departures occur at the highest forces. These plots establish strong pointwise predictive fidelity, but an MD model also has to work when its predictions are used repeatedly.
+
+## Running molecular dynamics with the learned force field
+
+The next test replaces the reference LJ force calculation with the trained surrogate during simulation. The two runs begin from the same particle configuration, allowing a direct visual comparison of how their states evolve.
+
+<VideoFigure id="fig-surrogate-md-video" src="/video/surrogate-MD-comparison.mp4" poster="/video/surrogate-md-comparison-poster.webp" caption="Reference Lennard–Jones MD (red) and neural-network-driven MD (gray), over a 150,000-step comparison shown in compressed playback. The movie tests whether small per-step force errors remain controlled when accumulated over a long simulation." />
+
+<FigRef id="fig-surrogate-md-video" /> shows the reference and learned-force trajectories superimposed. The particles initially follow similar paths, including many local encounters and collective rearrangements. As time advances, differences become visible. In a chaotic many-particle system, exact trajectory agreement eventually breaks down even for very small perturbations, so visual overlap over an arbitrarily long time is not a realistic sole criterion of correctness. The more meaningful question is whether divergence remains slow enough that the learned simulation still reproduces the right interaction law and structural statistics.
+
+### Quantifying trajectory divergence
+
+<Figure id="fig-surrogate-rmsd" className="figure-medium" src="/figures/surrogate/rmsd_overlay.webp" alt="RMSD between particle positions from neural-network-driven and reference molecular-dynamics trajectories plotted against time step" caption="Particle-position root-mean-square deviation (RMSD) between the surrogate and reference trajectories. The horizontal axis is MD time step; the vertical axis is RMSD in units of σ, the Lennard–Jones length scale. Even after about 8×10^4 steps, the separation is only around 0.05σ." />
+
+The RMSD in <FigRef id="fig-surrogate-rmsd" /> measures how particle positions in the two simulations separate over time. It increases during the run rather than remaining zero, so the surrogate does not remain locked to the reference trajectory indefinitely. At the same time, the growth is initially quite gradual: even after roughly $8\times 10^4$ steps the mismatch is only about $0.05\sigma$, which is a reasonably small positional drift for a long chaotic MD comparison. This makes the plot more encouraging than a simple statement of eventual divergence would suggest.
+
+## Does the learned simulation reproduce structural organization?
+
+For many physical simulations, **statistical observables** are at least as important as a single trajectory. One such observable is the radial distribution function, $g(r)$, which measures the relative probability of finding another particle at distance $r$ from a reference particle.
+
+<VideoFigure id="fig-surrogate-gr-video" src="/video/surrogate-gr-evolution.mp4" poster="/video/surrogate-gr-evolution-poster.webp" caption="Evolution of the radial distribution function during neural-network-driven and reference MD (purple and black curves). The horizontal axis is separation r/σ and the vertical axis is the dimensionless radial distribution function g(r). Matching peak locations and comparable peak heights indicate that the learned dynamics preserve the system's short- and medium-range structure." />
+
+The video in <FigRef id="fig-surrogate-gr-video" /> shows the radial distribution function developing over time. The strong first peak occurs near the Lennard–Jones nearest-neighbor spacing, and the later peaks characterize more distant coordination shells. The two simulations produce broadly similar peak locations and structural features, even as exact particle coordinates become different. That is important because many scientific uses of MD care more about such ensemble structure than about one exact trajectory.
+
+<Figure id="fig-surrogate-gr-final" className="figure-medium" src="/figures/surrogate/gr_compare_final.webp" alt="A still comparison of the radial distribution functions for the reference Lennard–Jones and neural-network simulations after evolution" caption="A late-time snapshot from the structural comparison. Both simulations exhibit a strong first-neighbor peak and subsequent shell structure. Examining one representative late frame makes it easier to compare peak positions, widths, and amplitudes once small dynamical differences have had time to accumulate." />
+
+The late-time snapshot in <FigRef id="fig-surrogate-gr-final" /> is useful to analyze because it shows the structural comparison after the two trajectories have had ample time to separate dynamically. Even at that stage, the first-neighbor peak remains in essentially the same location and the broader shell structure is still recognizable in both curves. Agreement in $g(r)$ therefore supports the claim that the surrogate captures important structural properties of this LJ test system; it is not, by itself, proof that every equilibrium observable or thermodynamic quantity is correct.
+
+### Training diagnostics
+
+<FigureGroup id="fig-surrogate-losses" columns={2} caption="Optimization history for this experiment. The horizontal axis is training epoch; the vertical axes are the corresponding loss values. Training loss decreases steadily, while the normalized validation loss also trends downward despite fluctuations and a few spikes. These are useful diagnostics, but the physically meaningful tests remain the recovered force law and the MD observables." panels={[
+  {label:'a',src:'/figures/surrogate/training_loss.webp',alt:'Training loss decreasing over optimization epochs',caption:'Training loss'},
+  {label:'b',src:'/figures/surrogate/validation_loss_normed.webp',alt:'Normalized validation loss varying over optimization epochs and generally decreasing',caption:'Normalized validation loss'}
+]}/>
+
+The training curves in <FigRef id="fig-surrogate-losses" /> document the fitting process. They are encouraging in the expected way—optimization improves both training and validation behavior—but they are not sufficient evidence of physical fidelity on their own. The force-law comparison, MD overlay, RMSD, and structural correlations provide the scientifically meaningful checks.
+
+## What worked, and what remains unresolved
+
+**The positive result** is that a physically structured neural network recovered the Lennard–Jones radial force law from example configurations and forces, predicted net forces accurately within the tested range, and generated MD trajectories with recognizable reference structure. The architecture made the learned interaction inspectable as a function of distance.
+
+**The limitations** are also substantive. The model assumes one species of isotropic particles and pairwise central interactions, with a fixed maximum neighbor count. It does not represent general many-body, angular, or long-range interactions. The implementation did not explicitly enforce strict pairwise action–reaction bookkeeping or derive its forces from a single conserved learned energy function; it should therefore not be described as guaranteed to conserve momentum or energy. The comparisons also do not establish a speed advantage over evaluating the inexpensive analytic LJ potential.
+
+An important next research direction is to retain physical symmetry while enlarging the representation to particle types, anisotropy, bond-angle and dihedral terms, and possibly graph-based interactions. This is a route toward more expressive force models, **not a claim that those extensions have already been demonstrated in this project**.
+
+## Research takeaway
+
+A learned force field is more than a regression model. It should reproduce a physically meaningful interaction, work when repeatedly evaluated inside a dynamics integrator, and preserve the structural observables relevant to the scientific question. This project provides a controlled illustration of that principle using a learned radial Lennard–Jones surrogate.

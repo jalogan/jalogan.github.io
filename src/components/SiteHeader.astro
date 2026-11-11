@@ -1,0 +1,25 @@
+---
+import { hasResearchCv, hasIndustryResume } from '../lib/cv';
+const showCv = hasResearchCv || hasIndustryResume;
+const path = Astro.url.pathname;
+const cvHref = '/about/#cv';
+const links = [
+  {href:'/research/',label:'Research'},
+  {href:'/publications/',label:'Publications'},
+  {href:'/notes/',label:'Notes & Explorations'},
+  {href:'/about/',label:'About'},
+  {href:'/contact/',label:'Contact'},
+];
+---
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="wordmark" href="/" aria-label="Jack Logan, homepage">Jack Logan<span class="wordmark-rule"> / </span><small>Research & writing</small></a>
+    <nav aria-label="Main navigation" class="nav-links">
+      {links.map(link => <a class:list={['nav-link', {active: path.startsWith(link.href)}]} href={link.href}>{link.label}</a>)}
+      {showCv && <a class="nav-cta" href={cvHref}>CV <span aria-hidden="true">↗</span></a>}
+    </nav>
+    <details class="mobile-menu"><summary aria-label="Open navigation">Menu <span aria-hidden="true">☰</span></summary>
+      <nav aria-label="Mobile navigation">{links.map(link=><a href={link.href}>{link.label}</a>)}{showCv && <a href={cvHref}>CV</a>}</nav>
+    </details>
+  </div>
+</header>

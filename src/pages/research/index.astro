@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ResearchCard from '../../components/ResearchCard.astro';
+import { getCollection } from 'astro:content';
+const projects = (await getCollection('research')).sort((a,b)=>a.data.order-b.data.order);
+---
+<BaseLayout title="Research | Jack Logan" description="Research projects in mathematical physics, statistical mechanics, simulations, and scientific computing.">
+<section class="page-intro"><div class="shell"><div class="section-kicker">Research portfolio</div><h1>Research</h1><p>Theoretical and computational investigations spanning statistical physics, numerical algorithms, mathematical modeling, and interpretable machine learning.</p></div></section>
+<section class="page-body shell"><div class="research-grid">{projects.map((entry,index)=><ResearchCard href={`/research/${entry.id.replace(/\.mdx?$/,'')}/`} title={entry.data.title} category={entry.data.category} description={entry.data.summary} image={entry.data.image || '/art/prismatic-order.webp'} imageAlt={entry.data.imageAlt || 'Science-inspired abstract artwork'} video={entry.data.video} index={`0${index+1}`}/>)}</div></section>
+</BaseLayout>

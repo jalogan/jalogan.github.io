@@ -1,0 +1,20 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+export async function getStaticPaths() {
+  const entries=await getCollection('notes');
+  return entries.map(entry=>({params:{slug:entry.id.replace(/\.mdx?$/,'')},props:{entry}}));
+}
+const {entry}=Astro.props;
+const {Content,headings}=await render(entry);
+const data=entry.data;
+const outline=headings.filter(h=>h.depth===2 || h.depth===3);
+---
+<BaseLayout title={`${data.title} | Notes & Explorations | Jack Logan`} description={data.summary}>
+<section class="article-hero note-article-hero"><div class="shell">
+  <div class="breadcrumb"><a href="/notes/">Notes & Explorations</a><span>/</span>{data.category}</div>
+  <h1>{data.title}</h1><p class="article-deck">{data.summary}</p>
+  <div class="article-tags"><span>{data.status}</span><span>{data.category}</span></div>
+</div></section>
+<div class="shell article-grid"><article class="article-prose"><Content /></article><aside class="article-toc" aria-label="Article table of contents"><strong>On this page</strong><ol>{outline.map(h=><li style={`padding-left:${(h.depth-2)*12}px`}><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol></aside></div>
+</BaseLayout>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 570" role="img" aria-labelledby="title desc">
+<title id="title">Event–component participation matrix</title>
+<desc id="desc">Four input events and three components. Weights are 4,0,0 in row zero; 2,2,0 in row one; 0,3,1 in row two; 1,1,2 in row three. Row-normalization describes distribution across components for an event; column-normalization describes which events reuse a component.</desc>
+<rect x="0" y="0" width="960" height="570" rx="16" fill="#fff"/>
+<rect x="26" y="25" width="908" height="520" rx="18" fill="#f7fafb" stroke="#dfe7eb" stroke-width="1.5"/>
+<text x="55" y="75" font-family="Arial,Helvetica,sans-serif" font-size="30" font-weight="700" fill="#173b54">Participation matrix N</text>
+<text x="55" y="104" font-family="Arial,Helvetica,sans-serif" font-size="17" fill="#63798a">Events × components  ·  nonnegative statistical weights</text>
+<text x="87" y="162" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="#526a7b">Events</text>
+<text x="397" y="129" font-family="Arial,Helvetica,sans-serif" font-size="20" text-anchor="middle" font-weight="700" fill="#173b54">Components</text>
+
+<text x="284" y="164" font-size="21" font-weight="700" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" fill="#173b54">A</text>
+<text x="396" y="164" font-size="21" font-weight="700" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" fill="#173b54">B</text>
+<text x="508" y="164" font-size="21" font-weight="700" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" fill="#173b54">C</text>
+<text x="135" y="229" text-anchor="middle" font-size="20" font-family="Arial,Helvetica,sans-serif" fill="#375367">m0</text>
+<rect x="234" y="181" width="100" height="67" rx="9" fill="#1d587c" />
+<text x="284" y="225" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="29" font-weight="700" fill="#fff">4</text>
+<rect x="346" y="181" width="100" height="67" rx="9" fill="#f0f5f7" />
+<text x="396" y="225" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="29" font-weight="700" fill="#173b54">0</text>
+<rect x="458" y="181" width="100" height="67" rx="9" fill="#f0f5f7" />
+<text x="508" y="225" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="29" font-weight="700" fill="#173b54">0</text>
+<text x="135" y="308" text-anchor="middle" font-size="20" font-family="Arial,Helvetica,sans-serif" fill="#375367">m1</text>
+<rect x="234" y="260" width="100" height="67" rx="9" fill="#79bdbb" />
+<text x="284" y="304" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="29" font-weight="700" fill="#173b54">2</text>
+<rect x="346" y="260" width="100" height="67" rx="9" fill="#79bdbb" />
+<text x="396" y="304" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="29" font-weight="700" fill="#173b54">2</text>
+<rect x="458" y="260" width="100" height="67" rx="9" fill="#f0f5f7" />
+<text x="508" y="304" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="29" font-weight="700" fill="#173b54">0</text>
+<text x="135" y="387" text-anchor="middle" font-size="20" font-family="Arial,Helvetica,sans-serif" fill="#375367">m2</text>
+<rect x="234" y="339" width="100" height="67" rx="9" fill="#f0f5f7" />
+<text x="284" y="383" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="29" font-weight="700" fill="#173b54">0</text>
+<rect x="346" y="339" width="100" height="67" rx="9" fill="#377e97" />
+<text x="396" y="383" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="29" font-weight="700" fill="#fff">3</text>
+<rect x="458" y="339" width="100" height="67" rx="9" fill="#bbdedf" />
+<text x="508" y="383" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="29" font-weight="700" fill="#173b54">1</text>
+<text x="135" y="466" text-anchor="middle" font-size="20" font-family="Arial,Helvetica,sans-serif" fill="#375367">m3</text>
+<rect x="234" y="418" width="100" height="67" rx="9" fill="#bbdedf" />
+<text x="284" y="462" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="29" font-weight="700" fill="#173b54">1</text>
+<rect x="346" y="418" width="100" height="67" rx="9" fill="#bbdedf" />
+<text x="396" y="462" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="29" font-weight="700" fill="#173b54">1</text>
+<rect x="458" y="418" width="100" height="67" rx="9" fill="#79bdbb" />
+<text x="508" y="462" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="29" font-weight="700" fill="#173b54">2</text>
+<path d="M 631 225 L 770 225" fill="none" stroke="#16829b" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M 755 216 L 771 225 L 755 234" fill="none" stroke="#16829b" stroke-width="3.5"/>
+<text x="649" y="192" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700" fill="#196784">Across each row</text>
+<text x="649" y="255" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="#405e70">Which components</text>
+<text x="649" y="276" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="#405e70">represent this event?</text>
+<path d="M 634 323 L 634 420" fill="none" stroke="#7b64a9" stroke-width="4" stroke-linecap="round"/>
+<path d="M 625 406 L 634 422 L 643 406" fill="none" stroke="#7b64a9" stroke-width="4"/>
+<text x="658" y="338" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700" fill="#746099">Down each column</text>
+<text x="658" y="371" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="#405e70">Which events</text>
+<text x="658" y="394" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="#405e70">reuse this component?</text>
+<line x1="55" y1="508" x2="902" y2="508" stroke="#d8e5e9"/>
+<text x="55" y="530" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#617786">Toy example  ·  Z = 16  ·  dark cells have larger weights</text>
+</svg>

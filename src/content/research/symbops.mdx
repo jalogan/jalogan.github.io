@@ -1,0 +1,147 @@
+---
+title: 'Symmetrized Bond Order Parameters (SymBOPs)'
+summary: 'A symmetry-aware mathematical framework for revealing coherent order in complex particle assemblies—even when conventional bond-order scalars or visual inspection miss it.'
+category: 'Symmetry & self-assembly'
+status: 'Published research'
+year: 2022
+order: 1
+featured: true
+image: '/figures/cards/symbops-sphere-card-v27.webp'
+imageAlt: 'Original spherical SymBOP angular response visualized in rainbow colors'
+problem: 'As experiments and simulations assemble increasingly complex structures from anisotropic building blocks and interactions, conventional scalar bond order parameters can miss structural symmetry, domain orientation, and coherent noncrystalline arrangements. How can we characterize what actually assembled?'
+contribution: 'Led the theoretical and computational characterization: symmetry-adapted order parameters, subspace projections, analytical and numerical calculations, algorithms, bond-level classification, domain analysis, and scientific figures. Collaborators supplied the experimental work and the hybrid-system LAMMPS simulations.'
+result: 'Developed SymBOPs to recover symmetry-specific information bond by bond, distinguishing crystalline domains and unexpectedly coherent, non-space-filling amorphous clusters. Later applications identified differently oriented domains, defects, and interpenetrating sublattices in experimental nanoparticle assemblies.'
+methods: ['Group theory and symmetry projection', 'Spherical harmonics and tensor analysis', 'Numerical optimization', 'Bond percolation and domain detection', 'Molecular dynamics and self-assembly analysis', 'Scientific computing and visualization']
+publicationUrl: 'https://doi.org/10.1063/5.0076915'
+originalUrl: 'https://jalogan.github.io/projects/SymBOPs/'
+---
+import Figure from '../../components/Figure.astro';
+import FigureGroup from '../../components/FigureGroup.astro';
+import VideoFigure from '../../components/VideoFigure.astro';
+import Equation from '../../components/Equation.astro';
+
+## Why a new kind of order parameter?
+
+Advances in programmable self-assembly allow increasingly intricate materials to be constructed from **anisotropic building blocks**—particles with geometry or interactions that depend on direction. But the ability to make these structures has outpaced some of the tools used to characterize them. A particle assembly can contain regions with distinct symmetries, differently oriented crystalline domains, and correlated arrangements that are neither conventional crystals nor featureless disorder.
+
+Traditional scalar bond order parameters (BOPs), such as $q_4$, $q_6$, and $w_6$, are powerful for identifying familiar local environments, but they discard the orientation information carried by the underlying bond tensors. That can make them poor at separating neighboring domains, interpreting directional bonding, or identifying a coherent arrangement with incomplete coordination.
+
+**Symmetrized Bond Order Parameters (SymBOPs)** solve a more specific problem: they project bond-orientational information onto the symmetry of the structure being sought. Because the projection can act on a **single bond**, it preserves information that would be lost by averaging an entire neighborhood into one scalar. Connected sets of characteristic bonds can then reveal a coherent domain—even one that does not extend into a periodic crystal. The framework was developed in the [foundational paper](https://doi.org/10.1063/5.0076915), applied to [simulated hybrid self-assembly](https://doi.org/10.1063/5.0076914), and extended to [experimental nanoparticle lattices](https://doi.org/10.1063/5.0168604).
+
+The pentagon-packing example in <FigRef id="fig-pentagon" /> illustrates why an apparently simple periodic crystal may nevertheless have several distinct types of order: the centers form a lattice while the polygon orientations and bond directions carry additional, nontrivial information.
+
+<Figure id="fig-pentagon" src="/figures/pentagon-smectic-v28.png" alt="Smectic C arrangement and densest packing of regular pentagons showing distinct translational, bond, and polygonal-orientation ordering" caption="Different order parameters can coexist: a smectic-C arrangement (left) and a periodic packing of pentagons with two orientationally distinct sublattices (right). Cropped from Logan et al., J. Chem. Phys. 156, 054108 (2022), original Fig. 1." />
+
+## Three distinct types of order
+
+It is useful to distinguish **translational order** (repetition of particle positions), **bond-orientational order** (correlations in directions between neighboring particles), and **particle-orientational order** (correlations in the axes of anisotropic particles themselves). These forms of order may coexist, but none should be confused with another. In particular, an assembly can have substantial bond or particle orientational order without long-range translational periodicity.
+
+<Figure id="fig-three-orders" className="figure-expanded" src="/figures/order-types-redraw.svg" alt="Three scientifically precise schematics showing regular hexagonal guides with unequal bond lengths, disordered aligned rods, and their coexistence" caption="The blue and coral neighborhoods have unequal neighbor distances but the same sixfold bond-orientational order. Their regular hexagonal outlines indicate identical bond directions, not equal bond lengths. Panel three repeats the exact particle coordinates from panel one, replacing only the dark circular neighbors with aligned rods. Bond-orientational and nematic order do not require translational periodicity." />
+
+In two dimensions a conventional complex bond order parameter can be written as
+
+<Equation id="eq-psi" latex={String.raw`\psi_n(i)=\frac{1}{N_i}\sum_{j\in\mathcal{N}(i)}e^{\mathrm{i}n\theta_{ij}}`}/>
+
+where $\theta_{ij}$ is the direction of a bond from particle $i$ to a neighbor, and $n$ denotes the angular symmetry being measured. The papers also use $q_n$ for this same **two-dimensional complex BOP**, subject to the same averaging and normalization convention. Its magnitude measures coherence; its phase carries the orientation. Be careful not to confuse that complex quantity with the **three-dimensional rotationally invariant scalar** $q_\ell$, which is a norm and contains no corresponding orientation phase.
+
+## What exactly is a SymBOP?
+
+In three dimensions we represent a bond direction $\hat{\mathbf b}_{ij}$ by the $(2\ell+1)$-component spherical-harmonic vector
+
+<Equation id="eq-bond-harmonic" latex={String.raw`\bigl|\hat{\mathbf b}_{ij}\bigr)_\ell=\left\{\sqrt{\frac{4\pi}{2\ell+1}}\,Y_{\ell m}(\hat{\mathbf b}_{ij})\right\}_{m=-\ell}^{\ell}`}/>
+
+The rounded **$|\cdot)$ notation** is intentional: it denotes a vector in harmonic space, suggestive of Dirac notation but distinct from an ordinary quantum-mechanical ket. The same harmonic space represents symmetric traceless tensors of rank $\ell$.
+
+For a target point symmetry group $G$, a group average projects the bond-order vector onto the *entire* $G$-invariant subspace:
+
+<Equation id="eq-group" latex={String.raw`\mathcal P_G^{(\ell)}=\frac{1}{|G|}\sum_{g\in G}D^{(\ell)}(g)`}/>
+
+That subspace need not be one-dimensional. The projector retains every harmonic combination that is unchanged by the operations of $G$. When several linearly independent invariant combinations exist, it maps a general bond vector onto their *span*, rather than onto one particular reference. The number of independent invariant combinations depends on **both the symmetry group and the harmonic degree** $\ell$; it is not a universal rule that one named symmetry always has only one direction. For example, the octahedral (cubic) invariant subspace is one-dimensional at $\ell=4$ and $\ell=6$, whereas a lower-symmetry group can preserve several distinct combinations at a given $\ell$. In the one-dimensional case, a normalized reference vector $|R)_\ell$ spans that subspace. We can then write a rank-one projector:
+
+<Equation id="eq-symbop" latex={String.raw`\boxed{\;\bigl|b_{ij}^{*}\bigr)_\ell=\mathcal P_R\bigl|\hat{\mathbf b}_{ij}\bigr)_\ell=\bigl|R\bigr)_\ell\bigl(R\big|\hat{\mathbf b}_{ij}\bigr)_\ell,\qquad \mathcal P_R=\bigl|R\bigr)_\ell\bigl(R\bigr|_\ell\;}`}/>
+
+**The projected harmonic vector $|b_{ij}^{*})_\ell$ is the bond-level SymBOP.** The scalar $\bigl(R|\hat{\mathbf b}_{ij}\bigr)_\ell$ is the projection coefficient. It gives the component of the bond vector **along the known reference**; multiplying this single amplitude by $|R)_\ell$ reconstructs the entire projected vector whenever the invariant subspace is one-dimensional. If there are $k>1$ independent invariant directions, a full description instead requires $k$ coefficients and their corresponding reference vectors. An analogous projection of an averaged bond multipole gives a regional or global SymBOP. The distinction matters: the method is not merely a new scalar magnitude, but a **symmetry-specific projection of a tensor**.
+
+## Two ways to choose the reference orientation
+
+The underlying theory is unified, but the practical analysis depends on what the experiment or simulation tells us about the particles.
+
+### 1. Anisotropic particles: use their orientations
+
+If the individual particles have a known orientation—for example, octahedrally arranged attractive patches—their **polyhedral nematic order parameter (PNOP)** provides a natural local reference vector $|s_i)_\ell$. For a neighboring pair $i,j$, the relevant quantities include the projection coefficient $\bigl(s_i|b_{ij}\bigr)_\ell$ and the relative particle alignment $\bigl(s_i|s_j\bigr)_\ell$. A single physical bond generally produces two projected values because the two particles carry distinct local frames.
+
+The resulting bond-by-bond scatter plots can reveal clusters corresponding to different binding arrangements. In the octahedral-particle simulations, they distinguish **edge-to-edge** (EtE) bonds associated with NaCl-like crystalline domains from **face-to-face** (FtF) bonds associated with compact noncrystalline clusters.
+
+<Figure id="fig-aniso-signatures" src="/figures/anisotropic-symbop-bond-signatures.webp" alt="Published SymBOP and PNOP bond scatterplots for degree four and six showing face-to-face and edge-to-edge clusters" caption="Local PNOP/SymBOP signatures of octahedral patchy-particle assembly, for harmonic degrees 4 and 6. The calculated curve tracks the continuous hinging of a pair of particles between edge-to-edge and face-to-face bonding. Adapted as a figure crop from Logan et al., J. Chem. Phys. 156, 054108 (2022), original Fig. 3." />
+
+This particle-based reference is a major computational convenience, **not a requirement of the theory**. A PNOP reference based on the building-block symmetry is directly appropriate when the order being analyzed shares the relevant symmetry. If we seek a *different symmetry of the assembled structure*, the correct object is a projector/reference for that **target structure**, rather than automatically projecting onto the particle's own PNOP. The measured particle axes may still help establish a frame or an initial orientation; otherwise one can determine the reference self-consistently from the bonds, as below.
+
+### 2. Isotropic particles or unknown orientations: solve for the reference
+
+When only particle positions are known, no intrinsic particle axis is available. We instead **rotate a reference harmonic tensor** and seek an orientation that gives a strong symmetry-projected signal for the bonds in a region. For cubic symmetry the reference depends on a chosen symmetry axis $\hat\nu$ (two angles) **and** an axial rotation $\gamma$ about that axis:
+
+<Equation id="eq-cubic-max" latex={String.raw`\left|Q_\ell^{*}(\hat\nu,\gamma)\right|=\left|\bigl(Q\big|R_{c}(\hat\nu,\gamma)\bigr)_\ell\right|`}/>
+
+In our isotropic-particle work, the dependence on $\gamma$ can be maximized **analytically** using the $m=0$ and complex $m=4$ harmonic components of the rotated bond multipole; the remaining two-dimensional search over $\hat\nu$ identifies candidate high-response symmetry axes. Consequently, an angular heatmap displays an amplitude **already maximized over the third angle**—a peak points to a preferred axis, but by itself is not the complete frame. We then determine the remaining axial orientation from the complex $m=4$ component, or equivalently identify a mutually orthogonal set of cubic axes, to fix the full reference frame up to symmetry-equivalent rotations.
+
+<Figure id="fig-angular" src="/figures/symbops-user-angle-plot.webp" alt="Angular landscape of SymBOP signal as a function of azimuthal angle and cosine polar angle with symmetry-related maxima" caption="Angular response after maximizing over axial rotation, showing candidate cubic symmetry axes of a sample. Peaks provide directions for completing the reference frame; they are not, by themselves, a determination of all three Euler angles. Research visualization from the author's work." />
+
+With the orientation fixed, bond-level projections can be plotted in a complex plane using the tetragonal $q_\ell^4$ component. The phase encodes the otherwise unresolved axial orientation; knowing the reference lets us select bonds near the characteristic signatures of the target structure, including those distorted by disorder or incomplete coordination. These are the *calculational* steps behind the method, rather than a process of visually guessing axes from a heatmap.
+
+## From characteristic bonds to coherent domains
+
+After classifying bonds by symmetry signature, we use **bond percolation** to identify their connected clusters. In a sample containing different orientations or morphologies, we find one coherent domain, remove its assigned bonds from the search, refine the reference as needed, and repeat to identify the next. This works even when several spatially disconnected domains have similar orientations.
+
+A striking outcome of the hybrid self-assembly work is the ability to detect coherent clusters in an arrangement that **lacks long-range crystalline order and does not fill space**. Such a cluster is not a random aggregate: its local relationships follow a reproducible geometrical pattern. In octahedral assemblies, the analysis separates the FtF amorphous arrangement from the EtE NaCl phase. We are identifying **structured local correlations**, not claiming that the amorphous arrangement becomes a conventional crystal.
+
+<Figure id="fig-aniso-domains" src="/figures/anisotropic-symbop-domains.webp" alt="Distinct colored self-assembled domains of edge-to-edge NaCl-like order and face-to-face compact noncrystalline clusters" caption="Bonds selected from the SymBOP signatures produce spatially connected edge-to-edge crystalline domains and face-to-face noncrystalline clusters. Cropped from Logan et al., J. Chem. Phys. 156, 054108 (2022), original Fig. 4." />
+
+<VideoFigure id="fig-aniso-movie" src="/video/octahedra-domains-slow.mp4" poster="/video/octahedra-domains-poster.png" caption="Rotating view of the original simulated octahedral-particle sample (left) and its identified coherent domains (right). Different colors distinguish domain memberships; the playback is slowed to make the three-dimensional internal structure easier to inspect." />
+
+
+<Figure id="fig-morphology" src="/figures/patchy-assembly-phase-domains.webp" alt="Published simulation figures showing SymBOP signatures and colored domains as the patchy-to-isotropic particle size ratio changes" caption="Morphology changes as particle size ratio varies: the SymBOP/PNOP signatures move from face-to-face clusters to edge-to-edge NaCl-like domains, with coexistence at intermediate ratios. Cropped from Mushnoori et al., J. Chem. Phys. 156, 024501 (2022), original Fig. 5." />
+
+See [*Controlling morphology in hybrid isotropic/patchy particle assemblies*](https://doi.org/10.1063/5.0076914) and its [simulation and anisotropic-analysis code](https://github.com/duttm/Octahedra_Nanoparticle_Project). The hybrid self-assembly simulations were performed by collaborators; my work focused on the underlying theory and numerical/structural characterization.
+
+### Square-patch assemblies: honeycomb fragments and square-lattice domains
+
+The same framework also distinguishes morphology in systems of **square-patch anisotropic particles**. As the patchy-to-isotropic particle size ratio changes, coherent fragments of three-dimensional honeycomb stacking give way to two-dimensional square-lattice domains. The method recognizes these structures through their characteristic local bond and particle orientations, including partially formed or spatially separated domains.
+
+<Figure id="fig-square-domains" src="/figures/square-patch-domain-transition.webp" alt="SymBOP and PNOP signatures and color-coded domains across particle size ratios in square-patch assemblies" caption="The domain transition in simulated square-patch assemblies. Bond-level symmetry signatures separate honeycomb and square-lattice domains across size ratios, including coexistence. Cropped from Mushnoori et al., J. Chem. Phys. 156, 024501 (2022), original Fig. 8." />
+
+<FigureGroup id="fig-square-ideal" columns={2} caption="Idealized structural motifs of the two competing square-patch assembly morphologies. These drawings illustrate the geometries; the domain classifications above come from bond-level analysis of the simulated assemblies." panels={[
+  { label:'a',src:'/figures/square-honeycomb-ideal-user.webp',alt:'Idealized 3D honeycomb stacking of square patch particles and isotropic neighbors',caption:'Honeycomb stacking motif.'},
+  { label:'b',src:'/figures/square-square-ideal-user.webp',alt:'Idealized two-dimensional square lattice arrangement of hybrid square-patch particles',caption:'Square-lattice motif.'}
+]} />
+
+The comparison is especially useful because coherent local motifs can be detected before—or without—long-range translational order. See [the morphology paper](https://doi.org/10.1063/5.0076914) for the simulation details.
+
+## From simulations to experimental nanoparticle assemblies
+
+The later work applied the self-consistent reference approach to reconstructed particle positions from **DNA-assembled nanoparticle lattices**. It resolved differently oriented FCC domains that standard scalar BOP plots did not clearly separate, including their interfaces and incompletely coordinated boundary particles.
+
+<Figure id="fig-experimental-fcc" src="/figures/experimental-fcc-domains.webp" alt="Experimental nanoparticle data showing complex bond-level signatures and two coherent FCC crystalline domains in red and blue" caption="Experimental FCC nanoparticle assembly: bond-level complex signatures isolate two differently oriented coherent domains, colored red and blue in the reconstructed structure. Cropped from Logan et al., J. Chem. Phys. 159, 154905 (2023), original Fig. 7." />
+
+In a second experimental sample, an imperfect cubic-diamond assembly, the method also distinguished **two interpenetrating FCC sublattices** within each diamond domain and exposed a structural defect associated with an incomplete layer and relative domain misorientation. This is more information than a global crystallinity score: it resolves *which* symmetry-compatible bonds and sublattices belong together.
+
+<FigureGroup id="fig-diamond" columns={1} caption="Experimental cubic diamond assembly. The symmetry-axis response and bond-level classification reveal coherent regions, paired interpenetrating FCC sublattices, and a defect-related domain boundary. Adapted from Logan et al., J. Chem. Phys. 159, 154905 (2023), original Fig. 10." panels={[
+  {label:'a',src:'/figures/experimental-diamond-axes-panel-a.png',alt:'Angular response heatmap for a cubic-diamond nanoparticle assembly, with three marked symmetry directions',caption:'Reference-axis response, with stars marking selected symmetry-axis directions.'},
+  {label:'b',src:'/figures/experimental-diamond-sublattices-panel-b.png',alt:'Three-dimensional reconstructed nanoparticle assembly colored by symmetry-classified coherent regions and interpenetrating FCC sublattices',caption:'Identified coherent regions and interpenetrating FCC sublattices.'}
+]} />
+
+See [*Symmetry-specific characterization of bond orientation order in DNA-assembled nanoparticle lattices*](https://doi.org/10.1063/5.0168604) and the [isotropic-particle SymBOP analysis code](https://github.com/jalogan/SymBOPs_for_Isotropic_Particles). My contributions were the theory, computational methods, analyses, and scientific visualizations; the experimental assembly and measurements were performed by collaborators.
+
+## What this contributes
+
+SymBOPs add symmetry specificity, a meaningful reference orientation, and single-bond resolution to familiar structural characterization methods. The framework connects representation theory and numerical algorithms to a practical problem: **recognizing complex order in messy, finite, and heterogeneous self-assembled systems**. It is useful precisely where a scalar classification or a visual inspection can obscure distinct domains, directional relationships, or coherent nonperiodic motifs.
+
+The reference symmetry must be chosen appropriately; neighbor definitions and classification tolerances affect results, and a detected bond pattern does not by itself determine an assembly mechanism. The method complements rather than replaces scalar BOPs and physical validation.
+
+## Publications and code
+
+- [**Symmetry-specific orientational order parameters for complex structures** — *J. Chem. Phys.* (2022)](https://doi.org/10.1063/5.0076915)
+- [**Controlling morphology in hybrid isotropic/patchy particle assemblies** — *J. Chem. Phys.* (2022)](https://doi.org/10.1063/5.0076914)
+- [**Symmetry-specific characterization of bond orientation order in DNA-assembled nanoparticle lattices** — *J. Chem. Phys.* (2023)](https://doi.org/10.1063/5.0168604)
+- [Anisotropic-particle analysis and simulation repository](https://github.com/duttm/Octahedra_Nanoparticle_Project)
+- [Isotropic-particle / unknown-orientation SymBOP analysis repository](https://github.com/jalogan/SymBOPs_for_Isotropic_Particles)
+---

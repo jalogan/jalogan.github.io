@@ -1,0 +1,90 @@
+---
+/** Video-enhanced scientific artwork. A static poster is always present, and
+ * motion only appears once an actual video frame is decoded.
+ */
+---
+<div class="hero-art" aria-hidden="true">
+  <video class="hero-art-video" autoplay muted loop playsinline preload="auto" poster="/art/ordering-poster.webp" tabindex="-1">
+    <source src="/art/order-evolution.mp4" type="video/mp4" />
+    <source src="/art/order-evolution.webm" type="video/webm" />
+  </video>
+</div>
+<button class="motion-toggle" type="button" aria-label="Pause background animation" aria-pressed="false">
+  <span class="motion-pause" aria-hidden="true">Ⅱ</span>
+  <span class="motion-play" aria-hidden="true">▷</span>
+  <span class="motion-label">Pause animation</span>
+</button>
+<script>
+  const video = document.querySelector<HTMLVideoElement>('.hero-art-video');
+  const button = document.querySelector<HTMLButtonElement>('.motion-toggle');
+  const label = button?.querySelector<HTMLElement>('.motion-label');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let userPaused = false;
+  let offscreen = false;
+  let autoplayBlocked = false;
+  const markReady = () => {
+    if (!video) return;
+    if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+      video.classList.add('video-ready');
+    }
+  };
+  function updateButton() {
+    if (!button || !label) return;
+    const paused = userPaused || autoplayBlocked;
+    button.setAttribute('aria-pressed', String(paused));
+    button.setAttribute('aria-label', paused ? 'Play background animation' : 'Pause background animation');
+    button.classList.toggle('is-paused', paused);
+    label.textContent = paused ? 'Play animation' : 'Pause animation';
+  }
+  function update() {
+    if (!video || !button) return;
+    if (reduceMotion.matches || userPaused || offscreen) {
+      video.pause();
+      updateButton();
+      return;
+    }
+    const attempt = video.play();
+    if (attempt) {
+      attempt.then(() => {
+        autoplayBlocked = false;
+        markReady();
+        updateButton();
+      }).catch(() => {
+        // Browser autoplay restrictions: static poster remains; user can tap Play.
+        autoplayBlocked = true;
+        updateButton();
+      });
+    }
+    updateButton();
+  }
+  if (video && button) {
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playbackRate = 1.0;
+    // The load event might have already fired before this script ran.
+    ['loadeddata','canplay','playing','timeupdate'].forEach(event =>
+      video.addEventListener(event, markReady));
+    video.addEventListener('error', () => { button.hidden = true; });
+    video.addEventListener('emptied', () => { video.classList.remove('video-ready'); });
+    markReady();
+    button.addEventListener('click', () => {
+      if (autoplayBlocked) {
+        autoplayBlocked = false;
+        userPaused = false;
+      } else userPaused = !userPaused;
+      update();
+    });
+    reduceMotion.addEventListener('change', update);
+    window.addEventListener('pageshow', () => requestAnimationFrame(update));
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) requestAnimationFrame(update);
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(entries => {
+        offscreen = !entries[0].isIntersecting;
+        update();
+      }, {threshold:0.05}).observe(video);
+    }
+    update();
+  }
+</script>

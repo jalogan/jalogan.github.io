@@ -1,0 +1,18 @@
+---
+interface Panel {label:string; src:string; poster?:string; alt:string; caption?:string}
+interface Props {id:string; number?:string|number; panels:Panel[]; caption:string; className?:string; columns?:number}
+const {id,number,panels,caption,className='',columns=2}=Astro.props;
+---
+<figure class:list={['scientific-figure','grouped-figure','grouped-video-figure',columns===1?'grouped-wide':'',className]} id={id}>
+  <div class="grouped-panels" style={`--figure-panel-columns:${columns}`}>
+    {panels.map(panel => <div class="grouped-panel">
+      <div class="grouped-panel-art grouped-panel-video">
+        <video controls preload="metadata" playsinline poster={panel.poster} aria-label={panel.alt}>
+          <source src={panel.src} type="video/mp4" />Your browser does not support embedded video.
+        </video>
+      </div>
+      <div class="grouped-panel-caption"><span class="grouped-panel-letter">({panel.label})</span>{panel.caption && <span> {panel.caption}</span>}</div>
+    </div>)}
+  </div>
+  <figcaption><strong>Figure {number}.</strong> {caption}</figcaption>
+</figure>

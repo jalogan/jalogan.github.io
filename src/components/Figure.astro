@@ -1,0 +1,15 @@
+---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+interface Props { id:string; number?: number|string; src:string; alt:string; caption:string; credit?: string; className?:string }
+const {id,number,src,alt,caption,credit,className=''}=Astro.props;
+// Missing local scientific media is a build error, not publishable page content.
+const local = src.startsWith('/') && !src.startsWith('//');
+if (local && !existsSync(join(process.cwd(), 'public', src.slice(1)))) {
+  throw new Error(`Missing scientific figure ${id}: ${src}`);
+}
+---
+<figure class:list={['scientific-figure',className]} id={id}>
+  <div class="figure-frame"><a class="figure-view-original" href={src} target="_blank" rel="noopener noreferrer" aria-label={`Open full-size figure: ${alt}`}><img src={src} alt={alt} loading="lazy" decoding="async" /></a></div>
+  <figcaption><strong>Figure {number}.</strong> {caption}{credit && <span class="figure-credit"> {credit}</span>}</figcaption>
+</figure>

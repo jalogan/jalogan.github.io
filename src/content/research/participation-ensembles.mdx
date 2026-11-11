@@ -1,0 +1,282 @@
+---
+title: 'Participation Ensembles: A Statistical Framework for Interpretable Neural Representations'
+summary: 'A theory-first, probabilistic framework connecting superposition, polysemanticity, entropy, and component interactions through a common event–component ensemble, with proposed applications to interpretability, regularization, and alignment.'
+category: 'AI interpretability & statistical mechanics'
+status: 'Independent research'
+order: 8
+featured: false
+image: '/figures/participation/participation-puzzle-card-v25-square.webp'
+imageAlt: 'Four interlocking puzzle pieces for superposition, polysemanticity, interactions, and entropy; the superposition piece shows nonorthogonal feature vectors sharing a representational space'
+problem: 'Can a common statistical framework reveal how a neural network distributes representations across components, reuses components across events, and organizes interactions—and can those statistics be turned into testable controls on internal representations?'
+contribution: 'Developed an event–component participation formulation, its dual conditional views and entropies, co-usage comparisons, worked examples and neural-network mappings; proposed systematic diagnostics, regularizers, and causal validation experiments.'
+result: 'A fully specified mathematical and interpretive framework with exact worked examples. Applications to causal circuit discovery, alignment, and learned regularization objectives are research directions, not experimentally established results.'
+methods: ['Probability and information theory', 'Statistical mechanics', 'Neural representation analysis', 'Conditional entropy', 'Component co-usage', 'Regularization design', 'Mechanistic interpretability']
+---
+
+import Equation from '../../components/Equation.astro';
+import Figure from '../../components/Figure.astro';
+
+## Why a participation ensemble?
+
+A neural network represents each input using internal resources: neurons, attention heads, sparse-autoencoder (SAE) features, directions in activation space, and possibly distributed circuits. A single input may use several resources; the same resource can be active for many different inputs. These are two sides of the same organizational problem. A third question is how resources **interact or co-occur**, and a fourth is how to quantify the concentration or dispersion of their activity using **entropy**.
+
+I propose to describe these aspects with one primitive object: a nonnegative **event–component participation matrix** $\mathcal N$. It assigns a statistical weight to an event and a component. After one normalization, it defines a joint probability distribution. Row and column conditionals, their entropies, marginal usage, and component co-usage then follow by ordinary probability theory. The objective is to make the definitions compatible, expose their assumptions, and build tools for measuring—and eventually shaping—the internal organization of learned representations.
+
+This is an **ongoing independent theoretical and methodological project**. The probabilities and entropy identities are established mathematics; the proposed novelty is their systematic organization, choice of meaningful neural measurements, and subsequent interpretability and intervention experiments. In particular, the terms *superposition* and *polysemanticity* below denote **operational participation measures**: they can be evidence relevant to those phenomena but do not alone prove that a network implements overlapping concepts or genuine causal circuits.
+
+<Figure id="fig-participation-overview" src="/figures/participation/participation-matrix.svg" alt="Event-by-component participation diagram labeled Events on rows and Components on columns; horizontal arrow for event-to-component distribution and vertical downward arrow for component-to-event reuse" caption="The same nonnegative event–component weights support two complementary statistical questions. Across a row: which components carry this event? Down a column: which events use this component? The drawn cell intensities represent the toy weights, not measurements from a real network." />
+
+## Part I. Start with probability, before introducing neural networks
+
+### 1. Events, components, and a primitive matrix
+
+Let $e\in\mathcal E$ index **events** and $M\in\mathcal M$ index **components**. For now these are only labels; they do not need a neural-network interpretation. Assign nonnegative weights
+
+<Equation id="eq-pe-primitive" latex={String.raw`\mathcal N_{eM}\geq 0,\qquad \mathcal N\in\mathbb R_{\geq0}^{|\mathcal E|\times|\mathcal M|}.`}/>
+
+The value $\mathcal N_{eM}$ quantifies how much weight the pair $(e,M)$ contributes to the ensemble. Several components may participate in one event, and a component may participate in several events. The weights need not be counts, probabilities, mutually exclusive outcomes, or integer-valued. They can later be constructed from transformed neural activations.
+
+Define a normalization constant, analogous to a statistical-mechanical partition function,
+
+<Equation id="eq-pe-joint" latex={String.raw`Z=\sum_{e,M}\mathcal N_{eM},\qquad p(e,M)=\frac{\mathcal N_{eM}}{Z},\qquad \sum_{e,M}p(e,M)=1.`}/>
+
+This is well defined when $Z>0$. The joint distribution is over **weighted event–component pairs**: sampling from $p$ selects one pair according to its normalized participation weight. It does *not* say that only one component was active in the actual neural computation.
+
+The marginals follow immediately:
+
+<Equation id="eq-pe-marginals-general" latex={String.raw`p(e)=\sum_M p(e,M),\qquad p(M)=\sum_e p(e,M).`}/>
+
+The first describes how much the various events contribute to the weighted ensemble; the second describes overall component usage under the chosen measurement. These need not be uniform, even when events are sampled equally often.
+
+### 2. Two conditional distributions from one object
+
+**Fix an event** and normalize the corresponding row:
+
+<Equation id="eq-pe-event-conditional" latex={String.raw`p(M\mid e)=\frac{p(e,M)}{p(e)}=\frac{\mathcal N_{eM}}{\sum_{M'}\mathcal N_{eM'}}.`}/>
+
+This gives the *component participation profile* for a particular event. A concentrated row uses only a few components; a broad row distributes its weight among many components. When chosen objects and weights represent actual feature contributions, this is an **event-centric proxy for representational superposition**.
+
+**Fix a component** and normalize its column:
+
+<Equation id="eq-pe-component-conditional" latex={String.raw`p(e\mid M)=\frac{p(e,M)}{p(M)}=\frac{\mathcal N_{eM}}{\sum_{e'}\mathcal N_{e'M}}.`}/>
+
+This gives the *event signature* of a component. A concentrated column identifies a relatively selective component; a broad column identifies one reused across events. When event categories correspond to distinct concepts, this may serve as a **proxy for polysemanticity**. Both interpretations require care: distribution across measured components is not identical to geometric superposition of feature directions, and reuse across examples is not automatically reuse across distinct meanings.
+
+Both conditionals are undefined for zero-weight rows or columns; such cases must be handled explicitly rather than divided by zero. Grouping, the measurement lens, and event sampling determine what the resulting probabilities mean.
+
+### 3. A complete four-event, three-component example
+
+To separate the mathematics from neural-network assumptions, consider four event labels $m_0,m_1,m_2,m_3$ and three components $A,B,C$. Let the rows be ordered by event, the columns by component, and choose
+
+<Equation id="eq-pe-example-matrix" latex={String.raw`\mathcal N=\begin{bmatrix}4&0&0\\2&2&0\\0&3&1\\1&1&2\end{bmatrix},\qquad Z=16.`}/>
+
+The matrix is only a list of statistical weights. Every row sums to four, while the column sums are $7,6,3$. Dividing every entry by $16$ gives the complete joint distribution:
+
+<Equation id="eq-pe-example-joint" latex={String.raw`p(m,M)=\begin{bmatrix}\tfrac14&0&0\\\tfrac18&\tfrac18&0\\0&\tfrac3{16}&\tfrac1{16}\\\tfrac1{16}&\tfrac1{16}&\tfrac18\end{bmatrix}.`}/>
+
+The marginals are
+
+<Equation id="eq-pe-example-marginals" latex={String.raw`p(m)=\begin{bmatrix}\tfrac14\\\tfrac14\\\tfrac14\\\tfrac14\end{bmatrix},\qquad p(M)=\begin{bmatrix}\tfrac7{16}&\tfrac6{16}&\tfrac3{16}\end{bmatrix}.`}/>
+
+The event marginal is uniform by construction. The component marginal says that $A$ has the greatest total weight and $C$ the least, but it cannot reveal which events use which components. The conditional distributions recover that information.
+
+#### Across rows: superposition-like spreading
+
+Dividing each row by its row sum gives
+
+<Equation id="eq-pe-example-rows" latex={String.raw`p(M\mid m)=\begin{bmatrix}1&0&0\\\tfrac12&\tfrac12&0\\0&\tfrac34&\tfrac14\\\tfrac14&\tfrac14&\tfrac12\end{bmatrix}.`}/>
+
+Each row is a normalized distribution over columns $A,B,C$. Event $m_0$ is concentrated on one component; $m_1$ divides its weight between two; $m_2$ uses mainly $B$; and $m_3$ distributes weight among all three. In the present abstract example, there is no semantic reason yet to call one row *more interpretable* than another: we have only described its distribution.
+
+#### Down columns: component reuse
+
+Dividing each column by its own total weight gives
+
+<Equation id="eq-pe-example-columns" latex={String.raw`p(m\mid M)=\begin{bmatrix}\tfrac47&0&0\\\tfrac27&\tfrac13&0\\0&\tfrac12&\tfrac13\\\tfrac17&\tfrac16&\tfrac23\end{bmatrix}.`}/>
+
+Each *column* sums to one. Component $A$ emphasizes $m_0$, $B$ is used by $m_1,m_2,m_3$, and $C$ is dominated by $m_3$ with some participation in $m_2$. The two conditionals are linked through Bayes' rule,
+
+<Equation id="eq-pe-bayes" latex={String.raw`p(m\mid M)=\frac{p(M\mid m)\,p(m)}{p(M)},`}/>
+
+so the apparent duality is not an additional model assumption: it is a property of the same normalized matrix.
+
+### 4. Entropy quantifies concentration and spread
+
+For a discrete distribution $q(x)$, its Shannon entropy is $H[q]=-\sum_x q(x)\log q(x)$, with $0\log0\equiv0$. We use natural logarithms throughout. Notationally, $e$ denotes a specific event, $E$ denotes the event-valued random variable that appears in expressions such as $H(M\mid E)$, and $\mathcal E$ denotes the full set of events. Applying entropy to the two conditional views yields
+
+<Equation id="eq-pe-local-entropies" latex={String.raw`\begin{aligned}H(M\mid m)&=-\sum_M p(M\mid m)\log p(M\mid m),\\H(m\mid M)&=-\sum_m p(m\mid M)\log p(m\mid M).\end{aligned}`}/>
+
+For the numerical example, the *event-specific* entropies are
+
+<Equation id="eq-pe-example-event-entropies" latex={String.raw`\begin{bmatrix}H(M\mid m_0)\\H(M\mid m_1)\\H(M\mid m_2)\\H(M\mid m_3)\end{bmatrix}\approx\begin{bmatrix}0\\0.693\\0.562\\1.040\end{bmatrix},`}/>
+
+while the *component-specific* entropies are
+
+<Equation id="eq-pe-example-component-entropies" latex={String.raw`\begin{bmatrix}H(m\mid A)&H(m\mid B)&H(m\mid C)\end{bmatrix}\approx\begin{bmatrix}0.956&1.011&0.637\end{bmatrix}.`}/>
+
+Here $m_0$ has a concentrated participation profile ($H=0$), and $m_3$ has the broadest. In the other direction, $B$ is the most broadly distributed across events by this criterion, while $C$ is the most selective. For a fixed set of $K$ possible components, an entropy between $0$ and $\log K$ can also be converted into an *effective number of participating components* $\exp H$; that is descriptive, not an estimate of independent causal mechanisms.
+
+The global component usage entropy is
+
+<Equation id="eq-pe-global-entropy" latex={String.raw`H(M)=-\sum_M p(M)\log p(M)\approx1.043,\qquad H_{\max}(M)=\log3\approx1.099.`}/>
+
+Thus overall component usage is rather evenly distributed, even though individual rows have very different degrees of concentration. This distinction between **local distribution** and **global usage** is one motivation for reporting both.
+
+Averaging over events gives the standard conditional entropy (different from one event's entropy):
+
+<Equation id="eq-pe-averaged-entropy" latex={String.raw`H(M\mid E)=\sum_e p(e)H(M\mid e),\qquad H(E\mid M)=\sum_M p(M)H(E\mid M).`}/>
+
+Together they obey familiar information-theoretic identities,
+
+<Equation id="eq-pe-chain" latex={String.raw`H(E,M)=H(E)+H(M\mid E)=H(M)+H(E\mid M),\qquad I(E;M)=H(M)-H(M\mid E).`}/>
+
+Mutual information $I(E;M)$ measures dependence between the two indices **under this chosen participation distribution**. It does not automatically measure the predictive information a component causally contributes to the network's task. This distinction becomes important in applied interpretability.
+
+### 5. Co-usage and statistical interactions
+
+A row profile tells us which components contribute to one event. To measure whether *pairs of component profiles* tend to be large for the same events, define the pairwise co-usage quantity
+
+<Equation id="eq-pe-cousage" latex={String.raw`C_{MN}=\sum_e p(e)\,p(M\mid e)\,p(N\mid e).`}/>
+
+Think of drawing an event $e$ from $p(e)$ and then drawing two component indices **independently conditional on that event**. The matrix $C$ is the induced joint distribution for those two component draws. It is an overlap statistic of conditional participation profiles—not a direct experimental probability that two neurons physically fire simultaneously. Its total sum is one.
+
+Compare $C_{MN}$ with what those two draws would produce if they were unconditionally independent:
+
+<Equation id="eq-pe-interaction" latex={String.raw`\chi_{MN}=\log\!\left(\frac{C_{MN}}{p(M)p(N)}\right).`}/>
+
+A positive $\chi$ means co-concentration in the measured events exceeds the marginal product; a negative value means it falls below that baseline; zero matches the baseline. If $C_{MN}=0$, the unregularized log ratio is $-\infty$, so practical implementations should specify their treatment of zeros and numerical smoothing.
+
+For the toy matrix the results are
+
+<Equation id="eq-pe-cousage-matrix" latex={String.raw`C=\begin{bmatrix}0.3281&0.0781&0.0313\\0.0781&0.2188&0.0781\\0.0313&0.0781&0.0781\end{bmatrix},`}/>
+
+<Equation id="eq-pe-interaction-matrix" latex={String.raw`\chi\approx\begin{bmatrix}0.539&-0.742&-0.965\\-0.742&0.442&0.105\\-0.965&0.105&0.799\end{bmatrix}.`}/>
+
+The $A,B$ pair is substantially less co-concentrated than its baseline; $B,C$ is slightly more. Diagonal entries measure *within-component concentration* under the two-draw construction and should not be read as self-interaction forces.
+
+#### Redundancy versus complementarity
+
+Co-usage alone cannot tell us what different components **do**. Suppose two components have positive $\chi_{MN}$. If their event signatures $p(e\mid M)$ and $p(e\mid N)$ are very similar (for instance, small Jensen–Shannon divergence), they may be candidates for **redundant or related** functions. If they are co-used but their signatures and responses to controlled perturbations differ, they may be candidates for **complementary roles** in a distributed computation. Neither conclusion follows from participation alone: task-level intervention and causal tests must confirm whether pruning, replacing, or jointly ablating those components has the expected effect.
+
+### 6. Why the statistical-mechanical analogy is useful
+
+The same construction appears in familiar physical systems. Take two noninteracting spins as microscopic configurations $m\in\{\uparrow\uparrow,\uparrow\downarrow,\downarrow\uparrow,\downarrow\downarrow\}$ and their total magnetization $M\in\{+2,0,-2\}$. The statistical weights
+
+<Equation id="eq-pe-paramagnet" latex={String.raw`\mathcal N_{mM}=\begin{cases}e^{-\beta E(m)},&M=M(m),\\0,&\text{otherwise}\end{cases}`}/>
+
+lead to the familiar partition function and distributions over microstates and magnetization. The participation ensemble is more general because **multiple columns can be nonzero in one row**, unlike a deterministic assignment to a single macrostate. This is a structural analogy, not a claim that neural activations are thermodynamic Boltzmann weights, nor that every neural network has a meaningful temperature or phase transition.
+
+## Part II. Mapping the framework to neural networks
+
+### 7. Decide what constitutes an event and a component
+
+Start from individual network events $e$: examples, token positions, sequences, or controlled input situations. Choose reusable internal **components** $M$: neurons, heads, SAE features, learned directions, or candidate circuits. For each pair measure a scalar $a_M(e)$ and pass it through a nonnegative *lens* $f$:
+
+<Equation id="eq-pe-neural-lens" latex={String.raw`\mathcal N_{eM}=f\bigl(a_M(e)\bigr)\ge0.`}/>
+
+For scalar activations, examples include $f(a)=|a|$, $f(a)=|a|^2$, or $f(a)=\max(0,a)$. For vector-valued head outputs one might use $\|\mathbf h_M(e)\|_2^2$ or the magnitude of a projection along a task-relevant direction. These answer **different questions**. Squared magnitude measures activity energy in the chosen coordinate system, while a directional projection attempts to capture a particular functional contribution. A signed contribution must be treated consistently before converting it to a nonnegative weight; a softmax-like exponential creates a different lens with different scaling behavior.
+
+The framework itself does not choose the *correct* lens. A useful experiment should document and compare multiple choices, distinguish activation from attribution, and test robustness to scaling and reparameterization. Splitting one feature into two coordinates or changing the feature dictionary can alter the entropies even if the network's function stays unchanged.
+
+### 8. Group events without changing the construction
+
+Raw events can be grouped into concepts, labels, tasks, symmetry operations, or experimentally defined situations. With $m(e)$ denoting the group label,
+
+<Equation id="eq-pe-grouping" latex={String.raw`\mathcal N_{mM}=\sum_{e\,:\,m(e)=m}\mathcal N_{eM}.`}/>
+
+This produces a new ensemble whose rows are groups rather than individual inputs. Intuitively, it is the difference between asking which neurons are active for one particular prompt and asking which neurons usually matter for an entire class of prompts. For comparison across groups with very different sample counts, one can instead construct or reweight the underlying event ensemble to reflect a chosen sampling prior, **provided that choice is reported**. An aggregate over many common events is not the same as an average over equally represented classes. Grouping is a form of coarse-graining and can hide variation within categories; retain the ungrouped analysis when possible.
+
+#### Example A: three input events measured over two neurons
+
+Suppose two neurons yield raw activations
+
+<Equation id="eq-pe-neuron-raw" latex={String.raw`a=\begin{bmatrix}2&0\\1&1\\0.2&1.8\end{bmatrix}.`}/>
+
+With the squared-activation lens, the participation matrix is
+
+<Equation id="eq-pe-neuron-n" latex={String.raw`\mathcal N=\begin{bmatrix}4&0\\1&1\\0.04&3.24\end{bmatrix}.`}/>
+
+Row normalization gives
+
+<Equation id="eq-pe-neuron-row" latex={String.raw`p(M\mid e)\approx\begin{bmatrix}1&0\\0.5&0.5\\0.0122&0.9878\end{bmatrix}.`}/>
+
+Event 1 is concentrated on neuron 1; event 2 is balanced; event 3 is almost entirely in neuron 2. The column conditionals (for neurons 1 and 2 respectively) are
+
+<Equation id="eq-pe-neuron-column" latex={String.raw`p(e\mid M)\approx\begin{bmatrix}0.7937&0\\0.1984&0.2358\\0.0079&0.7642\end{bmatrix}.`}/>
+
+Now group events 1 and 2 into class $A$ and event 3 into class $B$:
+
+<Equation id="eq-pe-neuron-group" latex={String.raw`\mathcal N_{\mathrm{group}}=\begin{bmatrix}5&1\\0.04&3.24\end{bmatrix},\qquad p(M\mid\mathrm{group})\approx\begin{bmatrix}0.833&0.167\\0.012&0.988\end{bmatrix}.`}/>
+
+The mathematical procedure is unchanged, but we have moved from input-specific to **class-level** participation. The result can be more stable and interpretable for meaningful classes, at the cost of concealing input-specific exceptions.
+
+#### Example B: Transformer token events and attention heads
+
+Take three token contexts—“not”, “very”, and “!”—and two attention heads. A head emits a vector, so use the Euclidean norm of that vector and square it. If the scalar head magnitudes are
+
+<Equation id="eq-pe-head-scales" latex={String.raw`a=\begin{bmatrix}3&1\\1&3\\2&2\end{bmatrix},`}/>
+
+then the participation matrix and its row-normalized conditionals are
+
+<Equation id="eq-pe-head-example" latex={String.raw`\mathcal N=\begin{bmatrix}9&1\\1&9\\4&4\end{bmatrix},\qquad p(M\mid e)=\begin{bmatrix}0.9&0.1\\0.1&0.9\\0.5&0.5\end{bmatrix}.`}/>
+
+One head carries most of the selected activity for “not”, the other for “very”, and they share it for “!”. The column-conditioned distributions are
+
+<Equation id="eq-pe-head-column" latex={String.raw`p(e\mid M)\approx\begin{bmatrix}0.643&0.071\\0.071&0.643\\0.286&0.286\end{bmatrix}.`}/>
+
+In a real Transformer, token behavior depends on sequence context. Head output norms alone do not identify causal effects on predictions; a directional contribution, activation patching, or ablation may be more appropriate for some questions.
+
+#### Example C: SAE feature directions and circuit candidates
+
+Let $\mathbf h(e)$ be a network hidden state and $w_k$ a feature direction obtained from an SAE or another dictionary. Choose scalar coefficients $z_{ek}=\langle\mathbf h(e),w_k\rangle$ (or actual SAE activations, if using its encoder), then set $\mathcal N_{ek}=f(z_{ek})$. The same conditional entropies and co-usage statistics now quantify the distribution of **measured feature activations**. A decoder dictionary can be overcomplete and features nonorthogonal; such geometric superposition is a separate property that should be checked directly alongside the participation statistics.
+
+One may also use candidate circuits as components, but only after specifying a measurable scalar for their participation in each event. Structural subgraphs are not automatically interchangeable with activation features. The statistical framework is deliberately agnostic about these choices while requiring the analyst to make them explicit.
+
+## Part III. From description toward useful interventions
+
+### 9. Designing regularizers
+
+Because the statistics are functions of the measured matrix $\mathcal N$ and its joint distribution, they can, *in principle*, be used as targets during training. A generic proposal is
+
+<Equation id="eq-pe-reg-objective" latex={String.raw`\mathcal L=\mathcal L_{\mathrm{task}}+\lambda_s\mathcal R_s+\lambda_u\mathcal R_u+\lambda_c\mathcal R_c,`}/>
+
+Here the subscripts are mnemonic: $s$ for **spread** across components within an event, $u$ for overall **usage** balance across components, and $c$ for component **co-usage** or coupling. One concrete illustrative choice is
+
+<Equation id="eq-pe-reg-components" latex={String.raw`\mathcal R_s=H(M\mid E),\qquad \mathcal R_u=-H(M),\qquad \mathcal R_c=\sum_{M<N}w_{MN}(\chi_{MN}-\chi_{MN}^{\star})^2.`}/>
+
+The first term encourages or penalizes how widely a typical event spreads across components. The second rewards broader total usage so that one does not solve the first objective by routing everything through the same small subset of units. The third comes directly from the co-usage statistic $\chi_{MN}$ introduced above: it asks whether particular pairs of components co-occur more or less than desired, relative to a target pattern $\chi_{MN}^{\star}$. If one wants a factorized representation, the target might be near zero. If one wants a known useful circuit to remain coordinated, the target might instead be positive for selected pairs.
+
+A simple intuition is this: suppose two attention heads are consistently co-used on a structured reasoning task. If ablations later show that they play distinct but complementary roles, then $\mathcal R_c$ gives a way to preserve or probe that relationship during training. Conversely, if many events all pile onto one broad polysemantic feature, then $\mathcal R_s$ and $\mathcal R_u$ give a way to nudge the representation toward cleaner separation. These are **illustrative objectives, not proven improvements**, but they are actionable rather than merely descriptive.
+
+This is also where physics analogies may become useful. Vary a regularization strength $\lambda$ and monitor how observables such as $H(M\mid E)$, $H(M)$, or average $\chi$ respond. A small response suggests a kind of representational **stiffness**: the internal organization resists that perturbation. A large second derivative suggests **curvature** or sensitivity. If a narrow range of $\lambda$ produces a sharp qualitative reorganization—say, a sudden jump from diffuse mixed representations to clearer specialization—that would motivate an operational analogy to a **phase transition**. Those words should still be treated as proposed analysis ideas until demonstrated carefully, but they point to potentially powerful diagnostics rather than decorative metaphors.
+
+### 10. Using the framework for interpretability and circuit discovery
+
+A practical procedure is to select events and internal objects, form $\mathcal N$, inspect the two conditional directions, compute entropies and co-usage, and nominate component clusters for direct investigation. For example, unusually similar event signatures may flag possible redundant representations; strong co-usage paired with contrasting signatures may indicate complementary roles. In a large model this can be valuable even before causal proof: instead of inspecting every layer or every neuron, one gets a principled shortlist of components and pairs worth testing. These are **hypothesis generators**, not ground-truth circuit assignments, but narrowing the search space is already a substantial gain.
+
+The next step is experimental: intervene on candidate components and test changes in predictions, intermediate variables, or known algorithmic behavior. Single and joint ablations, causal mediation, patching between examples, and null controls can distinguish correlated activity from functional contribution. In the best case, the participation statistics help organize where to look and what combinations to test, making subsequent mechanistic work more efficient and more systematic.
+
+### 11. Possible applications to alignment and deception studies
+
+An especially speculative direction is to use participation ensembles to audit components associated with *behaviorally defined events*, such as truthful versus misleading outputs, conflicting instructions, or differences between a model's visible response and a controlled behavioral ground truth. Conditional signatures and co-usage matrices might then identify **candidate modes** associated with those behaviors. Comparing their causal effects under patching or ablation would be the critical next step.
+
+The important point is not that the framework magically reveals a single "deceptive neuron." Rather, it could narrow an otherwise intractable search. If researchers currently have no principled place to begin, even a ranked set of candidate components, subspaces, or co-active groups is useful. At the same time, there is no validated implication that **high entropy**, **polysemanticity**, or a particular positive $\chi$ identifies deception by itself. Behavior labels may be noisy, apparent signatures may reflect superficial prompt features, and intentionally hidden behavior may be distributed. So the framework should be viewed as a way to prioritize investigation and design sharper tests, not as a turnkey detector.
+
+### 12. Proposed evaluation program
+
+The following experiments would test whether the proposed statistics reveal useful structure and whether they improve training or interpretability beyond simpler baselines:
+
+1. **Exact controls.** Reproduce the toy matrices and test that normalization, grouping, entropy, and co-usage implementations agree with direct calculations and remain numerically stable.
+2. **Known-feature neural toys.** Vary feature overlap, dictionary width, sparsity, noise, and sample counts in networks whose ground-truth concepts are known. Check whether the proposed measures track the right properties and when they fail.
+3. **Alternative lenses and baselines.** Compare activation magnitude, squared activation, signed attribution transformations, and causal effect measures. Report their sensitivity to rescaling, dictionary changes, sampling priors, and event coarse-graining.
+4. **Regularization trials.** Sweep each coefficient while monitoring task error, model robustness, feature recovery, effective component count, and distribution shift. Distinguish improvements in chosen statistics from improvements in useful computation.
+5. **Independent circuit tests.** On a known algorithmic model, compare nominated component families with ablation and activation-reinjection results, including negative and randomized controls.
+6. **Harder interpretability and safety benchmarks.** Only after controls succeed, test whether the framework adds predictive value for locating behavior-associated or causally relevant mechanisms rather than merely producing another representation visualization.
+
+My [**one-layer $D_3$ Transformer study**](/research/emergent-d3-symmetry/) is a natural intermediate test case and a good first test ground for the regularizers. Its input symmetry and exact group composition rules provide an independent yardstick: do participation patterns reveal which internal states support—and which do not support—composition? If one then sweeps the proposed regularizers, does composition become cleaner, more stable, or easier to localize without harming task performance? That is exactly the kind of controlled setting where ideas about spread, co-usage, stiffness, and structural transitions can be tested before moving to larger models. The original D3 study examined activations and feature overlap; **it did not establish that participation-ensemble regularization repairs composition**.
+
+## What is established—and what remains open
+
+The framework gives an explicit path from measured nonnegative event–component weights to a joint ensemble, two dual conditional profiles, their entropies, component usage, and co-usage statistics. The worked examples demonstrate these mathematical transformations exactly. Its attraction is the ability to switch between input-centric, component-centric, and interaction views *without changing the primitive data structure*.
+
+What remains open is the practical scientific claim: whether these chosen statistics track semantically meaningful features, correspond to causal mechanisms, and offer better training or auditing tools than existing baselines. The possibility of regularizing representations, identifying distributed circuits, or improving AI alignment is **a research program to test**, not an outcome demonstrated by the current equations. The value of the framework ultimately depends on whether these measurements help identify meaningful internal structure and guide successful causal tests.

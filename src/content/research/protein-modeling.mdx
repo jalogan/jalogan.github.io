@@ -1,0 +1,141 @@
+---
+title: 'Computational Protein Physics: What Makes a Minimal Model Work?'
+summary: 'Testing six coarse-grained molecular models against 2,531 protein crystal structures to discover which stereochemical features are necessary to reproduce realistic folded-protein structure.'
+category: 'Molecular simulation & computational biophysics'
+status: 'Published research'
+year: 2025
+order: 2
+featured: true
+image: '/figures/cards/protein-card-overlay.png'
+imageAlt: 'Overlay of atomistic and coarse-grained representations of protein 5TKW'
+problem: 'Can a computationally inexpensive protein model reproduce the important structural statistics of folded proteins, and which geometric and stereochemical constraints are indispensable?'
+contribution: 'As a co-first author, developed and evaluated physics-based coarse-grained protein models using large-scale molecular simulations and quantitative structural analysis, comparing model families and identifying the role of backbone constraints and side-chain geometry.'
+result: 'Of six successively more detailed models tested against 2,531 protein crystal structures, the modified multi-particle side-chain model reproduced four ensemble-averaged structural metrics—subchain size, structure factor, core fraction, and core packing—within 4% of reference values.'
+methods: ['Coarse-grained molecular dynamics', 'Constrained polymer mechanics', 'Statistical analysis of 2,531 proteins', 'Voronoi geometry and solvent accessibility', 'Model comparison and validation']
+publicationUrl: 'https://doi.org/10.1103/9wf9-ywhw'
+originalUrl: 'https://jalogan.github.io/projects/constrained_polymers/'
+---
+import Figure from '../../components/Figure.astro';
+import FigureGroup from '../../components/FigureGroup.astro';
+import VideoFigure from '../../components/VideoFigure.astro';
+import Equation from '../../components/Equation.astro';
+
+## The question: how much physics must a coarse-grained protein retain?
+
+A detailed atomistic protein model represents many interacting atoms and degrees of freedom. Such models are powerful, but can be computationally expensive. A coarse-grained representation sacrifices detail to enable simulations of larger systems or longer time scales.
+
+<figure className="inline-science-visual"><img src="/figures/protein-atomistic-5tkw.png" alt="All-atom space-filling visualization of protein 5TKW, showing hundreds of overlapping atomic spheres" loading="lazy" /><figcaption>All-atom visualization of protein 5TKW. Even a single protein contains many atomic degrees of freedom; coarse-graining represents selected structural features using far fewer beads.</figcaption></figure>
+
+The essential question is **which details can be discarded without losing the structure we care about**.
+
+Proteins may have a similar overall size and still differ substantially in their internal structure. Reproducing only the total radius of gyration—or making a model compact—is therefore a weak test. We investigated whether a hierarchy of simplified physical models could simultaneously reproduce **how polymer subchains grow, the internal spatial correlations, the fraction of buried residues, and how densely those residues pack**.
+
+The study uses **2,531 high-resolution X-ray crystal structures** of single-chain proteins selected from the **Dunbrack 1.8 / PISCES protein-structure database**. For each of six coarse-grained models, a separate collapse simulation was performed for every protein. This produces **15,186 model–protein simulations** for the six-model comparison. The full methodology and results appear in our [2025 *Physical Review E* paper](https://doi.org/10.1103/9wf9-ywhw), on which I am a **co-first author**.
+
+## A revealing measurement: internal versus global size
+
+For an entire folded protein with $N$ residues, its radius of gyration typically scales approximately as $R_g(N)\propto N^{1/3}$, as expected for a compact object. That scaling is useful, but it does **not** imply that every subchain behaves like an independently compact object.
+
+To probe internal geometry, we measure the radius of gyration of each contiguous section of $n$ residues and average over the starting positions used in the study:
+
+<Equation id="eq-protein-subchain" latex={String.raw`\langle R_g(n)\rangle=\frac{1}{N-n+1}\sum_{i=1}^{N-n+1}R_g(i,i+n-1)`}/>
+
+Here, the subchain radius of gyration and its subchain center of mass (the paper's Eqs. 3–4) are defined by
+
+<Equation id="eq-protein-segment" latex={String.raw`R_g(i,j)=\left[\frac{1}{j-i+1}\sum_{k=i}^{j}\left|\mathbf r_k-\langle\mathbf r\rangle_{i:j}\right|^2\right]^{1/2}`}/>
+
+<Equation id="eq-protein-segment-center" latex={String.raw`\langle\mathbf r\rangle_{i:j}=\frac{1}{j-i+1}\sum_{k=i}^{j}\mathbf r_k`}/>
+
+These expressions follow Eqs. (2)–(4) of the original paper and specify precisely how the radius of gyration is calculated for every segment before averaging over contiguous subchains of length $n$. The measured subchain curve is not described by a single $n^{1/3}$ law. Its effective scaling is steeper for small $n$ and shallower for large $n$: roughly $n^{0.7}$ and $n^{0.2}$ over the respective regimes in the reference dataset.
+
+<Figure id="fig-protein-scaling" className="figure-expanded protein-plot-figure" src="/figures/protein-fig1-combined-uncropped.png" alt="Three-panel figure showing experimental protein subchain radius of gyration, collapsed polymer scaling, and random-walk scaling comparisons" caption="The full three-panel comparison from the original paper, Fig. 1(a–c): (a) experimental protein subchain scaling; (b) collapsed generic polymer models; (c) ideal and self-avoiding walk scaling. Matching whole-chain size alone cannot reproduce the observed internal geometry." />
+
+### Visualizing radius of gyration along a chain
+
+The animation below highlights a **contiguous window of five beads** (red) as it moves along a longer chain (blue). At each position, $R_g(n=5)$ measures how widely the five bead positions are distributed around **their own center of mass**, not the center of the entire protein. Move the window to the next bead and calculate again; average the resulting values to obtain the subchain measurement. Repeating this for several choices of $n$ gives the curve $\langle R_g(n)\rangle$ used to compare models and experimental structures.
+
+<VideoFigure id="fig-protein-rg-window" className="video-narrow" softColors={true} src="/video/rg-subchain-n5-v20.mp4" poster="/video/rg-subchain-n5-v20-poster.png" caption="Demonstration of a sliding five-monomer window along a polymer chain while evaluating the subchain radius of gyration. This is an explanatory animation, not a trajectory from the protein-model comparison." />
+
+Why compare this with a random walk? A polymer chain is built step by step, just like a walk through space, but successive steps are linked physically. In an **ideal random walk**, the chain can cross itself and its typical size grows roughly as $N^{1/2}$. In a **self-avoiding walk**, excluded volume prevents two distant segments from occupying the same space. The chain spreads farther as more steps are added. In the classical Flory approximation, its size scales as $R_g(N)\sim N^{3/(d+2)}$ in dimension $d$—approximately $N^{3/5}$ in three dimensions. This scaling applies to the radius of gyration and, with a different numerical prefactor, to the root-mean-square end-to-end displacement. It connects the visual question **“how far does the walk spread?”** to a measurable polymer size.
+
+The next animation constructs such a self-avoiding chain and shows its increasing spatial extent. This is a useful **unfolded-polymer baseline**, not a model of a folded protein: the compact globule has an overall $N^{1/3}$ scaling and, as <FigRef id="fig-protein-scaling" /> shows, real folded proteins exhibit a more subtle change of scaling *inside* the chain.
+
+<VideoFigure id="fig-protein-saw" src="/video/self-avoiding-walk.mp4" poster="/video/self-avoiding-walk-poster.png" caption="Growth of an illustrative self-avoiding walk. Excluded-volume constraints cause the chain to spread as steps are added; in three dimensions the Flory estimate is Rg ∼ N³ᐟ⁵. The animation motivates a polymer baseline for interpreting the measured subchain sizes of folded proteins." />
+
+<Figure id="fig-protein-rg-sketch" src="/figures/protein-random-walk-rg.png" alt="Schematic of a polymer random walk with grid, a center-of-mass star, and a circle illustrating radius of gyration" caption="Radius-of-gyration construction for the completed random walk. The central marker identifies the chain center of mass, and Rg is the root-mean-square distance of monomers from that center; it need not equal the outermost distance from the center." />
+
+The contrast provides an excellent example of a broader modeling principle: **matching one global observable does not validate a model's internal geometry**.
+
+## Six models, with complexity added deliberately
+
+Instead of adding every biochemical interaction at once, we considered a controlled series of six models. Each retains the previous model's backbone, then adds a specific structural ingredient.
+
+<FigureGroup id="fig-protein-models" columns={2} caption="Six coarse-grained model representations (a–f) from the original paper Fig. 2. Model complexity grows from a simple backbone chain through side-chain and backbone stereochemistry to multiple beads per residue." panels={[
+  { label:'a', src:'/figures/protein-panels/model-a.webp', alt:'CRW: collapsed random walk.', caption:'CRW: collapsed random walk.' },
+  { label:'b', src:'/figures/protein-panels/model-b.webp', alt:'BADA: backbone-angle constraints.', caption:'BADA: backbone-angle constraints.' },
+  { label:'c', src:'/figures/protein-panels/model-c.webp', alt:'FJSC: variable side-chain sizes.', caption:'FJSC: variable side-chain sizes.' },
+  { label:'d', src:'/figures/protein-panels/model-d.webp', alt:'In Seq: sequence-dependent side chains.', caption:'In Seq: sequence-dependent side chains.' },
+  { label:'e', src:'/figures/protein-panels/model-e.webp', alt:'MPSC: multibead side chains.', caption:'MPSC: multibead side chains.' },
+  { label:'f', src:'/figures/protein-panels/model-f.webp', alt:'Side-chain bead representations used for MPSC and modMPSC.', caption:'Side-chain bead representations used for MPSC and modMPSC.' },
+]} />
+
+1. **CRW — collapsed random walk.** Excluded-volume beads connected into a backbone, with no explicit bending or dihedral constraints.
+2. **BADA — backbone angle constraints.** Introduces effective bend-angle and dihedral-angle potentials informed by experimentally observed backbone statistics.
+3. **FJSC — freely jointed side chains.** Adds a spherical side-chain bead for each backbone bead, with size drawn from the overall amino-acid side-chain distribution.
+4. **In Seq — sequence-dependent side chains.** Uses the actual amino-acid identity to select the side-chain bead size distribution.
+5. **MPSC — multi-particle side chains.** Represents several larger side chains with multiple beads, informed by Martini3-style geometry.
+6. **modMPSC — modified multi-particle side chains.** Further refines the representation of leucine and valine with two side-chain beads.
+
+This progression allows the effects of **backbone stereochemistry**, **excluded volume**, **amino-acid identity**, and **side-chain shape** to be evaluated separately instead of attributing every improvement to model complexity in general.
+
+## How the simulations were carried out
+
+The models begin as coarse-grained protein chains with appropriate connectivity and, for the more constrained models, effective backbone angle and dihedral potentials derived from structural data. Nonbonded beads interact through excluded-volume repulsion. An imposed, inward-directed compressive force and damped molecular dynamics (MD) then generate compact configurations while keeping the prescribed stereochemical constraints approximately satisfied.
+
+Importantly, **these were controlled collapse simulations, not demonstrations of a native protein folding pathway**. We did not claim that the simplified model could take an arbitrary sequence and autonomously discover its unique native fold, or that it reproduced folding kinetics. The experimental structures were used both to construct or parameterize the geometric constraints and to evaluate the resulting structural observables.
+
+The purpose was to learn which physical ingredients were sufficient for agreement with a broad experimental dataset, rather than to recreate an atomistic energy landscape.
+
+## What the comparisons revealed
+
+We compared four structural properties across models and reference proteins:
+
+- **Subchain size, $\langle R_g(n)\rangle$:** whether local-to-global polymer geometry follows the experimentally observed crossover.
+- **Structure factor, $S(q)$:** whether spatial correlations occur at the right length scales.
+- **Core fraction, $f_{\mathrm{core}}$:** what fraction of residues are buried in the solvent-inaccessible interior.
+- **Core packing fraction, $\langle\phi\rangle$:** how densely those core residues are packed, estimated from the geometry of their local Voronoi cells.
+
+<FigureGroup id="fig-protein-comparison" columns={1} caption="Model comparison (a–c), from the original paper Fig. 5. The panels test complementary aspects of chain-scale structure and spatial correlations." panels={[
+  { label:'a', src:'/figures/protein-panels/comparison-a.webp', alt:'Subchain radius of gyration for six models and experiment.', caption:'Subchain radius of gyration for six models and experiment.' },
+  { label:'b', src:'/figures/protein-panels/comparison-b.webp', alt:'Normalized subchain-size error.', caption:'Normalized subchain-size error.' },
+  { label:'c', src:'/figures/protein-panels/comparison-c.webp', alt:'Static structure factor across wavevectors.', caption:'Static structure factor across wavevectors.' },
+]} />
+The minimal CRW polymer misses important aspects of both internal size and spatial structure. Imposing backbone stereochemistry (BADA) introduces the characteristic crossover in subchain scaling, but not at the correct scale. The one-bead side-chain models (FJSC and In Seq) dramatically improve **subchain geometry and structure factor**, with normalized mean-squared error in $\langle R_g(n)\rangle$ below roughly $0.02$.
+
+That is **not the end of the story**. A model can match those measures and still represent a protein core incorrectly. The FJSC and In Seq models yield core fractions around $0.02$ and $0.05$, respectively, whereas experimental folded proteins are around $0.09$. Adding multibead side chains is therefore essential for the final part of the comparison.
+
+<FigureGroup id="fig-protein-core" columns={2} caption="Protein-core measurements (a–b), from the original paper Fig. 6. Together these establish whether a model reproduces not just global size, but the internal packing of the folded state." panels={[
+  { label:'a', src:'/figures/protein-panels/core-a.webp', alt:'Average packing fraction of buried residues.', caption:'Average packing fraction of buried residues.' },
+  { label:'b', src:'/figures/protein-panels/core-b.webp', alt:'Fraction of residues in the protein core.', caption:'Fraction of residues in the protein core.' },
+]} />
+Matching the **overall** mean core packing fraction can hide systematic errors in specific residue types. To test this, we also calculated the average local packing fraction separately for each of the 20 amino-acid types. The trend is informative: refined side-chain representations bring these residue-resolved packing fractions closer to the experimental values, rather than merely matching a single overall average.
+
+<FigureGroup id="fig-protein-residue" columns={1} caption="Amino-acid-resolved core packing (a–b), from the original paper Fig. 7. This catches compensating errors that would be hidden in the average packing fraction." panels={[
+  { label:'a', src:'/figures/protein-panels/residue-a.webp', alt:'Residue-specific packing fraction.', caption:'Residue-specific packing fraction.' },
+  { label:'b', src:'/figures/protein-panels/residue-b.webp', alt:'Residue-specific model differences, weighted by abundance.', caption:'Residue-specific model differences, weighted by abundance.' },
+]} />
+The **modMPSC** model reproduces all four ensemble-level measures—subchain radius of gyration, structure factor, fraction of core residues, and average core packing—to **within 4%** of the reference values reported in the paper. This is a strong result for a deliberately simplified representation: meaningful structural behavior can emerge from geometric and stereochemical constraints without explicitly modeling every atom or adding detailed amino-acid attractions.
+
+## What the result does—and does not—establish
+
+The strength of the evidence comes from *systematically comparing physics-based models against thousands of measured structures using several complementary observables*. It does not establish that every individual simulated conformation is close to the corresponding experimental native state. The paper reports an **average $C_\alpha$ root-mean-square deviation (RMSD) of approximately $3$ Å for core residues** in a separate study initialized close to the corresponding X-ray structures and then minimized. This describes a positional deviation *from the experimental structure*, not the roughly **$3.8$ Å average separation between successive backbone $C_\alpha$ atoms** used to define bead spacing. Neither result demonstrates de novo folding of an arbitrary sequence.
+
+There are also limitations inherent to the coarse-graining scheme, the externally imposed collapse force, and the use of ensemble-averaged observables. Reproducing real folding dynamics, sequence-specific native structures, or biological functions would require additional ingredients and independent validation.
+
+## Why this research matters
+
+This project demonstrates a method for building simpler but useful physical models: begin with a hierarchy of assumptions, measure several observables that probe *different* scales and parts of the structure, and retain complexity only where the data show that it matters. The outcome is both a more informative model of folded-protein packing and a transferable approach to **model reduction, simulation, numerical validation, and physics-based scientific computing**.
+
+## Paper
+
+[**J. A. Logan and J. Sumner (equal contribution), A. T. Grigas, M. D. Shattuck, and C. S. O’Hern, “Effect of stereochemical constraints on the structural properties of folded proteins,” *Physical Review E* 112, 054405 (2025).**](https://doi.org/10.1103/9wf9-ywhw)

@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+const notes=(await getCollection('notes')).sort((a,b)=>a.data.order-b.data.order);
+---
+<BaseLayout title="Notes & Explorations | Jack Logan" description="Informal physics and mathematics notes, derivations, and computational explorations.">
+<section class="page-intro"><div class="shell"><div class="section-kicker">An open scientific notebook</div><h1>Notes & Explorations</h1><p>Mathematical ideas, physical intuition, derivations, and computational experiments. Questions worth following, including ideas that remain exploratory rather than published research.</p></div></section>
+<section class="page-body shell">
+  <div class="note-index-grid">
+  {notes.map((note)=>
+    <a class="note-index-card" href={`/notes/${note.id.replace(/\.mdx?$/,'')}/`}>
+      <div class="section-kicker">{note.data.category}</div>
+      <h2>{note.data.title}</h2>
+      <p>{note.data.summary}</p>
+      <div class="note-index-footer"><span>{note.data.status}</span><span>Read note ↗</span></div>
+    </a>
+  )}
+  </div>
+</section>
+</BaseLayout>

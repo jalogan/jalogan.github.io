@@ -1,0 +1,16 @@
+---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+interface Panel {label:string; src:string; alt:string; caption?:string}
+interface Props {id:string;number?:string|number;panels:Panel[];caption:string;className?:string;columns?:number}
+const {id,number,panels,caption,className='',columns=2}=Astro.props;
+---
+<figure class:list={['scientific-figure','grouped-figure',columns===1?'grouped-wide':'',className]} id={id}>
+  <div class="grouped-panels" style={`--figure-panel-columns:${columns}`}>
+    {panels.map(panel => <div class="grouped-panel">
+      <div class="grouped-panel-art"><a class="figure-view-original" href={panel.src} target="_blank" rel="noopener noreferrer" aria-label={`Open full-size panel ${panel.label}: ${panel.alt}`}><img src={panel.src} alt={panel.alt} loading="lazy" decoding="async" /></a></div>
+      <div class="grouped-panel-caption"><span class="grouped-panel-letter">({panel.label})</span>{panel.caption && <span> {panel.caption}</span>}</div>
+    </div>)}
+  </div>
+  <figcaption><strong>Figure {number}.</strong> {caption}</figcaption>
+</figure>

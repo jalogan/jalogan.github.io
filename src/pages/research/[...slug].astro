@@ -1,0 +1,28 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+export async function getStaticPaths(){
+  const entries=await getCollection('research');
+  return entries.map(entry=>({params:{slug:entry.id.replace(/\.mdx?$/,'')},props:{entry}}));
+}
+const {entry}=Astro.props;
+const {Content,headings}=await render(entry);
+const data=entry.data;
+const outline=headings.filter(h=>h.depth===2 || h.depth===3);
+---
+<BaseLayout title={`${data.title} | Jack Logan`} description={data.summary} image={data.image}>
+<section class="article-hero"><div class="shell">
+  <div class="breadcrumb"><a href="/research/">Research</a><span>/</span>{data.category}</div>
+  <h1>{data.title}</h1><p class="article-deck">{data.summary}</p>
+  <div class="article-tags"><span>{data.status ?? 'Research'}</span>{data.methods.slice(0,3).map(method=><span>{method}</span>)}</div>
+  <div class="at-a-glance">
+    <div class="glance-item"><div class="glance-index">01 / The question</div><h2>The problem</h2><p>{data.problem}</p></div>
+    <div class="glance-item"><div class="glance-index">02 / The work</div><h2>My contribution</h2><p>{data.contribution}</p></div>
+    <div class="glance-item"><div class="glance-index">03 / The outcome</div><h2>Key result</h2><p>{data.result}</p></div>
+    <div class="glance-item"><div class="glance-index">04 / The toolkit</div><h2>Methods</h2><p>{data.methods.join(' · ')}</p></div>
+  </div>
+</div></section>
+<div class="shell article-grid"><article class="article-prose"><Content />
+
+</article><aside class="article-toc" aria-label="Article table of contents"><strong>On this page</strong><ol>{outline.map(h=><li style={`padding-left:${(h.depth-2)*12}px`}><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol></aside></div>
+</BaseLayout>

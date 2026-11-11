@@ -1,0 +1,200 @@
+---
+title: 'Compact Interaction Potential for van der Waals Nanorods'
+summary: 'An analytic interpolative potential for the van der Waals interaction of two finite solid cylindrical rods at arbitrary angle and position, together with a simulation-ready repulsive completion.'
+category: 'Soft matter · Theory'
+year: 2018
+status: 'Published research'
+order: 5
+featured: true
+image: '/figures/vdw-rods/vdw-rods-card.webp'
+imageAlt: 'Schematic of two interacting cylindrical nanorods with geometric parameters labeled'
+hero: 'A compact closed-form vdW potential for finite nanorods'
+tags:
+  - van der Waals interactions
+  - nanorods
+  - analytical theory
+  - interaction potentials
+  - soft matter
+problem: 'How can we evaluate van der Waals interactions between finite cylindrical nanorods at arbitrary relative angles and offsets without expensive direct volume integration?'
+contribution: 'Developed analytical approximations and the compact interaction-potential framework, including limiting-regime analysis and finite-length corrections, in collaboration with my coauthor.'
+result: 'Constructed a compact high-accuracy interpolative formula for the interaction energy of two finite cylindrical rods with arbitrary angle and offset.'
+impact: 'Provides a practical pair potential for carbon nanotubes, metallic nanorods, rod-like colloids, and related systems where direct numerical integration is too expensive to use repeatedly.'
+methods: ['Analytical theory', 'Asymptotic analysis', 'Finite-length and finite-diameter approximations', 'Interpolation between limiting regimes', 'van der Waals interactions']
+publicationUrl: 'https://doi.org/10.1103/PhysRevE.98.032609'
+originalUrl: 'https://doi.org/10.1103/PhysRevE.98.032609'
+---
+
+import Figure from '../../components/Figure.astro';
+import FigureGroup from '../../components/FigureGroup.astro';
+import Equation from '../../components/Equation.astro';
+
+## Why this problem matters
+
+Rod-like particles appear in many nanoscale and soft-matter systems: carbon nanotubes, metallic nanorods, microtubules, and rod-shaped colloids are all important examples. In those systems, van der Waals attraction can be strong enough to drive aggregation and self-organization. The difficulty is practical: the microscopic pair interaction is straightforward to write down, but directly integrating it for two **finite solid cylinders at arbitrary angle and offset** is too expensive to use repeatedly inside a simulation.
+
+This project developed a **compact closed-form approximation** that keeps the physically correct limiting behavior while remaining simple enough to evaluate efficiently. The goal was not an exact symbolic solution of the full six-parameter geometry, but a faithful interpolative formula that is accurate across the relevant regimes.
+
+## Geometry and notation
+
+The two rods have the same length $L$ and diameter $a$. The unit vectors $\widehat n_x$ and $\widehat n_y$ run along their axes, and $\theta$ is the angle between them. The unit vector $\widehat n_z$ is perpendicular to the two axes. The minimum **axis-to-axis** distance is $r$, while $X_0$ and $Y_0$ measure where the rod centers lie along their axes relative to the points of closest approach.
+
+This distinction is important. Two rods can have the same $r$ and $\theta$ but different energies if one is shifted toward the end of the other. A useful finite-rod potential must account for *distance, angle, and longitudinal overlap* simultaneously. <FigRef id="fig-vdw-setup" /> defines all three geometrical ingredients.
+
+<Figure id="fig-vdw-setup" src="/figures/vdw-rods/Fig2_Secondary_Modelv2.webp" alt="Two views of the nanorod geometry showing the angle theta, offsets X0 and Y0, director vectors n-hat_x and n-hat_y, perpendicular direction n-hat_z, and distances r and d" caption="Geometry used in the paper. Left: the finite-angle view showing the rod directors n̂x and n̂y, the angle θ between them, and the longitudinal offsets X0 and Y0. Right: the side view defining the shortest axis-to-axis distance r and the point-to-point separation d." />
+
+The rod-center positions are written as
+
+<Equation id="eq-vdw-centers" latex={String.raw`X_c = X_1 + X_0 \,\widehat n_x, \qquad Y_c = Y_1 + Y_0 \,\widehat n_y.`}/>
+
+The longitudinal displacements are
+
+<Equation id="eq-vdw-offsets" latex={String.raw`X_0 = \frac{[(X_c-Y_c)\cdot \widehat n_y](\widehat n_x\cdot \widehat n_y) - (X_c-Y_c)\cdot \widehat n_x}{(\widehat n_x\cdot \widehat n_y)^2 - 1}, \qquad Y_0 = \frac{[(X_c-Y_c)\cdot \widehat n_x](\widehat n_x\cdot \widehat n_y) - (X_c-Y_c)\cdot \widehat n_y}{1-(\widehat n_x\cdot \widehat n_y)^2}.`}/>
+
+The shortest axis-to-axis distance is
+
+<Equation id="eq-vdw-r" latex={String.raw`r = \left|(X_c-Y_c)\cdot \widehat n_z\right|, \qquad \widehat n_z = \operatorname{sgn}\!\left[(X_c-Y_c)\cdot (\widehat n_x\times \widehat n_y)\right] \frac{\widehat n_x\times \widehat n_y}{|\widehat n_x\times \widehat n_y|}.`}/>
+
+The starting microscopic interaction is the Hamaker form
+
+<Equation id="eq-vdw-hamaker" latex={String.raw`U = -\frac{A}{\pi^2}\iint \frac{d^3 r_1\, d^3 r_2}{|r_1-r_2|^6},`}/>
+
+where $A$ is the Hamaker constant.
+
+## Building the compact potential from controlled limits
+
+The strategy is to calculate what the interaction must do in **simple limits** before attempting the full geometry. The same potential must work when the rods are far apart or nearly touching, and when their directions cross or become parallel. These four regimes determine the structure of the interpolation; only a small number of constants then need to be fitted to numerical integration.
+
+### Step 1: Nonparallel rods far apart
+
+At large separation, $a\ll r$, we can treat each rod as a thin line carrying its cross-sectional volume. The cross-sectional area is $\sigma_1=\sigma_2=\pi a^2/4$. For two points a distance $X$ and $Y$ along the two axes, the geometry in Figure 1 gives
+
+<Equation id="eq-vdw-point-separation" latex={String.raw`d^2=r^2+(X\sin\theta)^2+(Y-X\cos\theta)^2.`}/>
+
+Substituting this expression into the microscopic Hamaker integral, and integrating over each rod's cross section, gives the thin-rod integral
+
+<Equation id="eq-vdw-thin-integral" latex={String.raw`U\simeq -\frac{A\sigma_1\sigma_2}{\pi^2}\int\!\!\int\frac{dX\,dY}{\left[r^2+(X\sin\theta)^2+(Y-X\cos\theta)^2\right]^3}.`}/>
+
+For nonparallel, effectively infinite rods we can introduce the dimensionless variables $x=X\sin\theta/r$ and $y=(Y-X\cos\theta)/r$. The change of variables contributes $r^2/|\sin\theta|$, so
+
+<Equation id="eq-vdw-thin-evaluation" latex={String.raw`U_{\times}^{\infty}= -\frac{A\sigma_1\sigma_2}{\pi^2r^4|\sin\theta|}\int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}\frac{dx\,dy}{(1+x^2+y^2)^3}= -\frac{A\pi a^4}{32r^4|\sin\theta|}.`}/>
+
+This result explains both characteristic factors. The $r^{-4}$ arises because we integrate a pairwise $d^{-6}$ interaction over two one-dimensional rods. The $1/|\sin\theta|$ arises from geometry: as two rods become nearly parallel, longer portions lie close to one another and contribute to the attraction. The apparent divergence at $\theta=0$ tells us that the **parallel case must be treated separately**, not that a finite rod has infinite energy.
+
+### Step 2: Nonparallel rods near contact
+
+At small surface-to-surface gap $h=r-a\ll a$, the thin-line approximation fails. The nearby cylindrical surfaces dominate the interaction. Applying the **Derjaguin approximation**—locally replacing the curved surfaces by their tangent neighborhoods and integrating over the local gaps—gives
+
+<Equation id="eq-vdw-near-crossing" latex={String.raw`U_{\times}\simeq-\frac{Aa}{12|\sin\theta|(r-a)},\qquad r-a\ll a.`}/>
+
+The interaction now diverges as $1/(r-a)$ rather than $1/r^4$. Any compact formula must recover these different distance dependences as it moves from far field to near contact.
+
+### Step 3: Interpolate across distances
+
+A useful denominator is $(r-a)(r+\epsilon a)^3$: it scales like $r^4$ far away and linearly in the gap close to contact. Taking $V_0=A\pi a^4/32$ from the exact thin-rod limit gives
+
+<Equation id="eq-vdw-nonparallel" latex={String.raw`U_{\times} = -\frac{V_0}{|\sin\theta|\,(r-a)(r+\epsilon a)^3}, \qquad V_0 = \frac{A\pi a^4}{32}, \qquad \epsilon = 0.12.`}/>
+
+The far-field coefficient is fixed analytically. Matching the leading near-contact coefficient gives $\epsilon=(3\pi/8)^{1/3}-1\approx0.06$; comparison with direct numerical volume integration shows that $\epsilon=0.12$ gives a more accurate interpolation over intermediate distances. Thus $0.12$ is a fitted refinement, while the **power laws and angular dependence** come from the limiting calculations.
+
+### Step 4: Parallel rods
+
+Parallel rods behave differently because an entire longitudinal segment is close to the other rod. In the far field, the two cross sections can again be replaced by their areas, but one relative longitudinal coordinate must now be integrated while the total overlap contributes a factor of $L$:
+
+<Equation id="eq-vdw-parallel-integral" latex={String.raw`U_{\parallel}^{\infty}= -\frac{A\sigma_1\sigma_2L}{\pi^2}\int_{-\infty}^{\infty}\frac{ds}{(r^2+s^2)^3}= -\frac{3\pi A a^4L}{128r^5}.`}/>
+
+Near contact, a cylindrical-surface calculation using the Derjaguin approximation instead gives a stronger gap dependence. Together, these two limits are
+
+<Equation id="eq-vdw-parallel" latex={String.raw`U_{\parallel} \approx \begin{cases}
+-\dfrac{3\pi A a^4 L}{128\,r^5}, & r\gg a,\\[6pt]
+-\dfrac{A L\sqrt{a}}{24\sqrt{2}\,(r-a)^{3/2}}, & r-a\ll a.
+\end{cases}`}/>
+
+The distinct distance dependences are the key: for parallel rods, the far-field energy scales as $Lr^{-5}$ and the near-contact energy as $L(r-a)^{-3/2}$. Compared with crossing rods, the extra power of separation reflects the long overlap of almost-parallel segments. Numerical cross-section integration provides the reference against which a compact expression can be tested.
+
+### Step 5: One long-rod formula for any angle
+
+The nonparallel interpolation already has the correct powers of $r$ and $r-a$ but becomes singular as $\sin\theta\to0$. We therefore modify the **angular factor in its denominator**, replacing $|\sin\theta|$ by the sum
+
+<Equation id="eq-vdw-angular-bridge" latex={String.raw`|\sin\theta|+\frac{\beta}{L}\sqrt{r(r-a)},\qquad \beta\approx2.35.`}/>
+
+Why a square root? If $\theta$ is appreciably nonzero, the first term dominates and we recover the crossing-rod result. If $\theta=0$, the added term dominates. It contributes a factor $L/\sqrt{r(r-a)}$ to the energy, producing exactly the additional powers needed for the **parallel near- and far-field scalings**. The dimensionless coefficient $\beta=2.35$ was optimized by comparison with numerical integration of the parallel-cylinder interaction.
+
+This gives the unified long-rod potential
+
+<Equation id="eq-vdw-long" latex={String.raw`U_{\mathrm{rods}} \approx -\frac{V_0}{\left(|\sin\theta| + \dfrac{2.35}{L}\sqrt{r(r-a)}\right)(r-a)(r+\epsilon a)^3}.`}/>
+
+The formula now connects the four physical regimes with **one inexpensive expression**. As the geometry in <FigRef id="fig-vdw-setup" /> makes clear, the same two rods can approach one another at very different angles, yet the interaction should change continuously rather than switch abruptly between two unrelated formulas. There is an important restriction, however: this result treats the rods as effectively long. A rod end can cut off the interaction even when the axes would otherwise pass close to one another.
+
+That leads to the final problem: handling finite length without losing the simplicity of the long-rod result.
+
+## Finite-length correction and the limits it must capture
+
+Shifting a finite rod far enough along its axis should make its attraction disappear, even if the infinite lines through the rod axes would still come close. We describe that loss of overlap by multiplying the long-rod potential by a **finite-length correction**.
+
+A helpful starting point comes from the exactly integrable thin-rod interaction for perpendicular *semi-infinite* rods. Integrating over one rod end gives the function
+
+<Equation id="eq-vdw-end-function" latex={String.raw`G(x)=\frac{3x+2x^3}{4(1+x^2)^{3/2}}.`}/>
+
+For two perpendicular finite rods, the end corrections are accurately represented by the product of differences of this function:
+
+<Equation id="eq-vdw-finite-product" latex={String.raw`\Gamma(x_{\pm},y_{\pm})=[G(x_+)-G(x_-)][G(y_+)-G(y_-)],\quad x_{\pm}=\frac{X_0\pm L/2}{r},\quad y_{\pm}=\frac{Y_0\pm L/2}{r}.`}/>
+
+This describes how the attraction decreases when the closest-approach points move toward or beyond the rod ends. It is accurate for perpendicular rods but not suitable by itself for the parallel limit, where the energy depends mainly on **overlap length**. For that limit, we introduced the simpler, quasilinear correction $\gamma$. It replaces the smooth transition function $G$ by a piecewise-linear function and modifies the scaled offsets so that the correction continuously becomes proportional to overlap as the rods turn parallel.
+
+The two heat maps in <FigRef id="fig-vdw-gamma" /> visualize the result. For perpendicular rods the nonzero interaction region is compact; for parallel rods it becomes a long diagonal strip representing the amount of longitudinal overlap.
+
+<FigureGroup id="fig-vdw-gamma" columns={2} caption="Heat maps of the finite-length correction γ(X±,Y±) for the same rod length but different angles. Left: θ = 90°, where the nonzero region is compact. Right: θ = 0°, where the correction becomes proportional to overlap and extends along the diagonal strip X0 ≈ Y0." panels={[
+  {label:'a',src:'/figures/vdw-rods/Fig9a_gamma_0_and_90_deg_with_L50_a2_r2_2-clean.png',alt:'Heat map of the finite-size correction gamma for perpendicular rods',caption:'Perpendicular rods, θ = 90°'},
+  {label:'b',src:'/figures/vdw-rods/Fig9b_gamma_0_and_90_deg_with_L50_a2_r2_2-clean.png',alt:'Heat map of the finite-size correction gamma for parallel rods',caption:'Parallel rods, θ = 0°'}
+]} />
+
+The compact finite-size correction $\gamma$ is built from a saturating piecewise-linear function of the dimensionless rod-end positions. Its complete definition appears directly with the final potential below, so the model can be read as a self-contained set of equations. The definitions encode which **parts of the finite rods can contribute**. The function $g$ saturates when an endpoint is far from the interaction region, while the $|\sin\theta|$ and $|\cos\theta|$ terms continuously rearrange the effective interaction region as the rods rotate. In <FigRef id="fig-vdw-gamma" />, the finite-angle result appears as a bounded patch, whereas the near-parallel result follows the diagonal corresponding to a nonzero overlap. This is the behavior we needed to preserve.
+
+## Final compact attractive potential
+
+With the correct angle and overlap behavior in hand, we can combine it with the finite-diameter interpolation. One final difficulty remains near the *ends*: using $\gamma$ alone can leave an unphysical region of strong attraction beyond a physical rod end. We introduced a second geometrical factor, $\gamma_a$, to shrink the effective diameter there, so the interaction turns off consistently as the rods separate.
+
+The resulting attractive potential, expressed in $X_0,Y_0,r,L,\theta$ (with diameter $a$ and Hamaker constant $A$), is collected with **all of its dependencies** below.
+
+<div className="vdw-formula-sheet" aria-label="Complete nanorod interaction potential and its auxiliary definitions">
+  <p className="vdw-formula-sheet-heading">Complete attractive potential and auxiliary definitions</p>
+  <Equation id="eq-vdw-final" latex={String.raw`U_{\mathrm{vdW}}(X_0,Y_0,r,L,\theta) = -\frac{A\pi a^4\,\gamma(X_{\pm},Y_{\pm})}{32\left(|\sin\theta| + \dfrac{2.35}{L}\sqrt{r(r-\gamma_a a)}\right)(r-\gamma_a a)(r+0.12a)^3}.`}/>
+  <div className="vdw-formula-short-row">
+    <div><h4>Finite-length weighting</h4><Equation id="eq-vdw-gamma" latex={String.raw`\begin{aligned}\gamma(x_{\pm},y_{\pm}) &= \min\Big( [g(x_+) - g(x_-)],\,[g(y_+) - g(y_-)] \Big),\\[3pt] g(x)&=\frac{1}{2}\,\operatorname{sgn}(x)\min\left(1,\frac{3}{2}|x|\right).\end{aligned}`}/></div>
+    <div><h4>End-cap correction</h4><Equation id="eq-vdw-gamma-a" latex={String.raw`\gamma_a = \gamma(X_{\pm}^a,Y_{\pm}^a),`}/></div>
+  </div>
+  <h4>Scaled rod-end variables</h4>
+  <Equation id="eq-vdw-gamma-xy" latex={String.raw`\begin{aligned} X_{\pm}&=\left(X_0 \pm \frac{L}{2}\right)\left(\frac{|\sin\theta|}{r+a} + \frac{4|\cos\theta|}{3L}\right) - \frac{4Y_0\cos\theta}{3L},\\[5pt]Y_{\pm}&=\left(Y_0 \pm \frac{L}{2}\right)\left(\frac{|\sin\theta|}{r+a} + \frac{4|\cos\theta|}{3L}\right) - \frac{4X_0\cos\theta}{3L}.\end{aligned}`}/>
+  <h4>Scaled variables for the cap correction</h4>
+  <Equation id="eq-vdw-gamma-a-xy" latex={String.raw`\begin{aligned} X_{\pm}^a &= \frac{X_0 \pm L/2}{a} \pm \frac{2(r+a)(L \mp 2Y_0\cos\theta)}{4a(r+a)|\cos\theta| + 3La|\sin\theta|} \mp 1.4,\\[5pt]Y_{\pm}^a &= \frac{Y_0 \pm L/2}{a} \pm \frac{2(r+a)(L \mp 2X_0\cos\theta)}{4a(r+a)|\cos\theta| + 3La|\sin\theta|} \mp 1.4\end{aligned}`}/>
+</div>
+
+The two functions play **different roles**. $\gamma$ measures how much of the rods' longitudinal interaction regions overlap; $\gamma_a$ prevents the near-field divergence from extending into geometries where the finite rods no longer physically face one another. Its definition uses the same function $\gamma$, evaluated at end-dependent variables.
+
+The figure below is a useful way to see the global behavior of the final attractive potential. The horizontal axis is the longitudinal displacement $X_0/a$, the vertical axis is the separation $r/a$, and the color scale shows the magnitude $|U_{\mathrm{vdW}}|/A$ on a logarithmic scale for $Y_0=0$ and $\theta=\pi/2$.
+
+<Figure id="fig-vdw-final-heatmap" src="/figures/vdw-rods/Fig10_Uvdw_Xr_heatmap_L50_a2_m90_y0_rpos.webp" alt="Heat map of the magnitude of the final compact van der Waals potential as a function of X0 over a and r over a" caption="Magnitude of the final compact attractive potential for a representative perpendicular-rod slice. The bright near-contact region traces the physically accessible rod shape, while the white forbidden region corresponds to geometric overlap of the hard cores." />
+
+## Adding repulsion and simulation readiness
+
+For simulation, the attractive van der Waals potential must be combined with a short-range repulsion. The paper proposed two convenient choices:
+
+<Equation id="eq-vdw-total-power" latex={String.raw`U_{\mathrm{total}} = U_{\mathrm{vdW}}\left(1 - \left(\frac{\xi}{r-\gamma_a a}\right)^2\right),`}/>
+
+<Equation id="eq-vdw-total-exp" latex={String.raw`U_{\mathrm{total}} = U_{\mathrm{vdW}}\left(1 - e^{1-(r-\gamma_a a)/\xi}\right).`}/>
+
+Here $\xi$ is a short-range regularization length controlling the repulsive core. The two choices illustrate different ways of regulating short-range attraction: the first adds an algebraic repulsion, while the second makes the correction depend exponentially on the surface gap. The appropriate choice depends on the physical stabilization mechanism of the particles (for example, ligands or electrostatic repulsion).
+
+A practical advantage of the compact form is that it can be differentiated analytically. The paper therefore also derived explicit expressions for the force field and torques in terms of the same geometric variables used above. The energy is formulated for direct use in numerical simulations. The complete vector expressions for the forces and torques are given in Eqs. (21) and (22) of the paper.
+
+## What this work contributes
+
+The scientific contribution is a compact, simulation-ready interaction model for finite cylindrical rods with van der Waals attraction. Instead of relying on brute-force numerical integration for every pair geometry, the paper distilled the problem into a small number of controlled limits and then stitched them together with a physically informed interpolation. The result keeps the correct asymptotic behavior, handles arbitrary angle and offset, accounts for end effects, and provides a direct route to forces and torques.
+
+The result also has clear boundaries: the model uses pairwise, nonretarded dispersion interactions and does not explicitly include many-body screening or the detailed material response of a real composite nanorod. Within that model, its value lies in making what was originally an expensive six-parameter volume integral **compact enough for repeated numerical evaluation**.
+
+That combination—**correct leading behavior in the limiting regimes, compact evaluation, and analytical differentiability**—is what makes the model useful for many-particle calculations involving nanorods and related elongated objects.
+
+## Publication
+
+[**J. A. Logan and A. V. Tkachenko, “Compact interaction potential for van der Waals nanorods,” *Physical Review E* 98, 032609 (2018).**](https://doi.org/10.1103/PhysRevE.98.032609)
